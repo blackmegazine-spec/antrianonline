@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>JD Production — Queue System</title>
+<title>JD Production — Antrian Digital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -80,6 +80,8 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
 .slot-settings-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .slot-setting-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:12px}
 .slot-setting-item.blocked{border-color:rgba(224,84,84,.3);background:rgba(224,84,84,.07)}
+
+/* ── CUSTOMER PAGE ── */
 #customer-page{min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:32px 16px;flex-direction:column}
 #track-page{min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:32px 16px;flex-direction:column}
 .track-card{width:100%;max-width:440px}
@@ -103,13 +105,16 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
 .cust-card{width:100%;max-width:480px}
 .mode-btn{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:left;transition:all var(--tr);cursor:pointer;margin-bottom:12px}.mode-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
 .mode-icon{font-size:26px;margin-bottom:8px}.mode-title{font-size:15px;font-weight:600;margin-bottom:4px}.mode-desc{font-size:12px;color:var(--text-muted)}
+
+/* FIX: slot grid responsive */
 .slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:400px){.slot-grid{grid-template-columns:repeat(2,1fr)}}
+
 .slot-btn{padding:12px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all var(--tr);text-align:center}
 .slot-btn.taken{background:var(--surface);color:var(--text-dim);cursor:not-allowed}.slot-btn.selected{background:var(--gold);color:#0C0C0E;border-color:var(--gold)}.slot-btn:not(.taken):not(.selected):hover{border-color:var(--gold)}
 .slot-taken-lbl{font-size:9px;color:var(--text-dim);display:block}
 .confirm-row{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border)}.confirm-row:last-child{border-bottom:none}.confirm-key{color:var(--text-muted)}
 .done-number{font-family:var(--font-display);font-size:80px;font-weight:700;color:var(--gold);line-height:1;padding:16px 0}
-/* ── TV DISPLAY PAGE ──────────────────────────────────── */
 #display-page{min-height:100vh;background:#08080A;padding:40px;display:flex;flex-direction:column;gap:32px}
 .display-brand{font-family:var(--font-display);font-size:28px;color:var(--gold)}.display-clock{font-family:var(--font-display);font-size:40px;color:var(--text-muted)}
 .display-called{background:linear-gradient(135deg,rgba(200,169,110,.12),rgba(200,169,110,.04));border:1px solid var(--border-active);border-radius:24px;padding:44px;text-align:center}
@@ -120,35 +125,23 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
 .display-waiting{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px}.display-waiting-label{font-size:13px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
 .waiting-chips{display:flex;gap:12px;flex-wrap:wrap}.waiting-chip{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 22px;font-family:var(--font-display);font-size:22px;color:var(--text)}
 .inprog-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface2);border-radius:12px;margin-bottom:10px}.inprog-num{font-family:var(--font-display);font-size:24px}.inprog-name{font-size:14px;color:var(--text-muted)}
-/* ── STANDALONE TV DISPLAY PAGE (separate URL) ─────────── */
-#tvdisplay-page{min-height:100vh;background:#06060A;padding:32px 40px;display:flex;flex-direction:column;gap:28px}
-.tv-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(200,169,110,.2);padding-bottom:20px}
-.tv-brand{font-family:var(--font-display);font-size:26px;color:var(--gold);display:flex;align-items:center;gap:10px}
-.tv-clock{font-family:var(--font-display);font-size:44px;color:rgba(255,255,255,.5);font-weight:400}
-.tv-main-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;flex:1}
-.tv-called-box{background:linear-gradient(135deg,rgba(200,169,110,.1),rgba(200,169,110,.03));border:1px solid rgba(200,169,110,.35);border-radius:20px;padding:40px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px}
-.tv-now-label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:600}
-.tv-big-number{font-family:var(--font-display);font-size:130px;font-weight:700;color:var(--gold);line-height:1;text-shadow:0 0 60px rgba(200,169,110,.3)}
-.tv-name{font-size:24px;color:var(--text);margin-top:10px;font-weight:500}
-.tv-svc{font-size:14px;color:var(--text-muted);margin-top:6px}
-.tv-slot{font-size:16px;color:var(--blue);margin-top:12px;font-weight:600}
-.tv-right{display:flex;flex-direction:column;gap:18px}
-.tv-inprog-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;flex:1}
-.tv-inprog-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;font-weight:600}
-.tv-inprog-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface2);border-radius:10px;margin-bottom:8px}
-.tv-inprog-num{font-family:var(--font-display);font-size:20px;color:var(--orange);min-width:44px}
-.tv-inprog-info{flex:1}.tv-inprog-name{font-size:13px;font-weight:500}.tv-inprog-svc{font-size:11px;color:var(--text-muted)}
-.tv-wait-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px}
-.tv-wait-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;font-weight:600}
-.tv-wait-chips{display:flex;gap:10px;flex-wrap:wrap}
-.tv-chip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:var(--font-display);font-size:18px;color:var(--text)}
-.tv-url-hint{font-size:11px;color:var(--text-dim);text-align:center;padding-top:4px}
-/* ─── NOTIF / MODAL ─────────────────────────────────── */
 .notif{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border-active);border-radius:var(--radius);padding:14px 20px;font-size:13px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:var(--shadow-gold);animation:slideUp .3s ease}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
 .modal-title{font-family:var(--font-display);font-size:18px;margin-bottom:20px}.modal-actions{display:flex;gap:10px;margin-top:20px}
 .link-box{background:var(--surface3);border:1px solid rgba(74,158,245,.3);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:var(--blue);word-break:break-all;font-family:monospace;margin-bottom:14px;line-height:1.8}
+
+/* FIX: responsive mobile */
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:repeat(2,1fr)}
+  .slot-settings-grid{grid-template-columns:repeat(2,1fr)}
+  #sidebar{display:none}
+  .topbar{padding:14px 16px}
+  .page{padding:16px}
+  .cust-card{max-width:100%}
+}
 </style>
 </head>
 <body>
@@ -156,20 +149,20 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
 <div id="app">
   <aside id="sidebar">
     <div class="brand">
-      <div class="brand-icon" id="sidebar-logo-icon">🎬</div>
+      <div class="brand-icon">🎬</div>
       <div><div class="brand-name" id="sidebar-brand-name">JD Production</div><div class="brand-role">ADMIN</div></div>
     </div>
     <nav>
       <button class="nav-item active" data-nav="dashboard" onclick="navigate('dashboard')"><span>◈</span> Dashboard</button>
-      <button class="nav-item" data-nav="queue"    onclick="navigate('queue')"><span>≡</span> Queue</button>
-      <button class="nav-item" data-nav="bookings" onclick="navigate('bookings')"><span>🔗</span> Booking Links</button>
-      <button class="nav-item" data-nav="tv"       onclick="navigate('tv')"><span>▣</span> TV Display</button>
-      <button class="nav-item" data-nav="reports"  onclick="navigate('reports')"><span>◎</span> Reports</button>
-      <button class="nav-item" data-nav="settings" onclick="navigate('settings')"><span>⊙</span> Settings</button>
+      <button class="nav-item" data-nav="queue"    onclick="navigate('queue')"><span>≡</span> Antrian</button>
+      <button class="nav-item" data-nav="bookings" onclick="navigate('bookings')"><span>🔗</span> Link Booking</button>
+      <button class="nav-item" data-nav="display"  onclick="openDisplay()"><span>▣</span> Display TV</button>
+      <button class="nav-item" data-nav="reports"  onclick="navigate('reports')"><span>◎</span> Laporan</button>
+      <button class="nav-item" data-nav="settings" onclick="navigate('settings')"><span>⊙</span> Pengaturan</button>
     </nav>
     <div class="live-dot">
       <div class="dot-wrap"><span class="dot-ping"></span><span class="dot-core"></span></div>
-      <span style="font-size:11px;color:var(--text-muted)">Live — System Active</span>
+      <span style="font-size:11px;color:var(--text-muted)">Live — Sistem Aktif</span>
     </div>
   </aside>
   <main id="main">
@@ -179,36 +172,35 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
       <div class="topbar">
         <div><div class="topbar-title">Dashboard</div><div class="topbar-sub" id="dash-date"></div></div>
         <div class="topbar-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openCustomer()">👤 Simulate Customer</button>
-          <button class="btn btn-primary btn-sm" onclick="navigate('queue')">📋 Manage Queue</button>
+          <button class="btn btn-primary btn-sm" onclick="navigate('queue')">📋 Kelola Antrian</button>
         </div>
       </div>
       <div class="page">
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Active Queue</div><div class="stat-value" style="color:var(--gold)" id="stat-active">0</div><div class="stat-sub">Not yet done</div></div>
-          <div class="stat-card"><div class="stat-label">Being Served</div><div class="stat-value" style="color:var(--blue)" id="stat-called">0</div><div class="stat-sub">At counter</div></div>
-          <div class="stat-card"><div class="stat-label">Done Today</div><div class="stat-value" style="color:var(--green)" id="stat-done">0</div><div class="stat-sub">Total served</div></div>
-          <div class="stat-card"><div class="stat-label">Avg. Wait Time</div><div class="stat-value" style="color:var(--purple)">18m</div><div class="stat-sub">Per customer</div></div>
+          <div class="stat-card"><div class="stat-label">Antrian Aktif</div><div class="stat-value" style="color:var(--gold)" id="stat-active">0</div><div class="stat-sub">Belum selesai</div></div>
+          <div class="stat-card"><div class="stat-label">Sedang Dilayani</div><div class="stat-value" style="color:var(--blue)" id="stat-called">0</div><div class="stat-sub">Di loket</div></div>
+          <div class="stat-card"><div class="stat-label">Selesai Hari Ini</div><div class="stat-value" style="color:var(--green)" id="stat-done">0</div><div class="stat-sub">Total dilayani</div></div>
+          <div class="stat-card"><div class="stat-label">Rata-rata Tunggu</div><div class="stat-value" style="color:var(--purple)">18m</div><div class="stat-sub">Per customer</div></div>
         </div>
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div style="font-family:var(--font-display);font-size:16px">🔗 Booking Links by Service</div>
-            <button class="btn btn-ghost btn-sm" onclick="navigate('bookings')">View All →</button>
+            <div style="font-family:var(--font-display);font-size:16px">🔗 Link Booking per Layanan</div>
+            <button class="btn btn-ghost btn-sm" onclick="navigate('bookings')">Lihat Semua →</button>
           </div>
           <div id="dash-booking-links" style="display:flex;flex-direction:column;gap:10px"></div>
         </div>
         <div class="grid2">
           <div class="card">
-            <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Current Queue</div>
+            <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Antrian Saat Ini</div>
             <div id="dash-queue-list"></div>
           </div>
           <div class="card">
-            <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Busiest Hours — <span style="color:var(--gold)">Peak 10:00–11:00</span></div>
+            <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Jam Tersibuk — <span style="color:var(--gold)">Puncak 10:00–11:00</span></div>
             <div class="bar-chart" style="height:130px" id="bar-chart"></div>
           </div>
         </div>
         <div class="card">
-          <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Status per Service</div>
+          <div style="font-family:var(--font-display);font-size:16px;margin-bottom:16px">Status per Layanan</div>
           <div class="grid3" id="dash-services"></div>
         </div>
       </div>
@@ -217,16 +209,16 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
     <!-- QUEUE -->
     <section id="page-queue" class="hidden">
       <div class="topbar">
-        <div><div class="topbar-title">Queue Management</div><div class="topbar-sub" id="queue-count-label"></div></div>
+        <div><div class="topbar-title">Manajemen Antrian</div><div class="topbar-sub" id="queue-count-label"></div></div>
         <div class="topbar-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openCustomer()">+ Simulate Customer</button>
-          <button class="btn btn-primary btn-sm" onclick="callNext()">📢 Call Next</button>
+          <button class="btn btn-primary btn-sm" onclick="callNext()">📢 Panggil Berikutnya</button>
+          <button class="btn btn-ghost btn-sm" onclick="alert('QR Code — connect ke backend')">⬛ QR Code</button>
         </div>
       </div>
       <div class="page">
         <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-          <input class="input-field" id="q-search" placeholder="Search name / number…" style="max-width:240px" oninput="renderQueue()">
-          <select class="input-field" id="q-filter" style="max-width:200px" onchange="renderQueue()"><option value="all">All Statuses</option></select>
+          <input class="input-field" id="q-search" placeholder="Cari nama / nomor…" style="max-width:240px" oninput="renderQueue()">
+          <select class="input-field" id="q-filter" style="max-width:200px" onchange="renderQueue()"><option value="all">Semua Status</option></select>
         </div>
         <div class="status-strip" id="status-strip"></div>
         <div id="queue-list" style="display:flex;flex-direction:column;gap:12px"></div>
@@ -236,49 +228,18 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
     <!-- BOOKING LINKS PAGE -->
     <section id="page-bookings" class="hidden">
       <div class="topbar">
-        <div><div class="topbar-title">Booking Links</div><div class="topbar-sub">Unique link per service — share or print QR code on-site</div></div>
+        <div><div class="topbar-title">Link Booking</div><div class="topbar-sub">Link unik per layanan — bagikan atau tempel QR di tempat</div></div>
         <div class="topbar-actions">
-          <button class="btn btn-ghost btn-sm" onclick="navigate('settings');setTimeout(()=>switchTab('services'),50)">⚙️ Manage Services</button>
+          <button class="btn btn-ghost btn-sm" onclick="navigate('settings');setTimeout(()=>switchTab('layanan'),50)">⚙️ Kelola Layanan</button>
         </div>
       </div>
       <div class="page" id="bookings-content"></div>
     </section>
 
-    <!-- TV DISPLAY LINKS PAGE -->
-    <section id="page-tv" class="hidden">
-      <div class="topbar">
-        <div><div class="topbar-title">TV Display</div><div class="topbar-sub">Open the display link on your TV / laptop in full screen</div></div>
-        <div class="topbar-actions">
-          <button class="btn btn-primary btn-sm" onclick="openDisplayWindow()">▣ Open Display Now</button>
-        </div>
-      </div>
-      <div class="page">
-        <div class="card" style="max-width:600px">
-          <div style="font-family:var(--font-display);font-size:18px;margin-bottom:6px">📺 TV / Laptop Display</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Open this link on your TV or any laptop/monitor you want to show the queue board on. It updates automatically.</div>
-          <div class="link-box" id="tv-link-display" style="font-size:13px;margin-bottom:16px"></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="openDisplayWindow()">▣ Open in New Tab</button>
-            <button class="btn btn-ghost btn-sm" onclick="copyTVLink()">📋 Copy Link</button>
-            <button class="btn btn-ghost btn-sm" onclick="showQRModal(buildTVLink(),'TV Display QR','Scan to open queue display on any screen')">⬛ QR Code</button>
-          </div>
-        </div>
-        <div class="card card-elevated" style="max-width:600px">
-          <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--gold)">💡 How to use</div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:2">
-            1. Click <strong style="color:var(--text)">Open in New Tab</strong> above<br>
-            2. Press <strong style="color:var(--text)">F11</strong> for full screen on the TV/laptop<br>
-            3. The display updates automatically — no refresh needed<br>
-            4. Or scan the QR Code with a phone and cast to TV
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- REPORTS -->
     <section id="page-reports" class="hidden">
       <div class="topbar">
-        <div><div class="topbar-title">Reports</div><div class="topbar-sub">Today's queue analytics</div></div>
+        <div><div class="topbar-title">Laporan</div><div class="topbar-sub">Analitik antrian hari ini</div></div>
         <div class="topbar-actions">
           <button class="btn btn-ghost btn-sm" onclick="alert('Export CSV')">📄 Export CSV</button>
           <button class="btn btn-ghost btn-sm" onclick="alert('Sync Google Sheets')">📊 Google Sheets</button>
@@ -286,12 +247,12 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
       </div>
       <div class="page">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-          <div class="stat-card"><div class="stat-label">Total Today</div><div class="stat-value" style="color:var(--gold)">47</div><div class="stat-sub">All statuses</div></div>
-          <div class="stat-card"><div class="stat-label">Avg. Wait</div><div class="stat-value" style="color:var(--blue)">18 min</div><div class="stat-sub">Per customer</div></div>
-          <div class="stat-card"><div class="stat-label">Peak Hour</div><div class="stat-value" style="color:var(--red);font-size:22px">10:00–11:00</div><div class="stat-sub">Busiest today</div></div>
+          <div class="stat-card"><div class="stat-label">Total Hari Ini</div><div class="stat-value" style="color:var(--gold)">47</div><div class="stat-sub">Semua status</div></div>
+          <div class="stat-card"><div class="stat-label">Rata-rata Tunggu</div><div class="stat-value" style="color:var(--blue)">18 mnt</div><div class="stat-sub">Per customer</div></div>
+          <div class="stat-card"><div class="stat-label">Jam Puncak</div><div class="stat-value" style="color:var(--red);font-size:22px">10:00–11:00</div><div class="stat-sub">Tersibuk hari ini</div></div>
         </div>
         <div class="card">
-          <div style="font-family:var(--font-display);font-size:18px;margin-bottom:24px">Hourly Distribution</div>
+          <div style="font-family:var(--font-display);font-size:18px;margin-bottom:24px">Distribusi per Jam</div>
           <div class="bar-chart" style="height:200px" id="report-chart"></div>
         </div>
       </div>
@@ -299,197 +260,191 @@ nav{padding:14px 12px;flex:1;display:flex;flex-direction:column;gap:2px}
 
     <!-- SETTINGS -->
     <section id="page-settings" class="hidden">
-      <div class="topbar"><div><div class="topbar-title">Settings</div><div class="topbar-sub">Business & system configuration</div></div></div>
+      <div class="topbar"><div><div class="topbar-title">Pengaturan</div><div class="topbar-sub">Konfigurasi bisnis & sistem</div></div></div>
       <div class="page">
         <div class="tab-bar">
-          <button class="tab-item active" data-tab="business"    onclick="switchTab('business')">🏢 Business</button>
-          <button class="tab-item"        data-tab="services"    onclick="switchTab('services')">🎞️ Services</button>
-          <button class="tab-item"        data-tab="slots"       onclick="switchTab('slots')">🕐 Time Slots</button>
-          <button class="tab-item"        data-tab="statuses"    onclick="switchTab('statuses')">📋 Statuses</button>
+          <button class="tab-item active" data-tab="bisnis"      onclick="switchTab('bisnis')">🏢 Bisnis</button>
+          <button class="tab-item"        data-tab="layanan"     onclick="switchTab('layanan')">🎞️ Layanan</button>
+          <button class="tab-item"        data-tab="waktu"       onclick="switchTab('waktu')">🕐 Slot Waktu</button>
+          <button class="tab-item"        data-tab="antrian"     onclick="switchTab('antrian')">📋 Status</button>
           <button class="tab-item"        data-tab="wa"          onclick="switchTab('wa')">📱 WhatsApp</button>
-          <button class="tab-item"        data-tab="ops"         onclick="switchTab('ops')">⚙️ Operations</button>
+          <button class="tab-item"        data-tab="operasional" onclick="switchTab('operasional')">⚙️ Operasional</button>
           <button class="tab-item"        data-tab="sheets"      onclick="switchTab('sheets')">📊 Google Sheets</button>
         </div>
 
-        <div id="tab-business" class="card" style="max-width:560px;display:flex;flex-direction:column;gap:18px">
-          <div style="font-family:var(--font-display);font-size:18px">Business Information</div>
-          <div><label class="label">Business Name</label><input class="input-field" id="cfg-name" value="JD Production"></div>
+        <div id="tab-bisnis" class="card" style="max-width:560px;display:flex;flex-direction:column;gap:18px">
+          <div style="font-family:var(--font-display);font-size:18px">Informasi Bisnis</div>
+          <div><label class="label">Nama Bisnis</label><input class="input-field" id="cfg-name" value="JD Production"></div>
           <div><label class="label">Logo (emoji)</label><input class="input-field" id="cfg-logo" value="🎬"></div>
           <div><label class="label">Tagline</label><input class="input-field" id="cfg-tagline" value="Professional Photography & Production"></div>
-          <div><label class="label">WhatsApp Number</label>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span style="font-size:13px;color:var(--text-muted);white-space:nowrap">+</span>
-              <input class="input-field" id="cfg-wa-number" placeholder="6281234567890 (with country code, no +)" style="flex:1">
-            </div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Example: 6281234567890 (Indonesia) — used for WA button on customer page</div>
-          </div>
           <div>
-            <label class="label">Accent Color</label>
+            <label class="label">Warna Aksen</label>
             <div style="display:flex;gap:10px;align-items:center">
               <input type="color" id="cfg-color" value="#C8A96E" style="width:40px;height:40px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none" oninput="syncColor()">
               <input class="input-field" id="cfg-color-hex" value="#C8A96E" style="flex:1" oninput="syncColorHex()">
             </div>
           </div>
-          <button class="btn btn-primary" style="align-self:flex-start" onclick="saveBusiness()">💾 Save</button>
+          <button class="btn btn-primary" style="align-self:flex-start" onclick="saveBisnis()">💾 Simpan</button>
         </div>
 
-        <div id="tab-services" class="card hidden" style="max-width:680px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--font-display);font-size:18px">Service Management</div>
+        <div id="tab-layanan" class="card hidden" style="max-width:680px;display:flex;flex-direction:column;gap:16px">
+          <div style="font-family:var(--font-display);font-size:18px">Manajemen Layanan</div>
           <div id="services-list"></div>
           <div class="divider"></div>
-          <div style="font-weight:600;margin-bottom:6px">Add New Service</div>
+          <div style="font-weight:600;margin-bottom:6px">Tambah Layanan Baru</div>
           <div style="display:grid;grid-template-columns:60px 1fr 120px 120px auto;gap:10px;align-items:end">
-            <div><label class="label">Icon</label><input class="input-field" id="new-svc-icon" value="🎬" style="text-align:center;padding:10px 4px"></div>
-            <div><label class="label">Service Name</label><input class="input-field" id="new-svc-name" placeholder="Service name…"></div>
-            <div><label class="label">Duration (min)</label><input class="input-field" id="new-svc-est" type="number" min="5" max="480" value="30"></div>
-            <div><label class="label">Max/Day</label><input class="input-field" id="new-svc-max" type="number" min="1" max="999" value="20"></div>
-            <div><button class="btn btn-primary" style="height:42px;margin-top:17px" onclick="addService()">+ Add</button></div>
+            <div><label class="label">Ikon</label><input class="input-field" id="new-svc-icon" value="🎬" style="text-align:center;padding:10px 4px"></div>
+            <div><label class="label">Nama Layanan</label><input class="input-field" id="new-svc-name" placeholder="Nama layanan…"></div>
+            <div><label class="label">Durasi (mnt)</label><input class="input-field" id="new-svc-est" type="number" min="5" max="480" value="30"></div>
+            <div><label class="label">Maks/Hari</label><input class="input-field" id="new-svc-max" type="number" min="1" max="999" value="20"></div>
+            <div><button class="btn btn-primary" style="height:42px;margin-top:17px" onclick="addService()">+ Tambah</button></div>
           </div>
-          <div style="font-size:11px;color:var(--text-muted)">💡 Duration = estimated time per session. Max/Day = booking quota per day.</div>
+          <div style="font-size:11px;color:var(--text-muted)">💡 Durasi = estimasi waktu/sesi. Maks/Hari = kuota booking per hari.</div>
         </div>
 
-        <div id="tab-slots" class="card hidden" style="max-width:700px;display:flex;flex-direction:column;gap:18px">
-          <div style="font-family:var(--font-display);font-size:18px">Time Slot Settings</div>
+        <div id="tab-waktu" class="card hidden" style="max-width:700px;display:flex;flex-direction:column;gap:18px">
+          <div style="font-family:var(--font-display);font-size:18px">Pengaturan Slot Waktu</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-            <div><label class="label">Opening Time</label><input class="input-field" id="slot-open" type="time" value="09:00" onchange="regenerateSlots()"></div>
-            <div><label class="label">Closing Time</label><input class="input-field" id="slot-close" type="time" value="20:00" onchange="regenerateSlots()"></div>
+            <div><label class="label">Jam Buka</label><input class="input-field" id="slot-open" type="time" value="09:00" onchange="regenerateSlots()"></div>
+            <div><label class="label">Jam Tutup</label><input class="input-field" id="slot-close" type="time" value="20:00" onchange="regenerateSlots()"></div>
             <div><label class="label">Interval</label>
               <select class="input-field" id="slot-interval" onchange="regenerateSlots()">
-                <option value="15">15 minutes</option><option value="30" selected>30 minutes</option>
-                <option value="45">45 minutes</option><option value="60">60 minutes</option>
+                <option value="15">15 menit</option><option value="30" selected>30 menit</option>
+                <option value="45">45 menit</option><option value="60">60 menit</option>
               </select>
             </div>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-            <div style="font-size:13px;font-weight:500">Slots — <span style="color:var(--text-muted)" id="slot-count-label"></span></div>
+            <div style="font-size:13px;font-weight:500">Slot — <span style="color:var(--text-muted)" id="slot-count-label"></span></div>
             <div style="display:flex;gap:8px">
-              <button class="btn btn-success btn-sm" onclick="toggleAllSlots(true)">✓ Enable All</button>
-              <button class="btn btn-danger btn-sm" onclick="toggleAllSlots(false)">✕ Block All</button>
+              <button class="btn btn-success btn-sm" onclick="toggleAllSlots(true)">✓ Aktifkan Semua</button>
+              <button class="btn btn-danger btn-sm" onclick="toggleAllSlots(false)">✕ Blokir Semua</button>
             </div>
           </div>
           <div class="slot-settings-grid" id="slot-settings-grid"></div>
-          <div style="font-size:11px;color:var(--text-muted)">💡 Click Block to close a specific slot (break, meeting, etc.).</div>
-          <button class="btn btn-primary" style="align-self:flex-start" onclick="showNotif('Time slots saved!')">💾 Save Slots</button>
+          <div style="font-size:11px;color:var(--text-muted)">💡 Klik Blokir untuk menutup slot tertentu (istirahat, rapat, dll).</div>
+          <button class="btn btn-primary" style="align-self:flex-start" onclick="showNotif('Slot waktu disimpan!')">💾 Simpan Slot</button>
         </div>
 
-        <div id="tab-statuses" class="card hidden" style="max-width:560px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--font-display);font-size:18px">Custom Queue Statuses</div>
+        <div id="tab-antrian" class="card hidden" style="max-width:560px;display:flex;flex-direction:column;gap:16px">
+          <div style="font-family:var(--font-display);font-size:18px">Custom Status Antrian</div>
           <div id="status-list-settings"></div>
           <div class="divider"></div>
-          <div style="font-weight:600;margin-bottom:4px">Add New Status</div>
+          <div style="font-weight:600;margin-bottom:4px">Tambah Status Baru</div>
           <div style="display:flex;gap:10px">
             <input class="input-field" id="new-status-icon" value="🔵" style="width:80px">
-            <input class="input-field" id="new-status-label" placeholder="New status name…" style="flex:1">
-            <button class="btn btn-primary" onclick="addStatus()">+ Add</button>
+            <input class="input-field" id="new-status-label" placeholder="Nama status baru…" style="flex:1">
+            <button class="btn btn-primary" onclick="addStatus()">+ Tambah</button>
           </div>
         </div>
 
         <div id="tab-wa" class="card hidden" style="max-width:560px;display:flex;flex-direction:column;gap:18px">
-          <div style="font-family:var(--font-display);font-size:18px">WhatsApp Integration (Fonnte)</div>
-          <div><label class="label">Fonnte API Key</label><input class="input-field" id="cfg-apikey" type="password" placeholder="Fonnte API Key" value="YOUR_FONNTE_API_KEY"></div>
-          <div><label class="label">Sender WA Number</label><input class="input-field" id="cfg-sender" placeholder="6281234567890" value="6281234567890"></div>
+          <div style="font-family:var(--font-display);font-size:18px">Integrasi WhatsApp (Fonnte)</div>
+          <div><label class="label">Fonnte API Key</label><input class="input-field" id="cfg-apikey" type="password" placeholder="API Key Fonnte" value="YOUR_FONNTE_API_KEY"></div>
+          <div><label class="label">Nomor WA Pengirim</label><input class="input-field" id="cfg-sender" placeholder="6281234567890" value="6281234567890"></div>
           <div>
-            <label class="label">WA Message Template</label>
-            <textarea class="input-field" id="cfg-template" rows="5" style="resize:vertical">Hello {name}! Queue number: *{number}* — {service}.
-Slot: *{slot}* | Track: {link}
+            <label class="label">Template Pesan WA</label>
+            <textarea class="input-field" id="cfg-template" rows="5" style="resize:vertical">Halo {name}! Nomor antrian: *{number}* — {service}.
+Slot: *{slot}* | Pantau: {link}
 
 _JD Production_</textarea>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Variables: {name} {number} {service} {slot} {link}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Variabel: {name} {number} {service} {slot} {link}</div>
           </div>
           <div style="display:flex;gap:10px">
-            <button class="btn btn-success" id="btn-test-wa" onclick="testWa()">📤 Test Send WA</button>
-            <button class="btn btn-primary" onclick="showNotif('API Key saved!')">💾 Save</button>
+            <button class="btn btn-success" id="btn-test-wa" onclick="testWa()">📤 Test Kirim WA</button>
+            <button class="btn btn-primary" onclick="showNotif('API Key disimpan!')">💾 Simpan</button>
           </div>
         </div>
 
-        <div id="tab-ops" class="card hidden" style="max-width:560px;display:flex;flex-direction:column;gap:18px">
-          <div style="font-family:var(--font-display);font-size:18px">Operations</div>
-          <div><label class="label">Number of Counters</label><input class="input-field" id="cfg-counters" type="number" min="1" max="20" value="2" oninput="renderCounters()"></div>
-          <div><label class="label">Active Counters</label><div id="counter-tags" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div></div>
-          <button class="btn btn-primary" style="align-self:flex-start" onclick="saveOps()">💾 Save</button>
+        <div id="tab-operasional" class="card hidden" style="max-width:560px;display:flex;flex-direction:column;gap:18px">
+          <div style="font-family:var(--font-display);font-size:18px">Operasional</div>
+          <div><label class="label">Jumlah Loket</label><input class="input-field" id="cfg-counters" type="number" min="1" max="20" value="2" oninput="renderCounters()"></div>
+          <div><label class="label">Loket Aktif</label><div id="counter-tags" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div></div>
+          <button class="btn btn-primary" style="align-self:flex-start" onclick="saveOperasional()">💾 Simpan</button>
         </div>
 
         <div id="tab-sheets" class="card hidden" style="max-width:620px;display:flex;flex-direction:column;gap:20px">
           <div style="font-family:var(--font-display);font-size:18px">📊 Google Sheets Sync</div>
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;line-height:1.8">
-            <div style="font-weight:600;margin-bottom:8px;color:var(--gold)">⚙️ Setup (one-time):</div>
+            <div style="font-weight:600;margin-bottom:8px;color:var(--gold)">⚙️ Cara Setup (sekali saja):</div>
             <div style="color:var(--text-muted)">
-              1. Open <strong style="color:var(--text)">script.google.com</strong> → New Project<br>
-              2. Delete all code → paste the script below<br>
-              3. Click <strong style="color:var(--text)">Deploy → New Deployment → Web App</strong><br>
+              1. Buka <strong style="color:var(--text)">script.google.com</strong> → New Project<br>
+              2. Hapus semua kode → paste script di bawah<br>
+              3. Klik <strong style="color:var(--text)">Deploy → New Deployment → Web App</strong><br>
               4. Execute as: <strong style="color:var(--text)">Me</strong> • Access: <strong style="color:var(--text)">Anyone</strong><br>
-              5. Copy deployment URL → paste below
+              5. Copy URL deployment → paste di bawah
             </div>
-            <div style="margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="showAppsScript()">📋 View Apps Script</button></div>
+            <div style="margin-top:12px">
+              <button class="btn btn-ghost btn-sm" onclick="showAppsScript()">📋 Lihat Script Apps Script</button>
+            </div>
           </div>
-          <div><label class="label">Apps Script Deployment URL</label><input class="input-field" id="cfg-sheets-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
-          <div><label class="label">Target Sheet ID (optional — leave blank to auto-create)</label>
+          <div><label class="label">URL Apps Script Deployment</label>
+            <input class="input-field" id="cfg-sheets-url" placeholder="https://script.google.com/macros/s/…/exec">
+          </div>
+          <div><label class="label">Sheet ID Tujuan (opsional — kosong = buat otomatis)</label>
             <input class="input-field" id="cfg-sheets-id" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms">
-            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">From URL: docs.google.com/spreadsheets/d/<strong>[ID HERE]</strong>/edit</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Ambil dari URL: docs.google.com/spreadsheets/d/<strong>[ID INI]</strong>/edit</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <label class="label">Sync Data</label>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-primary" onclick="syncToSheets('antrian')">📤 Sync Queue</button>
-              <button class="btn btn-ghost" onclick="syncToSheets('laporan')">📤 Sync Reports</button>
-              <button class="btn btn-ghost" onclick="syncToSheets('layanan')">📤 Sync Services</button>
-              <button class="btn btn-ghost" onclick="syncToSheets('semua')">📤 Sync All</button>
+              <button class="btn btn-primary" onclick="syncToSheets('antrian')">📤 Sync Antrian</button>
+              <button class="btn btn-ghost" onclick="syncToSheets('laporan')">📤 Sync Laporan</button>
+              <button class="btn btn-ghost" onclick="syncToSheets('layanan')">📤 Sync Layanan</button>
+              <button class="btn btn-ghost" onclick="syncToSheets('semua')">📤 Sync Semua</button>
             </div>
           </div>
+          <div class="divider"></div>
+          <div style="font-weight:600">📥 Import dari Google Sheet Lain</div>
+          <div><label class="label">URL atau ID Sheet Sumber</label>
+            <input class="input-field" id="cfg-import-sheet" placeholder="URL atau Sheet ID">
+          </div>
+          <div><label class="label">Nama Sheet/Tab</label>
+            <input class="input-field" id="cfg-import-tab" placeholder="Sheet1" value="Sheet1">
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="importFromSheet()">📥 Import Data</button>
+          </div>
           <div id="sheets-status" style="display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px"></div>
-          <button class="btn btn-primary btn-sm" style="align-self:flex-start" onclick="saveSheetsCfg()">💾 Save Configuration</button>
+          <button class="btn btn-primary btn-sm" style="align-self:flex-start" onclick="saveSheetsCfg()">💾 Simpan Konfigurasi</button>
         </div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- CUSTOMER PAGE (no admin back button — clean for clients) -->
+<!-- CUSTOMER PAGE -->
 <div id="customer-page" class="hidden">
-  <div class="cust-header">
-    <div class="cust-logo" id="cust-logo-el">🎬</div>
-    <div class="cust-title" id="cust-title-el">JD Production</div>
-    <div class="cust-sub" id="cust-sub-el">Take your digital queue number</div>
-  </div>
+  <button class="btn btn-ghost btn-sm" onclick="closeCustomer()" style="position:fixed;top:16px;right:16px;z-index:100">← Admin</button>
+  <div class="cust-header"><div class="cust-logo" id="cust-logo-emoji">🎬</div><div class="cust-title" id="cust-title-text">JD Production</div><div class="cust-sub">Ambil nomor antrian digital</div></div>
   <div class="cust-card card card-elevated" id="cust-card"></div>
-  <!-- WA contact button — shown at bottom, only if WA number configured -->
-  <div id="cust-wa-footer" style="margin-top:20px;text-align:center"></div>
 </div>
 
 <!-- TRACK PAGE -->
 <div id="track-page" class="hidden">
   <div style="text-align:center;margin-bottom:24px">
-    <div style="font-size:36px;margin-bottom:8px" id="track-logo-el">🎬</div>
+    <div style="font-size:36px;margin-bottom:8px">🎬</div>
     <div style="font-family:var(--font-display);font-size:22px;margin-bottom:4px" id="track-brand-name">JD Production</div>
-    <div style="font-size:12px;color:var(--text-muted)">Your Queue Status</div>
+    <div style="font-size:12px;color:var(--text-muted)">Status Antrian Kamu</div>
   </div>
   <div class="track-card card card-elevated" id="track-card"></div>
-  <div style="margin-top:16px;font-size:11px;color:var(--text-dim);text-align:center">Page auto-updates • <span id="track-last-update"></span></div>
+  <div style="margin-top:16px;font-size:11px;color:var(--text-dim);text-align:center">Halaman ini otomatis update • <span id="track-last-update"></span></div>
 </div>
 
-<!-- TV DISPLAY PAGE (opened via ?tv=1) — standalone, no admin UI -->
-<div id="tvdisplay-page" class="hidden">
-  <div class="tv-header">
-    <div class="tv-brand"><span id="tv-logo-el">🎬</span><span id="tv-brand-name-el">JD Production</span></div>
-    <div class="tv-clock" id="tv-clock">00:00:00</div>
+<!-- DISPLAY PAGE -->
+<div id="display-page" class="hidden">
+  <button class="btn btn-ghost btn-sm" onclick="closeDisplay()" style="position:fixed;top:16px;right:16px;z-index:100">← Admin</button>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div class="display-brand">🎬 JD Production</div><div class="display-clock" id="display-clock">00:00:00</div>
   </div>
-  <div class="tv-main-grid">
-    <div class="tv-called-box" id="tv-called-box">
-      <div class="tv-now-label">Now Serving</div>
-      <div style="font-family:var(--font-display);font-size:40px;color:var(--text-dim)">— Waiting —</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div class="display-called">
+      <div class="display-called-label">Sedang Dipanggil</div>
+      <div id="display-called-content"><div style="font-family:var(--font-display);font-size:40px;color:var(--text-dim)">— Menunggu —</div></div>
     </div>
-    <div class="tv-right">
-      <div class="tv-inprog-box">
-        <div class="tv-inprog-label">In Progress</div>
-        <div id="tv-inprog-list"></div>
-      </div>
-    </div>
+    <div class="display-inprog"><div class="display-inprog-label">Dalam Proses</div><div id="display-inprog-list"></div></div>
   </div>
-  <div class="tv-wait-box">
-    <div class="tv-wait-label">Waiting to be Called</div>
-    <div class="tv-wait-chips" id="tv-wait-chips"></div>
-  </div>
-  <div class="tv-url-hint" id="tv-url-hint"></div>
+  <div class="display-waiting"><div class="display-waiting-label">Menunggu Dipanggil</div><div class="waiting-chips" id="display-waiting-chips"></div></div>
 </div>
 
 <!-- MODAL QR CODE -->
@@ -501,9 +456,9 @@ _JD Production_</textarea>
     <div style="font-size:11px;color:var(--text-dim);margin-bottom:16px;word-break:break-all;font-family:monospace;padding:8px;background:var(--surface3);border-radius:8px" id="modal-qr-url"></div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="downloadQR()">⬇️ Download QR</button>
-      <button class="btn btn-ghost btn-sm" onclick="copyQRLink()">📋 Copy Link</button>
+      <button class="btn btn-ghost btn-sm" onclick="copyQRLink()">📋 Salin Link</button>
     </div>
-    <div class="modal-actions"><button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="document.getElementById('modal-qr').classList.add('hidden')">Close</button></div>
+    <div class="modal-actions"><button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="document.getElementById('modal-qr').classList.add('hidden')">Tutup</button></div>
   </div>
 </div>
 
@@ -511,11 +466,11 @@ _JD Production_</textarea>
 <div id="modal-appsscript" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
   <div class="modal-box" style="max-width:620px">
     <div class="modal-title">📋 Google Apps Script</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Copy this script → paste into script.google.com → Deploy as Web App</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Copy script ini → paste ke script.google.com → Deploy sebagai Web App</div>
     <div id="appsscript-code" style="background:var(--surface3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;font-family:monospace;font-size:11px;line-height:1.7;max-height:360px;overflow-y:auto;white-space:pre;color:var(--text)"></div>
     <div class="modal-actions">
-      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="copyAppsScript()">📋 Copy Script</button>
-      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-appsscript').classList.add('hidden')">Close</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="copyAppsScript()">📋 Salin Script</button>
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-appsscript').classList.add('hidden')">Tutup</button>
     </div>
   </div>
 </div>
@@ -523,37 +478,37 @@ _JD Production_</textarea>
 <!-- MODAL LINK -->
 <div id="modal-link" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
   <div class="modal-box">
-    <div class="modal-title" id="modal-link-title">Booking Link</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Share this link with customers. They'll go directly to the queue page for that service.</div>
+    <div class="modal-title" id="modal-link-title">Link Booking</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Bagikan link ini ke customer. Mereka langsung masuk ke halaman antrian layanan tersebut.</div>
     <div class="link-box" id="modal-link-url"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-primary btn-sm" onclick="copyLink()">📋 Copy Link</button>
+      <button class="btn btn-primary btn-sm" onclick="copyLink()">📋 Salin Link</button>
       <button class="btn btn-ghost btn-sm" onclick="shareWaLink()">📱 Share via WA</button>
       <button class="btn btn-ghost btn-sm" onclick="showQRFromModal()">⬛ QR Code</button>
     </div>
-    <div class="modal-actions"><button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="document.getElementById('modal-link').classList.add('hidden')">Close</button></div>
+    <div class="modal-actions"><button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="document.getElementById('modal-link').classList.add('hidden')">Tutup</button></div>
   </div>
 </div>
 
-<!-- MODAL EDIT SERVICE -->
+<!-- MODAL EDIT LAYANAN -->
 <div id="modal-svc" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
   <div class="modal-box">
-    <div class="modal-title">✏️ Edit Service</div>
+    <div class="modal-title">✏️ Edit Layanan</div>
     <input type="hidden" id="edit-svc-id">
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="display:grid;grid-template-columns:80px 1fr;gap:12px">
-        <div><label class="label">Icon</label><input class="input-field" id="edit-svc-icon" style="text-align:center;font-size:20px;padding:8px"></div>
-        <div><label class="label">Service Name</label><input class="input-field" id="edit-svc-name"></div>
+        <div><label class="label">Ikon</label><input class="input-field" id="edit-svc-icon" style="text-align:center;font-size:20px;padding:8px"></div>
+        <div><label class="label">Nama Layanan</label><input class="input-field" id="edit-svc-name"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label class="label">Duration (minutes)</label><input class="input-field" id="edit-svc-est" type="number" min="5" max="480"></div>
-        <div><label class="label">Max Quota/Day</label><input class="input-field" id="edit-svc-max" type="number" min="1" max="999"></div>
+        <div><label class="label">Durasi (menit)</label><input class="input-field" id="edit-svc-est" type="number" min="5" max="480"></div>
+        <div><label class="label">Kuota Maks/Hari</label><input class="input-field" id="edit-svc-max" type="number" min="1" max="999"></div>
       </div>
-      <div><label class="label">Description (optional)</label><input class="input-field" id="edit-svc-desc" placeholder="Short description…"></div>
+      <div><label class="label">Deskripsi (opsional)</label><input class="input-field" id="edit-svc-desc" placeholder="Deskripsi singkat…"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-svc').classList.add('hidden')">Cancel</button>
-      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveEditService()">💾 Save</button>
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-svc').classList.add('hidden')">Batal</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveEditService()">💾 Simpan</button>
     </div>
   </div>
 </div>
@@ -561,28 +516,51 @@ _JD Production_</textarea>
 <div id="notif" class="notif hidden"></div>
 
 <script>
+// ─── HELPER: format tanggal & waktu dengan aman ───────────────────────────
+// FIX: Tidak pakai toLocaleString() pada Date object karena bisa return 1899
+// di beberapa browser/locale. Pakai method yang lebih explicit.
+function getNowTime() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  return h + ':' + m;
+}
+function getNowDateString() {
+  const now = new Date();
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+}
+function getNowTimeString() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  return h + ':' + m + ':' + s;
+}
+
 // ─── STATE ────────────────────────────────────────────────────────────────
 let state = {
   queue: [],
   nextNumber: 1,
   services: [
-    { id: 's1', icon: '📸', name: 'Photo Studio', est: 60, max: 10, desc: 'Professional studio photo session' },
-    { id: 's2', icon: '🎬', name: 'Video Production', est: 120, max: 5, desc: 'Commercial video production' },
-    { id: 's3', icon: '✂️', name: 'Edit & Post', est: 90, max: 8, desc: 'Photo & video editing' },
+    { id: 's1', icon: '📸', name: 'Foto Studio', est: 60, max: 10, desc: 'Sesi foto studio profesional' },
+    { id: 's2', icon: '🎬', name: 'Video Production', est: 120, max: 5, desc: 'Produksi video komersial' },
+    { id: 's3', icon: '✂️', name: 'Edit & Post', est: 90, max: 8, desc: 'Editing foto & video' },
   ],
   statuses: [
-    { id: 'waiting',    icon: '⏳', label: 'Waiting',     color: '#7A7880' },
-    { id: 'called',     icon: '📢', label: 'Called',      color: '#4A9EF5' },
-    { id: 'inprogress', icon: '⚙️', label: 'In Progress', color: '#F5A142' },
-    { id: 'done',       icon: '✅', label: 'Done',        color: '#4EC994' },
-    { id: 'skip',       icon: '⏭️', label: 'Skipped',     color: '#E05454' },
+    { id: 'waiting',    icon: '⏳', label: 'Menunggu',      color: '#7A7880' },
+    { id: 'called',     icon: '📢', label: 'Dipanggil',     color: '#4A9EF5' },
+    { id: 'inprogress', icon: '⚙️', label: 'Dalam Proses',  color: '#F5A142' },
+    { id: 'done',       icon: '✅', label: 'Selesai',       color: '#4EC994' },
+    { id: 'skip',       icon: '⏭️', label: 'Dilewati',      color: '#E05454' },
   ],
   slots: [],
   blockedSlots: new Set(),
   currentPage: 'dashboard',
-  currentTab: 'business',
+  currentTab: 'bisnis',
   customer: { step: 'select-service', service: null, slot: null },
-  config: { name: 'JD Production', logo: '🎬', tagline: 'Professional Photography & Production', color: '#C8A96E', waNumber: '' },
+  config: { name: 'JD Production', logo: '🎬', tagline: 'Professional Photography & Production', color: '#C8A96E' },
   counters: 2,
 };
 
@@ -595,107 +573,21 @@ function navigate(page) {
   });
   document.getElementById('app').classList.remove('hidden');
   document.getElementById('customer-page').classList.add('hidden');
-  document.getElementById('display-page') && document.getElementById('display-page').classList.add('hidden');
-  document.getElementById('tvdisplay-page').classList.add('hidden');
+  document.getElementById('display-page').classList.add('hidden');
+  document.getElementById('track-page').classList.add('hidden');
   state.currentPage = page;
   if (page === 'dashboard') renderDashboard();
   if (page === 'queue')     renderQueue();
   if (page === 'bookings')  renderBookings();
-  if (page === 'tv')        renderTVPage();
   if (page === 'reports')   renderReports();
   if (page === 'settings')  renderSettings();
-}
-
-// ─── TV DISPLAY (standalone) ──────────────────────────────────────────────
-function buildTVLink() {
-  return window.location.origin + window.location.pathname + '?tv=1';
-}
-function openDisplayWindow() {
-  window.open(buildTVLink(), '_blank');
-}
-function copyTVLink() {
-  const link = buildTVLink();
-  navigator.clipboard.writeText(link).then(() => showNotif('✅ TV display link copied!')).catch(() => prompt('Copy this link:', link));
-}
-function renderTVPage() {
-  const el = document.getElementById('tv-link-display');
-  if (el) el.textContent = buildTVLink();
-}
-
-let tvInterval;
-function initTVDisplay() {
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('customer-page').classList.add('hidden');
-  document.getElementById('track-page').classList.add('hidden');
-  document.getElementById('tvdisplay-page').classList.remove('hidden');
-
-  // Load from LS
-  loadFromLS();
-
-  // Update brand
-  const tvBrand = document.getElementById('tv-brand-name-el');
-  const tvLogo = document.getElementById('tv-logo-el');
-  if (tvBrand) tvBrand.textContent = state.config.name || 'JD Production';
-  if (tvLogo)  tvLogo.textContent  = state.config.logo  || '🎬';
-
-  const hint = document.getElementById('tv-url-hint');
-  if (hint) hint.textContent = window.location.href;
-
-  renderTVDisplay();
-  tvInterval = setInterval(() => {
-    updateTVClock();
-    // Re-load from LS to pick up changes from admin tab (same browser)
-    loadFromLS();
-    renderTVDisplay();
-  }, 2000);
-}
-
-function updateTVClock() {
-  const el = document.getElementById('tv-clock');
-  if (el) el.textContent = new Date().toLocaleTimeString('en-GB');
-}
-
-function renderTVDisplay() {
-  const called  = state.queue.filter(q => q.status === 'called');
-  const inprog  = state.queue.filter(q => q.status === 'inprogress');
-  const waiting = state.queue.filter(q => q.status === 'waiting');
-
-  const calledBox = document.getElementById('tv-called-box');
-  if (calledBox) {
-    const last = called[called.length - 1];
-    if (last) {
-      calledBox.innerHTML = `
-        <div class="tv-now-label">Now Serving</div>
-        <div class="tv-big-number">${String(last.number).padStart(3,'0')}</div>
-        <div class="tv-name">${last.name}</div>
-        <div class="tv-svc">${last.serviceIcon} ${last.service}</div>
-        <div class="tv-slot">🕐 Slot: ${last.slot}</div>`;
-    } else {
-      calledBox.innerHTML = `<div class="tv-now-label">Now Serving</div><div style="font-family:var(--font-display);font-size:40px;color:var(--text-dim)">— Waiting —</div>`;
-    }
-  }
-
-  const inprogEl = document.getElementById('tv-inprog-list');
-  if (inprogEl) {
-    inprogEl.innerHTML = inprog.length
-      ? inprog.map(q => `<div class="tv-inprog-row">
-          <div class="tv-inprog-num">${String(q.number).padStart(3,'0')}</div>
-          <div class="tv-inprog-info"><div class="tv-inprog-name">${q.name}</div><div class="tv-inprog-svc">${q.serviceIcon} ${q.service} • ${q.slot}</div></div>
-        </div>`).join('')
-      : '<div style="color:var(--text-dim);font-size:13px">None</div>';
-  }
-
-  const waitEl = document.getElementById('tv-wait-chips');
-  if (waitEl) {
-    waitEl.innerHTML = waiting.map(q => `<div class="tv-chip">${String(q.number).padStart(3,'0')}</div>`).join('')
-      || '<div style="color:var(--text-dim)">No queue</div>';
-  }
 }
 
 // ─── CUSTOMER PAGE ────────────────────────────────────────────────────────
 function openCustomer(serviceId) {
   document.getElementById('app').classList.add('hidden');
-  document.getElementById('tvdisplay-page').classList.add('hidden');
+  document.getElementById('display-page').classList.add('hidden');
+  document.getElementById('track-page').classList.add('hidden');
   document.getElementById('customer-page').classList.remove('hidden');
   state.customer = { step: 'select-service', service: null, slot: null };
   if (serviceId) {
@@ -712,29 +604,19 @@ function closeCustomer() {
 
 function renderCustomer() {
   const card = document.getElementById('cust-card');
-  // Update branding
-  const logoEl = document.getElementById('cust-logo-el');
-  const titleEl = document.getElementById('cust-title-el');
-  const subEl   = document.getElementById('cust-sub-el');
-  if (logoEl)  logoEl.textContent  = state.config.logo  || '🎬';
-  if (titleEl) titleEl.textContent = state.config.name  || 'JD Production';
-  if (subEl)   subEl.textContent   = state.config.tagline || 'Take your digital queue number';
-
-  // WA footer (contact us — not admin link)
-  const waFooter = document.getElementById('cust-wa-footer');
-  if (waFooter && state.config.waNumber) {
-    waFooter.innerHTML = `<a href="https://wa.me/${state.config.waNumber}" target="_blank" class="btn btn-ghost btn-sm" style="display:inline-flex;gap:6px">📱 Contact us via WhatsApp</a>`;
-  } else if (waFooter) {
-    waFooter.innerHTML = '';
-  }
+  // Update header
+  const logoEl = document.getElementById('cust-logo-emoji');
+  const titleEl = document.getElementById('cust-title-text');
+  if (logoEl) logoEl.textContent = state.config.logo || '🎬';
+  if (titleEl) titleEl.textContent = state.config.name || 'JD Production';
 
   if (state.customer.step === 'select-service') {
-    card.innerHTML = `<div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Select Service</div>` +
+    card.innerHTML = `<div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Pilih Layanan</div>` +
       state.services.map(s => `
         <button class="mode-btn" onclick="custSelectService('${s.id}')">
           <div class="mode-icon">${s.icon}</div>
           <div class="mode-title">${s.name}</div>
-          <div class="mode-desc">${s.desc || 'Est. ' + s.est + ' min • Max ' + s.max + '/day'}</div>
+          <div class="mode-desc">${s.desc || 'Estimasi ' + s.est + ' menit • Maks ' + s.max + '/hari'}</div>
         </button>`).join('');
     return;
   }
@@ -742,30 +624,36 @@ function renderCustomer() {
   if (state.customer.step === 'select-slot') {
     const svc = state.customer.service;
     const usedSlots = state.queue.filter(q => q.serviceId === svc.id && q.status !== 'done' && q.status !== 'skip').map(q => q.slot);
+    // FIX: pastikan slots sudah ter-generate sebelum render
+    const availableSlots = state.slots.filter(sl => !state.blockedSlots.has(sl));
     card.innerHTML = `
-      <button onclick="state.customer.step='select-service';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Back</button>
+      <button onclick="state.customer.step='select-service';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Kembali</button>
       <div style="font-family:var(--font-display);font-size:18px;margin-bottom:4px">${svc.icon} ${svc.name}</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px">Select an available time slot</div>
-      <div style="margin-bottom:8px"><label class="label">Your Name</label><input class="input-field" id="cust-name" placeholder="Enter your name…"></div>
-      <div class="slot-grid" style="margin-top:16px">` +
-      state.slots.filter(sl => !state.blockedSlots.has(sl)).map(sl => {
-        const taken = usedSlots.includes(sl);
-        return `<button class="slot-btn${taken ? ' taken' : ''}" onclick="custSelectSlot('${sl}')" ${taken ? 'disabled' : ''}>${sl}${taken ? '<span class="slot-taken-lbl">Full</span>' : ''}</button>`;
-      }).join('') +
-      `</div>`;
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px">Estimasi ${svc.est} menit per sesi</div>
+      <div style="margin-bottom:16px"><label class="label">Nama Kamu</label><input class="input-field" id="cust-name" placeholder="Masukkan nama…"></div>
+      <label class="label" style="margin-bottom:10px">Pilih Slot Waktu</label>
+      ${availableSlots.length === 0
+        ? '<div style="text-align:center;padding:32px;color:var(--text-muted)"><div style="font-size:32px;margin-bottom:8px">😔</div><div>Semua slot sudah habis atau diblokir</div></div>'
+        : `<div class="slot-grid">` +
+          availableSlots.map(sl => {
+            const taken = usedSlots.includes(sl);
+            return `<button class="slot-btn${taken ? ' taken' : ''}" onclick="custSelectSlot('${sl}')" ${taken ? 'disabled' : ''}>${sl}${taken ? '<span class="slot-taken-lbl">Penuh</span>' : ''}</button>`;
+          }).join('') +
+          `</div>`
+      }`;
     return;
   }
 
   if (state.customer.step === 'confirm') {
     const svc = state.customer.service;
     card.innerHTML = `
-      <button onclick="state.customer.step='select-slot';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Back</button>
-      <div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Confirm Booking</div>
-      <div class="confirm-row"><span class="confirm-key">Service</span><span>${svc.icon} ${svc.name}</span></div>
+      <button onclick="state.customer.step='select-slot';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Kembali</button>
+      <div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Konfirmasi Booking</div>
+      <div class="confirm-row"><span class="confirm-key">Layanan</span><span>${svc.icon} ${svc.name}</span></div>
       <div class="confirm-row"><span class="confirm-key">Slot</span><strong>${state.customer.slot}</strong></div>
-      <div class="confirm-row"><span class="confirm-key">Name</span><span>${state.customer.name || '-'}</span></div>
-      <div class="confirm-row"><span class="confirm-key">Est. Duration</span><span>${svc.est} minutes</span></div>
-      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px" onclick="custConfirm()">✅ Get Queue Number</button>`;
+      <div class="confirm-row"><span class="confirm-key">Nama</span><span>${state.customer.name || '-'}</span></div>
+      <div class="confirm-row"><span class="confirm-key">Estimasi</span><span>${svc.est} menit</span></div>
+      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px" onclick="custConfirm()">✅ Ambil Nomor Antrian</button>`;
     return;
   }
 
@@ -777,22 +665,22 @@ function renderCustomer() {
         <div class="done-number">${String(entry.number).padStart(3,'0')}</div>
         <div style="font-size:15px;font-weight:600;margin-bottom:4px">${entry.name}</div>
         <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">${entry.serviceIcon} ${entry.service} — 🕐 ${entry.slot}</div>
-        <div class="tag" style="background:rgba(78,201,148,.12);border-color:rgba(78,201,148,.3);color:var(--green);margin:0 auto 20px">✅ Queue number successfully taken</div>
+        <div class="tag" style="background:rgba(78,201,148,.12);border-color:rgba(78,201,148,.3);color:var(--green);margin:0 auto 20px">✅ Nomor antrian berhasil diambil</div>
 
         <div style="background:var(--surface);border:1px solid var(--border-active);border-radius:var(--radius);padding:18px;margin-bottom:16px;text-align:left">
-          <div style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">🔗 Track Your Queue</div>
+          <div style="font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">🔗 Link Pantau Antrian Kamu</div>
           <div class="track-share-box" id="done-track-link">${trackLink}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-            <button class="btn btn-primary btn-sm" onclick="copyTrackLink('${trackLink}')">📋 Copy Link</button>
-            <button class="btn btn-success btn-sm" onclick="shareTrackWA('${entry.id}','${entry.name}','${String(entry.number).padStart(3,'0')}','${entry.service}','${entry.slot}')">📱 Send via WA</button>
-            <button class="btn btn-ghost btn-sm" onclick="showQRModal('${trackLink}','Queue ${String(entry.number).padStart(3,'0')} QR','Scan to track your queue')">⬛ QR Code</button>
-            <button class="btn btn-ghost btn-sm" onclick="openTrackPage('${entry.id}')">👁 View Status</button>
+            <button class="btn btn-primary btn-sm" onclick="copyTrackLink('${trackLink}')">📋 Salin Link</button>
+            <button class="btn btn-success btn-sm" onclick="shareTrackWA('${entry.id}','${entry.name}','${String(entry.number).padStart(3,'0')}','${entry.service}','${entry.slot}')">📱 Kirim via WA</button>
+            <button class="btn btn-ghost btn-sm" onclick="showQRModal('${trackLink}','QR Antrian ${String(entry.number).padStart(3,'0')}','Scan untuk pantau antrian')">⬛ QR Code</button>
+            <button class="btn btn-ghost btn-sm" onclick="openTrackPage('${entry.id}')">👁 Lihat Status</button>
           </div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:10px">💡 Share this link — they can track their position in real-time</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:10px">💡 Bagikan link ini ke client — mereka bisa pantau posisi antrian real-time</div>
         </div>
 
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="state.customer.step='select-service';renderCustomer()">+ Book Again</button>
+          <button class="btn btn-ghost" onclick="state.customer.step='select-service';renderCustomer()">+ Booking Lagi</button>
         </div>
       </div>`;
   }
@@ -805,6 +693,11 @@ function custSelectService(id) {
 }
 function custSelectSlot(slot) {
   const name = document.getElementById('cust-name')?.value?.trim();
+  if (!name) {
+    showNotif('⚠️ Masukkan nama kamu dulu');
+    document.getElementById('cust-name')?.focus();
+    return;
+  }
   state.customer.name = name;
   state.customer.slot = slot;
   state.customer.step = 'confirm';
@@ -822,7 +715,8 @@ function custConfirm() {
     serviceIcon: svc.icon,
     slot: state.customer.slot,
     status: 'waiting',
-    time: now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+    // FIX: gunakan helper getNowTime() bukan toLocaleString yang bisa return 1899
+    time: getNowTime(),
   };
   state.queue.push(entry);
   state.customer.entry = entry;
@@ -830,6 +724,56 @@ function custConfirm() {
   saveToLS(true);
   renderCustomer();
   updateStats();
+}
+
+// ─── DISPLAY TV ───────────────────────────────────────────────────────────
+let displayInterval;
+function openDisplay() {
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('customer-page').classList.add('hidden');
+  document.getElementById('display-page').classList.remove('hidden');
+  renderDisplay();
+  displayInterval = setInterval(() => {
+    const el = document.getElementById('display-clock');
+    if (el) el.textContent = getNowTimeString();
+    renderDisplay();
+  }, 1000);
+}
+function closeDisplay() {
+  clearInterval(displayInterval);
+  document.getElementById('display-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+function renderDisplay() {
+  const called = state.queue.filter(q => q.status === 'called');
+  const inprog = state.queue.filter(q => q.status === 'inprogress');
+  const waiting = state.queue.filter(q => q.status === 'waiting');
+
+  const calledEl = document.getElementById('display-called-content');
+  if (calledEl) {
+    if (called.length > 0) {
+      const c = called[called.length - 1];
+      calledEl.innerHTML = `
+        <div class="display-called-number">${String(c.number).padStart(3,'0')}</div>
+        <div class="display-called-name">${c.name}</div>
+        <div class="display-called-svc">${c.serviceIcon} ${c.service}</div>
+        <div class="display-called-counter">🕐 Slot: ${c.slot}</div>`;
+    } else {
+      calledEl.innerHTML = `<div style="font-family:var(--font-display);font-size:40px;color:var(--text-dim)">— Menunggu —</div>`;
+    }
+  }
+
+  const inprogEl = document.getElementById('display-inprog-list');
+  if (inprogEl) {
+    inprogEl.innerHTML = inprog.length
+      ? inprog.map(q => `<div class="inprog-row"><div><div class="inprog-num">${String(q.number).padStart(3,'0')}</div><div class="inprog-name">${q.name}</div></div><div style="font-size:12px;color:var(--text-muted)">${q.slot}</div></div>`).join('')
+      : '<div style="color:var(--text-dim);font-size:14px">Kosong</div>';
+  }
+
+  const waitEl = document.getElementById('display-waiting-chips');
+  if (waitEl) {
+    waitEl.innerHTML = waiting.map(q => `<div class="waiting-chip">${String(q.number).padStart(3,'0')}</div>`).join('') || '<div style="color:var(--text-dim)">Tidak ada antrian</div>';
+  }
 }
 
 // ─── QUEUE ────────────────────────────────────────────────────────────────
@@ -846,12 +790,9 @@ function renderQueue() {
     });
   }
 
-  // *** FIX: exclude 'done' from default view — show active only ***
   let list = state.queue.filter(q => {
     const matchSearch = !search || q.name.toLowerCase().includes(search) || String(q.number).includes(search);
-    const matchFilter = filter === 'all'
-      ? q.status !== 'done'   // hide done when showing "all"
-      : q.status === filter;
+    const matchFilter = filter === 'all' || q.status === filter;
     return matchSearch && matchFilter;
   });
 
@@ -859,37 +800,23 @@ function renderQueue() {
   if (!el) return;
 
   const label = document.getElementById('queue-count-label');
-  if (label) {
-    const activeCount = state.queue.filter(q => q.status !== 'done').length;
-    const doneCount   = state.queue.filter(q => q.status === 'done').length;
-    label.textContent = `${activeCount} active • ${doneCount} done today`;
-  }
+  if (label) label.textContent = `${list.length} antrian`;
 
   if (list.length === 0) {
-    const emptyMsg = filter === 'done'
-      ? `<div style="text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No completed queue yet</div></div>`
-      : `<div style="text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>No active queue</div><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="openCustomer()">+ Simulate Customer</button></div>`;
-    el.innerHTML = emptyMsg;
-    renderStatusStrip();
+    el.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>`;
     return;
   }
 
   el.innerHTML = list.map(q => {
     const st = state.statuses.find(s => s.id === q.status) || state.statuses[0];
-    // Only show non-done statuses as clickable buttons (done is already hidden from view by default)
-    const statusBtns = state.statuses.filter(s => s.id !== 'done').map(s =>
-      `<button class="btn btn-sm ${q.status===s.id?'btn-primary':'btn-ghost'}" onclick="setStatus('${q.id}','${s.id}')"
-        style="${s.id==='skip'?'border-color:rgba(224,84,84,.3);color:var(--red)':''}">${s.icon} ${s.label}</button>`
-    ).join('');
     return `<div class="queue-card fade-in" style="border-left-color:${st.color}">
       <div style="display:flex;gap:14px;align-items:flex-start">
         <div class="qnum">${String(q.number).padStart(3,'0')}</div>
         <div class="qbody">
           <div class="qname">${q.name} <span class="qmode-badge">${q.serviceIcon} ${q.service}</span></div>
-          <div class="qmeta">Slot: ${q.slot} • Registered: ${q.time}</div>
+          <div class="qmeta">Slot: ${q.slot} • Daftar: ${q.time}</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${statusBtns}
-            <button class="btn btn-success btn-sm" onclick="setStatus('${q.id}','done')" title="Mark as Done">✅ Done</button>
+            ${state.statuses.map(s => `<button class="btn btn-sm ${q.status===s.id?'btn-primary':'btn-ghost'}" onclick="setStatus('${q.id}','${s.id}')" style="${s.id==='done'?'border-color:rgba(78,201,148,.3);color:var(--green)':''}${s.id==='skip'?'border-color:rgba(224,84,84,.3);color:var(--red)':''}">${s.icon} ${s.label}</button>`).join('')}
             <button class="btn btn-danger btn-sm" onclick="removeQueue('${q.id}')">🗑</button>
           </div>
         </div>
@@ -903,29 +830,31 @@ function renderQueue() {
 
 function setStatus(id, status) {
   const q = state.queue.find(q => q.id === id);
-  if (q) { q.status = status; saveToLS(true); renderQueue(); renderDashboard(); }
+  if (q) { q.status = status; renderQueue(); renderDashboard(); }
 }
 function removeQueue(id) {
   state.queue = state.queue.filter(q => q.id !== id);
-  saveToLS(true); renderQueue(); renderDashboard();
+  renderQueue(); renderDashboard();
 }
 function callNext() {
   const next = state.queue.find(q => q.status === 'waiting');
-  if (next) { next.status = 'called'; saveToLS(true); renderQueue(); showNotif('📢 Calling ' + next.name + ' — No. ' + String(next.number).padStart(3,'0')); }
-  else showNotif('No waiting queue');
+  if (next) { next.status = 'called'; renderQueue(); showNotif('📢 Memanggil ' + next.name + ' — No. ' + String(next.number).padStart(3,'0')); }
+  else showNotif('Tidak ada antrian menunggu');
 }
 function renderStatusStrip() {
   const el = document.getElementById('status-strip');
   if (!el) return;
   el.innerHTML = state.statuses.map(s => {
     const count = state.queue.filter(q => q.status === s.id).length;
-    return `<span class="tag" style="background:rgba(0,0,0,0.2);border-color:${s.color}40;color:${s.color};cursor:pointer" onclick="document.getElementById('q-filter').value='${s.id}';renderQueue()">${s.icon} ${s.label} <strong>${count}</strong></span>`;
-  }).join('') + `<span class="tag" style="background:rgba(0,0,0,0.2);border-color:rgba(255,255,255,.1);color:var(--text-muted);cursor:pointer" onclick="document.getElementById('q-filter').value='all';renderQueue()">All Active</span>`;
+    return `<span class="tag" style="background:rgba(0,0,0,0.2);border-color:${s.color}40;color:${s.color}">${s.icon} ${s.label} <strong>${count}</strong></span>`;
+  }).join('');
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────
 function renderDashboard() {
-  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  // FIX: gunakan helper date yang aman
+  const dd = document.getElementById('dash-date');
+  if (dd) dd.textContent = getNowDateString();
   updateStats();
 
   const bl = document.getElementById('dash-booking-links');
@@ -935,7 +864,6 @@ function renderDashboard() {
       return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)">
         <div style="display:flex;align-items:center;gap:10px"><span>${s.icon}</span><span style="font-weight:500">${s.name}</span></div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-ghost btn-sm" onclick="openCustomer('${s.id}')">👤 Simulate</button>
           <button class="link-chip" onclick="showLinkModal('${s.id}')">🔗 Link</button>
         </div>
       </div>`;
@@ -956,7 +884,7 @@ function renderDashboard() {
             <span class="tag" style="border-color:${st?.color}40;color:${st?.color}">${st?.icon} ${st?.label}</span>
           </div>`;
         }).join('')
-      : '<div style="text-align:center;padding:30px;color:var(--text-muted)">No active queue</div>';
+      : '<div style="text-align:center;padding:30px;color:var(--text-muted)">Belum ada antrian aktif</div>';
   }
 
   const ds = document.getElementById('dash-services');
@@ -967,7 +895,7 @@ function renderDashboard() {
         <div style="font-size:22px">${s.icon}</div>
         <div style="font-weight:600;font-size:13px">${s.name}</div>
         <div style="font-family:var(--font-display);font-size:24px;color:var(--gold)">${count}</div>
-        <div style="font-size:11px;color:var(--text-muted)">active queue</div>
+        <div style="font-size:11px;color:var(--text-muted)">antrian aktif</div>
       </div>`;
     }).join('');
   }
@@ -1011,12 +939,12 @@ function renderBookings() {
     return `<div class="card card-elevated" style="display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:center;gap:12px">
         <div style="font-size:28px">${s.icon}</div>
-        <div><div style="font-family:var(--font-display);font-size:17px">${s.name}</div><div style="font-size:12px;color:var(--text-muted)">Est. ${s.est} min • Max ${s.max}/day • ${count} queued today</div></div>
+        <div><div style="font-family:var(--font-display);font-size:17px">${s.name}</div><div style="font-size:12px;color:var(--text-muted)">Estimasi ${s.est} mnt • Maks ${s.max}/hari • ${count} antrian hari ini</div></div>
       </div>
       <div class="link-box" style="cursor:text">${link}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-primary btn-sm" onclick="showLinkModal('${s.id}')">📋 Copy & Share</button>
-        <button class="btn btn-ghost btn-sm" onclick="openCustomer('${s.id}')">👤 Simulate</button>
+        <button class="btn btn-primary btn-sm" onclick="showLinkModal('${s.id}')">📋 Salin & Bagikan</button>
+        <button class="btn btn-ghost btn-sm" onclick="showQRModal('${link}','⬛ QR ${s.name}','Scan untuk booking langsung')">⬛ QR Code</button>
       </div>
     </div>`;
   }).join('');
@@ -1032,38 +960,41 @@ function showLinkModal(serviceId) {
 }
 function copyLink() {
   const link = document.getElementById('modal-link-url').dataset.link;
-  navigator.clipboard.writeText(link).then(() => showNotif('✅ Link copied!')).catch(() => prompt('Copy this link:', link));
+  navigator.clipboard.writeText(link).then(() => showNotif('✅ Link disalin!')).catch(() => { prompt('Salin link ini:', link); });
 }
 function shareWaLink() {
   const link = document.getElementById('modal-link-url').dataset.link;
-  window.open('https://wa.me/?text=' + encodeURIComponent('Queue booking at JD Production: ' + link), '_blank');
+  window.open('https://wa.me/?text=' + encodeURIComponent('Booking antrian JD Production: ' + link), '_blank');
 }
 
 // ─── REPORTS ──────────────────────────────────────────────────────────────
-function renderReports() { renderBarChart('report-chart'); }
+function renderReports() {
+  renderBarChart('report-chart');
+}
 
 // ─── SETTINGS ────────────────────────────────────────────────────────────
-function renderSettings() { switchTab(state.currentTab); }
+function renderSettings() {
+  switchTab(state.currentTab);
+}
 function switchTab(tab) {
   state.currentTab = tab;
   document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
   document.querySelectorAll('.tab-item').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
   const tabEl = document.getElementById('tab-' + tab);
   if (tabEl) tabEl.classList.remove('hidden');
-  if (tab === 'services')  renderServicesList();
-  if (tab === 'slots')     renderSlotsSettings();
-  if (tab === 'statuses')  renderStatusSettings();
-  if (tab === 'ops')       renderCounters();
-  if (tab === 'sheets')    renderSheetsTab();
-  if (tab === 'wa')        renderWaTab();
-  if (tab === 'business')  renderBusinessTab();
+  if (tab === 'layanan')     renderServicesList();
+  if (tab === 'waktu')       renderSlotsSettings();
+  if (tab === 'antrian')     renderStatusSettings();
+  if (tab === 'operasional') renderCounters();
+  if (tab === 'sheets')      renderSheetsTab();
+  if (tab === 'wa')          renderWaTab();
+  if (tab === 'bisnis')      renderBisnisTab();
 }
-function renderBusinessTab() {
-  const n = document.getElementById('cfg-name');   if (n) n.value = state.config.name    || '';
-  const l = document.getElementById('cfg-logo');   if (l) l.value = state.config.logo    || '🎬';
-  const t = document.getElementById('cfg-tagline');if (t) t.value = state.config.tagline || '';
-  const w = document.getElementById('cfg-wa-number'); if (w) w.value = state.config.waNumber || '';
-  const c = document.getElementById('cfg-color');  if (c) c.value = state.config.color   || '#C8A96E';
+function renderBisnisTab() {
+  const n = document.getElementById('cfg-name'); if (n) n.value = state.config.name || '';
+  const l = document.getElementById('cfg-logo'); if (l) l.value = state.config.logo || '🎬';
+  const t = document.getElementById('cfg-tagline'); if (t) t.value = state.config.tagline || '';
+  const c = document.getElementById('cfg-color'); if (c) c.value = state.config.color || '#C8A96E';
   const ch = document.getElementById('cfg-color-hex'); if (ch) ch.value = state.config.color || '#C8A96E';
 }
 function renderSheetsTab() {
@@ -1071,8 +1002,8 @@ function renderSheetsTab() {
   const i = document.getElementById('cfg-sheets-id');  if (i) i.value = state.sheetsId  || '';
 }
 function renderWaTab() {
-  const k = document.getElementById('cfg-apikey');   if (k) k.value = state.apikey    || '';
-  const s = document.getElementById('cfg-sender');   if (s) s.value = state.sender    || '';
+  const k = document.getElementById('cfg-apikey'); if (k) k.value = state.apikey || '';
+  const s = document.getElementById('cfg-sender'); if (s) s.value = state.sender || '';
   const t = document.getElementById('cfg-template'); if (t && state.waTemplate) t.value = state.waTemplate;
 }
 
@@ -1091,11 +1022,11 @@ function getFullStatePayload() {
     counters: state.counters,
     nextNumber: state.nextNumber,
     sheetsUrl: state.sheetsUrl || '',
-    sheetsId: state.sheetsId  || '',
-    apikey: state.apikey      || '',
-    sender: state.sender      || '',
+    sheetsId: state.sheetsId || '',
+    apikey: state.apikey || '',
+    sender: state.sender || '',
     waTemplate: state.waTemplate || '',
-    slotOpen: state.slotOpen  || '09:00',
+    slotOpen: state.slotOpen || '09:00',
     slotClose: state.slotClose || '20:00',
     slotInterval: state.slotInterval || 30,
   };
@@ -1108,42 +1039,41 @@ async function saveToLS(silent) {
       const res = await fetch(state.sheetsUrl, { method:'POST', body: JSON.stringify(getFullStatePayload()) });
       const json = await res.json();
       if (json.sheetId) state.sheetsId = json.sheetId;
-      if (!silent) showNotif('✅ Saved to Google Sheets & browser!');
+      if (!silent) showNotif('✅ Tersimpan ke Google Sheets & browser!');
     } catch(e) {
-      if (!silent) showNotif('✅ Saved in browser (Sheets offline)');
+      if (!silent) showNotif('✅ Tersimpan di browser (Sheets offline)');
     }
   } else {
-    if (!silent) showNotif('✅ Saved in browser');
+    if (!silent) showNotif('✅ Tersimpan di browser');
   }
 }
 
 async function loadFromSheets() {
   if (!state.sheetsUrl) return false;
   try {
-    showNotif('⏳ Loading data from Google Sheets…');
+    showNotif('⏳ Memuat data dari Google Sheets…');
     const res = await fetch(state.sheetsUrl + '?action=load_settings');
     const json = await res.json();
     if (!json.ok) return false;
     const s = json.settings || {};
-    if (s.name)         state.config.name     = s.name;
-    if (s.logo)         state.config.logo     = s.logo;
-    if (s.tagline)      state.config.tagline  = s.tagline;
-    if (s.color)        state.config.color    = s.color;
-    if (s.waNumber)     state.config.waNumber = s.waNumber;
-    if (s.apikey)       state.apikey          = s.apikey;
-    if (s.sender)       state.sender          = s.sender;
-    if (s.waTemplate)   state.waTemplate      = s.waTemplate;
-    if (s.slotOpen)     state.slotOpen        = s.slotOpen;
-    if (s.slotClose)    state.slotClose       = s.slotClose;
-    if (s.slotInterval) state.slotInterval    = parseInt(s.slotInterval);
-    if (s.counters)     state.counters        = parseInt(s.counters);
-    if (s.nextNumber)   state.nextNumber      = parseInt(s.nextNumber);
-    if (s.blockedSlots) state.blockedSlots    = new Set(s.blockedSlots.split(',').filter(Boolean));
-    if (s.sheetsId)     state.sheetsId        = s.sheetsId;
-    if (json.services && json.services.length) state.services = json.services;
-    if (json.statuses && json.statuses.length) state.statuses = json.statuses;
-    if (json.queue    && json.queue.length)    state.queue    = json.queue;
-    showNotif('✅ Data loaded from Google Sheets!');
+    if (s.name)         state.config.name    = s.name;
+    if (s.logo)         state.config.logo    = s.logo;
+    if (s.tagline)      state.config.tagline = s.tagline;
+    if (s.color)        state.config.color   = s.color;
+    if (s.apikey)       state.apikey         = s.apikey;
+    if (s.sender)       state.sender         = s.sender;
+    if (s.waTemplate)   state.waTemplate     = s.waTemplate;
+    if (s.slotOpen)     state.slotOpen       = s.slotOpen;
+    if (s.slotClose)    state.slotClose      = s.slotClose;
+    if (s.slotInterval) state.slotInterval   = parseInt(s.slotInterval);
+    if (s.counters)     state.counters       = parseInt(s.counters);
+    if (s.nextNumber)   state.nextNumber     = parseInt(s.nextNumber);
+    if (s.blockedSlots) state.blockedSlots   = new Set(s.blockedSlots.split(',').filter(Boolean));
+    if (s.sheetsId)     state.sheetsId       = s.sheetsId;
+    if (json.services && json.services.length)  state.services = json.services;
+    if (json.statuses && json.statuses.length)  state.statuses = json.statuses;
+    if (json.queue    && json.queue.length)      state.queue    = json.queue;
+    showNotif('✅ Data dimuat dari Google Sheets!');
     return true;
   } catch(e) { return false; }
 }
@@ -1153,21 +1083,21 @@ function loadFromLS() {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return false;
     const data = JSON.parse(raw);
-    if (data.config)    state.config       = { ...state.config, ...data.config };
-    if (data.services)  state.services     = data.services;
-    if (data.statuses)  state.statuses     = data.statuses;
-    if (data.queue)     state.queue        = data.queue;
-    if (data.slots)     state.slots        = data.slots;
+    if (data.config)    state.config    = data.config;
+    if (data.services)  state.services  = data.services;
+    if (data.statuses)  state.statuses  = data.statuses;
+    if (data.queue)     state.queue     = data.queue;
+    if (data.slots)     state.slots     = data.slots;
     if (data.blockedSlots) state.blockedSlots = new Set(data.blockedSlots);
-    if (data.counters)  state.counters     = data.counters;
-    if (data.nextNumber) state.nextNumber  = data.nextNumber;
-    if (data.sheetsUrl) state.sheetsUrl    = data.sheetsUrl;
-    if (data.sheetsId)  state.sheetsId     = data.sheetsId;
-    if (data.apikey)    state.apikey       = data.apikey;
-    if (data.sender)    state.sender       = data.sender;
-    if (data.waTemplate) state.waTemplate  = data.waTemplate;
-    if (data.slotOpen)  state.slotOpen     = data.slotOpen;
-    if (data.slotClose) state.slotClose    = data.slotClose;
+    if (data.counters)  state.counters  = data.counters;
+    if (data.nextNumber) state.nextNumber = data.nextNumber;
+    if (data.sheetsUrl) state.sheetsUrl = data.sheetsUrl;
+    if (data.sheetsId)  state.sheetsId  = data.sheetsId;
+    if (data.apikey)    state.apikey    = data.apikey;
+    if (data.sender)    state.sender    = data.sender;
+    if (data.waTemplate) state.waTemplate = data.waTemplate;
+    if (data.slotOpen)  state.slotOpen  = data.slotOpen;
+    if (data.slotClose) state.slotClose = data.slotClose;
     if (data.slotInterval) state.slotInterval = data.slotInterval;
     return true;
   } catch(e) { return false; }
@@ -1189,19 +1119,19 @@ function showQRFromModal() {
   const link = document.getElementById('modal-link-url').dataset.link;
   const title = document.getElementById('modal-link-title').textContent;
   document.getElementById('modal-link').classList.add('hidden');
-  showQRModal(link, '⬛ ' + title, 'Scan to book directly');
+  showQRModal(link, '⬛ ' + title, 'Scan untuk booking langsung');
 }
 function downloadQR() {
   const canvas = document.querySelector('#qr-container canvas');
-  if (!canvas) { showNotif('⚠️ QR not generated yet'); return; }
+  if (!canvas) { showNotif('⚠️ QR belum ter-generate'); return; }
   const a = document.createElement('a');
   a.download = 'qr-jdproduction.png';
   a.href = canvas.toDataURL();
   a.click();
-  showNotif('✅ QR Code downloaded!');
+  showNotif('✅ QR Code didownload!');
 }
 function copyQRLink() {
-  navigator.clipboard.writeText(_currentQRLink).then(() => showNotif('✅ Link copied!')).catch(() => prompt('Copy link:', _currentQRLink));
+  navigator.clipboard.writeText(_currentQRLink).then(() => showNotif('✅ Link disalin!')).catch(() => prompt('Salin link:', _currentQRLink));
 }
 
 // ─── GOOGLE SHEETS SYNC ───────────────────────────────────────────────────
@@ -1218,13 +1148,13 @@ function getOrCreateSS() {
   const files = DriveApp.getFilesByName(SPREADSHEET_NAME);
   if (files.hasNext()) return SpreadsheetApp.open(files.next());
   const ss = SpreadsheetApp.create(SPREADSHEET_NAME);
-  ['Settings','Queue','Services','Statuses','Daily Report'].forEach(name => {
+  ['Settings','Antrian','Layanan','Statuses','Laporan Harian'].forEach(name => {
     if (!ss.getSheetByName(name)) ss.insertSheet(name);
   });
   return ss;
 }
 
-function doGet(e)  { return handleRequest(e); }
+function doGet(e) { return handleRequest(e); }
 function doPost(e) { return handleRequest(e); }
 
 function handleRequest(e) {
@@ -1241,13 +1171,13 @@ function handleRequest(e) {
         const rows = sheet.getDataRange().getValues();
         rows.forEach(r => { if (r[0]) data[r[0]] = r[1]; });
       }
-      const qa = ss.getSheetByName('Queue');
+      const qa = ss.getSheetByName('Antrian');
       const queue = [];
       if (qa && qa.getLastRow() > 1) {
         const rows = qa.getDataRange().getValues().slice(1);
         rows.forEach(r => queue.push({ id:r[0],number:r[1],name:r[2],serviceId:r[3],service:r[4],serviceIcon:r[5],slot:r[6],status:r[7],time:r[8] }));
       }
-      const ls = ss.getSheetByName('Services');
+      const ls = ss.getSheetByName('Layanan');
       const services = [];
       if (ls && ls.getLastRow() > 1) {
         const rows = ls.getDataRange().getValues().slice(1);
@@ -1259,34 +1189,61 @@ function handleRequest(e) {
         const rows = st.getDataRange().getValues().slice(1);
         rows.forEach(r => statuses.push({ id:r[0],icon:r[1],label:r[2],color:r[3] }));
       }
-      return json({ ok:true, settings:data, queue, services, statuses, sheetId:ss.getId(), sheetUrl:ss.getUrl() });
+      return json({ ok:true, settings:data, queue, services, statuses, sheetId:ss.getId() });
     }
 
     if (action === 'save_settings') {
       const sheet = getOrClearSheet(ss, 'Settings');
       const cfg = body.config || {};
-      [['name',cfg.name||''],['logo',cfg.logo||''],['tagline',cfg.tagline||''],['color',cfg.color||''],
-       ['waNumber',cfg.waNumber||''],['apikey',body.apikey||''],['sender',body.sender||''],
-       ['waTemplate',body.waTemplate||''],['slotOpen',body.slotOpen||'09:00'],['slotClose',body.slotClose||'20:00'],
-       ['slotInterval',body.slotInterval||30],['counters',body.counters||2],['nextNumber',body.nextNumber||1],
-       ['blockedSlots',(body.blockedSlots||[]).join(',')],['sheetsId',ss.getId()],
-       ['savedAt',new Date().toLocaleString('en-US')]].forEach(r => sheet.appendRow(r));
+      const rows = [
+        ['name',cfg.name||''],['logo',cfg.logo||''],['tagline',cfg.tagline||''],['color',cfg.color||''],
+        ['apikey',body.apikey||''],['sender',body.sender||''],['waTemplate',body.waTemplate||''],
+        ['slotOpen',body.slotOpen||'09:00'],['slotClose',body.slotClose||'20:00'],['slotInterval',body.slotInterval||30],
+        ['counters',body.counters||2],['nextNumber',body.nextNumber||1],
+        ['blockedSlots',(body.blockedSlots||[]).join(',')],['sheetsId',ss.getId()],
+      ];
+      rows.forEach(r => sheet.appendRow(r));
       if (body.services) {
-        const ls = getOrClearSheet(ss,'Services',['ID','Icon','Name','Duration','Max/Day','Description']);
+        const ls = getOrClearSheet(ss, 'Layanan', ['ID','Ikon','Nama','Durasi','Maks/Hari','Deskripsi']);
         body.services.forEach(s => ls.appendRow([s.id,s.icon,s.name,s.est,s.max,s.desc||'']));
         styleHeader(ls,6);
       }
       if (body.statuses) {
-        const st = getOrClearSheet(ss,'Statuses',['ID','Icon','Label','Color']);
+        const st = getOrClearSheet(ss, 'Statuses', ['ID','Ikon','Label','Warna']);
         body.statuses.forEach(s => st.appendRow([s.id,s.icon,s.label,s.color]));
         styleHeader(st,4);
       }
       if (body.queue) {
-        const qa = getOrClearSheet(ss,'Queue',['ID','No','Name','ServiceID','Service','Icon','Slot','Status','Time']);
+        const qa = getOrClearSheet(ss, 'Antrian', ['ID','No','Nama','ServiceID','Layanan','Ikon','Slot','Status','Waktu']);
         body.queue.forEach(q => qa.appendRow([q.id,q.number,q.name,q.serviceId,q.service,q.serviceIcon,q.slot,q.status,q.time]));
         styleHeader(qa,9);
       }
-      return json({ ok:true, sheetId:ss.getId(), sheetUrl:ss.getUrl() });
+      return json({ ok:true, sheetId:ss.getId() });
+    }
+
+    if (action === 'sync_antrian') {
+      const qa = getOrClearSheet(ss, 'Antrian', ['No','Nama','Layanan','Slot','Status','Waktu']);
+      (body.rows||[]).forEach(r => qa.appendRow(r));
+      styleHeader(qa,6);
+      return json({ ok:true, sheetId:ss.getId() });
+    }
+    if (action === 'sync_laporan') {
+      const sh = getOrClearSheet(ss, 'Laporan Harian', ['Tanggal','Total','Selesai','Menunggu','Dipanggil','Diproses']);
+      (body.rows||[]).forEach(r => sh.appendRow(r));
+      styleHeader(sh,6);
+      return json({ ok:true, sheetId:ss.getId() });
+    }
+    if (action === 'sync_layanan') {
+      const sh = getOrClearSheet(ss, 'Layanan', ['ID','Ikon','Nama','Durasi','Maks/Hari','Deskripsi']);
+      (body.rows||[]).forEach(r => sh.appendRow(r));
+      styleHeader(sh,6);
+      return json({ ok:true, sheetId:ss.getId() });
+    }
+    if (action === 'import') {
+      const srcSS = SpreadsheetApp.openById(body.importId);
+      const srcSheet = srcSS.getSheetByName(body.tabName) || srcSS.getSheets()[0];
+      const values = srcSheet.getDataRange().getValues();
+      return json({ ok:true, rows:values, sheetId:ss.getId() });
     }
 
     return json({ ok:false, error:'Unknown action: '+action });
@@ -1295,15 +1252,15 @@ function handleRequest(e) {
   }
 }
 
-function getOrClearSheet(ss,name,headers) {
+function getOrClearSheet(ss, name, headers) {
   let sheet = ss.getSheetByName(name);
   if (!sheet) sheet = ss.insertSheet(name);
   sheet.clearContents();
   if (headers) sheet.appendRow(headers);
   return sheet;
 }
-function styleHeader(sheet,cols) {
-  sheet.getRange(1,1,1,cols).setBackground('#C8A96E').setFontColor('#000000').setFontWeight('bold');
+function styleHeader(sheet, cols) {
+  sheet.getRange(1,1,1,cols).setBackground('#C8A96E').setFontColor('#000').setFontWeight('bold');
 }
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
@@ -1314,7 +1271,7 @@ function showAppsScript() {
   document.getElementById('modal-appsscript').classList.remove('hidden');
 }
 function copyAppsScript() {
-  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => showNotif('✅ Script copied! Paste into script.google.com')).catch(() => prompt('Copy script:', APPS_SCRIPT_CODE));
+  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => showNotif('✅ Script disalin! Paste ke script.google.com')).catch(() => prompt('Salin script:', APPS_SCRIPT_CODE));
 }
 
 function setSheetStatus(msg, ok) {
@@ -1329,11 +1286,11 @@ function setSheetStatus(msg, ok) {
 
 async function syncToSheets(type) {
   const url = document.getElementById('cfg-sheets-url')?.value?.trim() || state.sheetsUrl;
-  if (!url) { showNotif('⚠️ Fill in Apps Script URL first under Google Sheets tab'); navigate('settings'); setTimeout(()=>switchTab('sheets'),100); return; }
+  if (!url) { showNotif('⚠️ Isi URL Apps Script dulu di tab Google Sheets'); navigate('settings'); setTimeout(()=>switchTab('sheets'),100); return; }
   const sheetId = document.getElementById('cfg-sheets-id')?.value?.trim() || state.sheetsId || '';
-  const today = new Date().toLocaleDateString('en-US');
-  showNotif('⏳ Syncing to Google Sheets…');
-  setSheetStatus('⏳ Syncing…', true);
+  const today = getNowDateString();
+  showNotif('⏳ Menyinkronkan ke Google Sheets…');
+  setSheetStatus('⏳ Sedang sync…', true);
   const actions = type === 'semua' ? ['antrian','laporan','layanan'] : [type];
   let lastUrl = '';
   for (const act of actions) {
@@ -1349,49 +1306,78 @@ async function syncToSheets(type) {
     if (act === 'layanan') rows = state.services.map(s => [s.id, s.icon, s.name, s.est, s.max, s.desc||'']);
     try {
       const res = await fetch(url, { method:'POST', body: JSON.stringify({ action:'sync_'+act, sheetId, rows }) });
-      const json = await res.json();
-      if (json.sheetUrl) lastUrl = json.sheetUrl;
-      if (!json.ok) throw new Error(json.error);
+      const j = await res.json();
+      if (j.sheetUrl) lastUrl = j.sheetUrl;
+      if (!j.ok) throw new Error(j.error);
     } catch(err) {
-      setSheetStatus('❌ Failed: ' + err.message, false);
-      showNotif('❌ Sync failed: ' + err.message);
+      setSheetStatus('❌ Gagal: ' + err.message, false);
+      showNotif('❌ Sync gagal: ' + err.message);
       return;
     }
   }
-  setSheetStatus('✅ Sync successful! ' + (lastUrl ? `<a href="${lastUrl}" target="_blank" style="color:var(--green)">Open Sheet →</a>` : ''), true);
-  showNotif('✅ Data synced to Google Sheets!');
+  const statusEl = document.getElementById('sheets-status');
+  if (statusEl) statusEl.innerHTML = '✅ Sync berhasil! ' + (lastUrl ? `<a href="${lastUrl}" target="_blank" style="color:var(--green);text-decoration:underline">Buka Sheet →</a>` : '');
+  if (statusEl) statusEl.style.display = 'block';
+  showNotif('✅ Data berhasil disinkronkan ke Google Sheets!');
+}
+
+async function importFromSheet() {
+  const url = document.getElementById('cfg-sheets-url')?.value?.trim() || state.sheetsUrl;
+  if (!url) { showNotif('⚠️ Isi URL Apps Script dulu'); return; }
+  const importInput = document.getElementById('cfg-import-sheet')?.value?.trim();
+  if (!importInput) { showNotif('⚠️ Isi URL atau ID Sheet sumber'); return; }
+  let importId = importInput;
+  const match = importInput.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (match) importId = match[1];
+  const tabName = document.getElementById('cfg-import-tab')?.value?.trim() || 'Sheet1';
+  showNotif('⏳ Mengimport dari Google Sheet…');
+  setSheetStatus('⏳ Importing…', true);
+  try {
+    const res = await fetch(url, { method:'POST', body: JSON.stringify({ action:'import', importId, tabName, sheetId: state.sheetsId||'' }) });
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.error);
+    const rows = j.rows || [];
+    setSheetStatus(`✅ Import berhasil! ${rows.length} baris dari sheet "${tabName}"`, true);
+    showNotif(`✅ ${rows.length} baris diimport!`);
+  } catch(err) {
+    setSheetStatus('❌ Import gagal: ' + err.message, false);
+    showNotif('❌ Import gagal: ' + err.message);
+  }
 }
 
 function saveSheetsCfg() {
   state.sheetsUrl = document.getElementById('cfg-sheets-url')?.value?.trim() || '';
-  state.sheetsId  = document.getElementById('cfg-sheets-id')?.value?.trim()  || '';
+  state.sheetsId  = document.getElementById('cfg-sheets-id')?.value?.trim() || '';
   try { localStorage.setItem('jdprod_sheetsurl', state.sheetsUrl); } catch(e) {}
   saveToLS(true);
-  showNotif('✅ Google Sheets configuration saved!');
+  showNotif('✅ Konfigurasi Google Sheets disimpan!');
 }
 
-function saveBusiness() {
-  state.config.name     = document.getElementById('cfg-name').value;
-  state.config.logo     = document.getElementById('cfg-logo').value;
-  state.config.tagline  = document.getElementById('cfg-tagline').value;
-  state.config.waNumber = document.getElementById('cfg-wa-number').value.trim().replace(/\D/g,'');
-  state.config.color    = document.getElementById('cfg-color').value;
+function saveBisnis() {
+  state.config.name    = document.getElementById('cfg-name').value;
+  state.config.logo    = document.getElementById('cfg-logo').value;
+  state.config.tagline = document.getElementById('cfg-tagline').value;
+  state.config.color   = document.getElementById('cfg-color').value;
   document.getElementById('sidebar-brand-name').textContent = state.config.name;
-  document.getElementById('sidebar-logo-icon').textContent  = state.config.logo;
   saveToLS();
-  showNotif('✅ Business info saved!');
+  showNotif('✅ Informasi bisnis disimpan!');
 }
-function syncColor()    { const v = document.getElementById('cfg-color').value; document.getElementById('cfg-color-hex').value = v; }
-function syncColorHex() { const v = document.getElementById('cfg-color-hex').value; if (/^#[0-9a-fA-F]{6}$/.test(v)) document.getElementById('cfg-color').value = v; }
+function syncColor() {
+  const val = document.getElementById('cfg-color').value;
+  document.getElementById('cfg-color-hex').value = val;
+}
+function syncColorHex() {
+  const val = document.getElementById('cfg-color-hex').value;
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) document.getElementById('cfg-color').value = val;
+}
 
-// ─── SERVICES ─────────────────────────────────────────────────────────────
 function renderServicesList() {
   const el = document.getElementById('services-list');
   if (!el) return;
   el.innerHTML = state.services.map(s => `
     <div class="svc-row">
       <div class="svc-icon">${s.icon}</div>
-      <div class="svc-info"><div class="svc-name">${s.name}</div><div class="svc-meta">${s.est} min • Max ${s.max}/day${s.desc?' • '+s.desc:''}</div></div>
+      <div class="svc-info"><div class="svc-name">${s.name}</div><div class="svc-meta">${s.est} menit • Maks ${s.max}/hari${s.desc?' • '+s.desc:''}</div></div>
       <button class="btn btn-ghost btn-sm" onclick="openEditService('${s.id}')">✏️</button>
       <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">🗑</button>
     </div>`).join('');
@@ -1401,14 +1387,14 @@ function addService() {
   const name = document.getElementById('new-svc-name').value.trim();
   const est  = parseInt(document.getElementById('new-svc-est').value) || 30;
   const max  = parseInt(document.getElementById('new-svc-max').value) || 20;
-  if (!name) { showNotif('⚠️ Service name is required'); return; }
+  if (!name) { showNotif('⚠️ Nama layanan wajib diisi'); return; }
   state.services.push({ id: 's'+Date.now(), icon, name, est, max, desc: '' });
   document.getElementById('new-svc-name').value = '';
   renderServicesList(); saveToLS();
-  showNotif('✅ Service added!');
+  showNotif('✅ Layanan ditambahkan!');
 }
 function deleteService(id) {
-  if (confirm('Delete this service?')) { state.services = state.services.filter(s => s.id !== id); renderServicesList(); saveToLS(); showNotif('Service deleted'); }
+  if (confirm('Hapus layanan ini?')) { state.services = state.services.filter(s => s.id !== id); renderServicesList(); saveToLS(); showNotif('Layanan dihapus'); }
 }
 function openEditService(id) {
   const s = state.services.find(s => s.id === id);
@@ -1416,8 +1402,8 @@ function openEditService(id) {
   document.getElementById('edit-svc-id').value = s.id;
   document.getElementById('edit-svc-icon').value = s.icon;
   document.getElementById('edit-svc-name').value = s.name;
-  document.getElementById('edit-svc-est').value  = s.est;
-  document.getElementById('edit-svc-max').value  = s.max;
+  document.getElementById('edit-svc-est').value = s.est;
+  document.getElementById('edit-svc-max').value = s.max;
   document.getElementById('edit-svc-desc').value = s.desc || '';
   document.getElementById('modal-svc').classList.remove('hidden');
 }
@@ -1433,52 +1419,41 @@ function saveEditService() {
   }
   document.getElementById('modal-svc').classList.add('hidden');
   renderServicesList(); saveToLS();
-  showNotif('✅ Service updated!');
+  showNotif('✅ Layanan diperbarui!');
 }
 
 // ─── SLOT SETTINGS ────────────────────────────────────────────────────────
 function generateSlots(open, close, interval) {
   const slots = [];
-  // FIX: parse time properly using split — avoid Date constructor 1899 bug
-  const [oh, om] = open.split(':').map(Number);
+  let [h, m] = open.split(':').map(Number);
   const [ch, cm] = close.split(':').map(Number);
-  let totalMin = oh * 60 + om;
   const closeMin = ch * 60 + cm;
-  while (totalMin < closeMin) {
-    const h = Math.floor(totalMin / 60);
-    const m = totalMin % 60;
+  while (h * 60 + m < closeMin) {
     slots.push(String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0'));
-    totalMin += interval;
+    m += interval;
+    if (m >= 60) { h += Math.floor(m/60); m = m % 60; }
   }
   return slots;
 }
 function regenerateSlots() {
-  const open     = document.getElementById('slot-open')?.value  || '09:00';
+  const open     = document.getElementById('slot-open')?.value || '09:00';
   const close    = document.getElementById('slot-close')?.value || '20:00';
   const interval = parseInt(document.getElementById('slot-interval')?.value || '30');
   state.slots = generateSlots(open, close, interval);
-  state.slotOpen = open; state.slotClose = close; state.slotInterval = interval;
   state.blockedSlots = new Set();
   renderSlotsSettings();
 }
 function renderSlotsSettings() {
   if (state.slots.length === 0) regenerateSlots();
-  const el  = document.getElementById('slot-settings-grid');
+  const el = document.getElementById('slot-settings-grid');
   const lbl = document.getElementById('slot-count-label');
   if (!el) return;
-  if (lbl) lbl.textContent = state.slots.length + ' slots';
-  // Sync input fields
-  const openEl = document.getElementById('slot-open');
-  const closeEl = document.getElementById('slot-close');
-  const intEl = document.getElementById('slot-interval');
-  if (openEl && state.slotOpen)   openEl.value  = state.slotOpen;
-  if (closeEl && state.slotClose) closeEl.value = state.slotClose;
-  if (intEl && state.slotInterval) intEl.value  = String(state.slotInterval);
+  if (lbl) lbl.textContent = state.slots.length + ' slot';
   el.innerHTML = state.slots.map(sl => {
     const blocked = state.blockedSlots.has(sl);
     return `<div class="slot-setting-item${blocked?' blocked':''}">
       <span>${sl}</span>
-      <button class="btn btn-sm ${blocked?'btn-success':'btn-danger'}" style="padding:3px 8px;font-size:11px" onclick="toggleSlot('${sl}')">${blocked?'Open':'Block'}</button>
+      <button class="btn btn-sm ${blocked?'btn-success':'btn-danger'}" style="padding:3px 8px;font-size:11px" onclick="toggleSlot('${sl}')">${blocked?'Buka':'Blokir'}</button>
     </div>`;
   }).join('');
 }
@@ -1503,13 +1478,13 @@ function renderStatusSettings() {
     </div>`).join('');
 }
 function addStatus() {
-  const icon  = document.getElementById('new-status-icon').value.trim()  || '🔵';
+  const icon  = document.getElementById('new-status-icon').value.trim() || '🔵';
   const label = document.getElementById('new-status-label').value.trim();
-  if (!label) { showNotif('⚠️ Status name is required'); return; }
+  if (!label) { showNotif('⚠️ Nama status wajib diisi'); return; }
   state.statuses.push({ id: 'st'+Date.now(), icon, label, color: '#7A7880' });
   document.getElementById('new-status-label').value = '';
   renderStatusSettings(); saveToLS();
-  showNotif('✅ Status added!');
+  showNotif('✅ Status ditambahkan!');
 }
 function deleteStatus(id) {
   state.statuses = state.statuses.filter(s => s.id !== id);
@@ -1522,12 +1497,12 @@ function renderCounters() {
   state.counters = n;
   const el = document.getElementById('counter-tags');
   if (!el) return;
-  el.innerHTML = Array.from({length: n}, (_, i) => `<span class="tag" style="background:rgba(74,158,245,.1);border-color:rgba(74,158,245,.3);color:var(--blue)">Counter ${i+1}</span>`).join('');
+  el.innerHTML = Array.from({length: n}, (_, i) => `<span class="tag" style="background:rgba(74,158,245,.1);border-color:rgba(74,158,245,.3);color:var(--blue)">Loket ${i+1}</span>`).join('');
 }
-function saveOps() {
+function saveOperasional() {
   state.counters = parseInt(document.getElementById('cfg-counters')?.value || 2);
   saveToLS();
-  showNotif('✅ Operations saved!');
+  showNotif('✅ Operasional disimpan!');
 }
 
 // ─── WA TEST ──────────────────────────────────────────────────────────────
@@ -1536,8 +1511,8 @@ function testWa() {
   state.sender = document.getElementById('cfg-sender')?.value || '';
   state.waTemplate = document.getElementById('cfg-template')?.value || '';
   saveToLS();
-  if (!state.apikey || state.apikey === 'YOUR_FONNTE_API_KEY') { showNotif('⚠️ Enter Fonnte API Key first'); return; }
-  showNotif('📤 Test WA sent (simulation) — configuration saved!');
+  if (!state.apikey || state.apikey === 'YOUR_FONNTE_API_KEY') { showNotif('⚠️ Masukkan API Key Fonnte dulu'); return; }
+  showNotif('📤 Test WA terkirim (simulasi) — konfigurasi disimpan!');
 }
 
 // ─── NOTIF ────────────────────────────────────────────────────────────────
@@ -1552,80 +1527,86 @@ function showNotif(msg) {
 
 // ─── TRACKING PAGE ────────────────────────────────────────────────────────
 function copyTrackLink(link) {
-  navigator.clipboard.writeText(link).then(() => showNotif('✅ Tracking link copied!')).catch(() => { prompt('Copy this link:', link); });
+  navigator.clipboard.writeText(link).then(() => showNotif('✅ Link tracking disalin!')).catch(() => { prompt('Salin link ini:', link); });
 }
 
 function shareTrackWA(qId, name, number, service, slot) {
   const link = window.location.origin + window.location.pathname + '?track=' + qId;
-  const msg = `Hello *${name}*! 👋\n\nYour queue number at *${state.config.name || 'JD Production'}*:\n\n🎫 *No. ${number}*\n📋 Service: ${service}\n🕐 Slot: ${slot}\n\nTrack your queue position in real-time:\n${link}\n\n_${state.config.name || 'JD Production'}_`;
+  const msg = `Halo *${name}*! 👋\n\nNomor antrian kamu di *JD Production*:\n\n🎫 *No. ${number}*\n📋 Layanan: ${service}\n🕐 Slot: ${slot}\n\nPantau posisi antrian kamu real-time di link ini:\n${link}\n\n_JD Production — Antrian Digital_`;
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
 
 async function openTrackPage(qId) {
   document.getElementById('app').classList.add('hidden');
   document.getElementById('customer-page').classList.add('hidden');
-  document.getElementById('tvdisplay-page').classList.add('hidden');
+  document.getElementById('display-page').classList.add('hidden');
   document.getElementById('track-page').classList.remove('hidden');
-
-  const trackBrand = document.getElementById('track-brand-name');
-  const trackLogo  = document.getElementById('track-logo-el');
-  if (trackBrand) trackBrand.textContent = state.config.name || 'JD Production';
-  if (trackLogo)  trackLogo.textContent  = state.config.logo || '🎬';
+  document.getElementById('track-brand-name').textContent = state.config.name || 'JD Production';
 
   const el = document.getElementById('track-card');
   if (el) el.innerHTML = `
     <div style="text-align:center;padding:48px;color:var(--text-muted)">
       <div style="font-size:36px;margin-bottom:12px;animation:pulse 1.5s infinite">⏳</div>
-      <div style="font-weight:500">Loading queue data…</div>
+      <div style="font-weight:500">Memuat data antrian…</div>
     </div>`;
 
-  if (state.sheetsUrl) await loadFromSheets().catch(() => {});
-  if (!state.queue.find(q => q.id === qId)) loadFromLS();
+  if (state.sheetsUrl) {
+    await loadFromSheets().catch(() => {});
+  }
+
+  if (!state.queue.find(q => q.id === qId)) {
+    loadFromLS();
+  }
 
   renderTrackPage(qId);
 
   if (window._trackInterval) clearInterval(window._trackInterval);
   window._trackInterval = setInterval(async () => {
     if (state.sheetsUrl) await loadFromSheets().catch(() => {});
-    else loadFromLS();
     renderTrackPage(qId);
   }, 8000);
 }
 
+function closeTrackPage() {
+  if (window._trackInterval) clearInterval(window._trackInterval);
+  document.getElementById('track-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+
 function renderTrackPage(qId) {
-  const q   = state.queue.find(q => q.id === qId);
-  const el  = document.getElementById('track-card');
+  const q = state.queue.find(q => q.id === qId);
+  const el = document.getElementById('track-card');
   const upd = document.getElementById('track-last-update');
-  if (upd) upd.textContent = 'Updated: ' + new Date().toLocaleTimeString('en-GB');
+  if (upd) upd.textContent = 'Update: ' + getNowTime();
   if (!el) return;
 
   if (!q) {
-    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Queue not found</div></div>`;
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Antrian tidak ditemukan</div></div>`;
     return;
   }
 
   const waitingBefore = state.queue.filter(w => w.status === 'waiting' && w.number < q.number).length;
-  const totalWaiting  = state.queue.filter(w => w.status === 'waiting').length;
-  const nowServing    = state.queue.filter(w => w.status === 'called' || w.status === 'inprogress');
+  const totalWaiting = state.queue.filter(w => w.status === 'waiting').length;
+  const nowServing = state.queue.filter(w => w.status === 'called' || w.status === 'inprogress');
   const nowServingLatest = nowServing[nowServing.length - 1];
-  const svc    = state.services.find(s => s.id === q.serviceId);
+  const svc = state.services.find(s => s.id === q.serviceId);
   const etaMin = waitingBefore * (svc?.est || 30);
 
   const steps = [
-    { id: 'waiting',    label: 'Waiting',     icon: '⏳' },
-    { id: 'called',     label: 'Called',      icon: '📢' },
-    { id: 'inprogress', label: 'In Progress', icon: '⚙️' },
-    { id: 'done',       label: 'Done',        icon: '✅' },
+    { id: 'waiting',    label: 'Menunggu',  icon: '⏳' },
+    { id: 'called',     label: 'Dipanggil', icon: '📢' },
+    { id: 'inprogress', label: 'Diproses',  icon: '⚙️' },
+    { id: 'done',       label: 'Selesai',   icon: '✅' },
   ];
   const statusOrder = ['waiting','called','inprogress','done'];
-  const currentIdx  = statusOrder.indexOf(q.status);
+  const currentIdx = statusOrder.indexOf(q.status);
 
   const statusMap = {
-    waiting:    { color:'var(--text-muted)', bg:'rgba(122,120,128,.1)', label:'⏳ Waiting for your turn',      border:'rgba(122,120,128,.3)' },
-    called:     { color:'var(--blue)',       bg:'rgba(74,158,245,.1)',  label:'📢 You\'re being called! Head to counter', border:'rgba(74,158,245,.3)' },
-    inprogress: { color:'var(--orange)',     bg:'rgba(245,161,66,.1)',  label:'⚙️ Currently being served',      border:'rgba(245,161,66,.3)' },
-    done:       { color:'var(--green)',      bg:'rgba(78,201,148,.1)',  label:'✅ Service complete',             border:'rgba(78,201,148,.3)' },
-    skip:       { color:'var(--red)',        bg:'rgba(224,84,84,.1)',   label:'⏭️ Skipped — contact admin',      border:'rgba(224,84,84,.3)' },
+    waiting:    { color: 'var(--text-muted)', bg: 'rgba(122,120,128,.1)', label: '⏳ Menunggu giliran', border: 'rgba(122,120,128,.3)' },
+    called:     { color: 'var(--blue)',       bg: 'rgba(74,158,245,.1)',   label: '📢 Sedang dipanggil! Segera ke loket', border: 'rgba(74,158,245,.3)' },
+    inprogress: { color: 'var(--orange)',     bg: 'rgba(245,161,66,.1)',   label: '⚙️ Sedang dalam proses', border: 'rgba(245,161,66,.3)' },
+    done:       { color: 'var(--green)',      bg: 'rgba(78,201,148,.1)',   label: '✅ Selesai dilayani', border: 'rgba(78,201,148,.3)' },
+    skip:       { color: 'var(--red)',        bg: 'rgba(224,84,84,.1)',    label: '⏭️ Dilewati — hubungi admin', border: 'rgba(224,84,84,.3)' },
   };
   const st = statusMap[q.status] || statusMap.waiting;
 
@@ -1634,9 +1615,7 @@ function renderTrackPage(qId) {
       <div class="track-number">${String(q.number).padStart(3,'0')}</div>
       <div style="font-size:15px;font-weight:600;margin-bottom:4px">${q.name}</div>
       <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${q.serviceIcon} ${q.service} • 🕐 ${q.slot}</div>
-      <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:100px;background:${st.bg};border:1px solid ${st.border};color:${st.color};font-weight:600;font-size:13px;margin-bottom:20px">
-        ${st.label}
-      </div>
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:100px;background:${st.bg};border:1px solid ${st.border};color:${st.color};font-weight:600;font-size:13px;margin-bottom:20px">${st.label}</div>
       <div class="track-status-bar">
         ${steps.map((step, i) => {
           const isDone = i < currentIdx;
@@ -1649,31 +1628,16 @@ function renderTrackPage(qId) {
       </div>
     </div>
     <div class="divider"></div>
-    <div class="track-info-row"><span class="track-info-key">Your position</span><strong style="color:var(--gold)">${q.status==='waiting'?`${waitingBefore+1} of ${totalWaiting}`:q.status==='done'?'Done ✅':'Being served'}</strong></div>
-    <div class="track-info-row"><span class="track-info-key">Waiting queue</span><span>${totalWaiting} people</span></div>
-    <div class="track-info-row"><span class="track-info-key">Registered at</span><span>${q.time}</span></div>
-    <div class="track-info-row"><span class="track-info-key">Queue number</span><span style="font-family:var(--font-display);font-size:17px;color:var(--gold)">${String(q.number).padStart(3,'0')}</span></div>
-    ${q.status==='waiting'?`
-    <div class="track-eta">
-      <div style="font-size:11px;color:var(--purple);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">⏱ Estimated Wait</div>
-      <div style="font-family:var(--font-display);font-size:28px;color:var(--purple)">${etaMin>0?'~'+etaMin+' minutes':'Almost your turn'}</div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Based on queue ahead of you</div>
-    </div>`:''}
-    ${nowServingLatest&&q.status==='waiting'?`
-    <div class="track-now-serving">
-      <div style="font-size:11px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Now Serving</div>
-      <div class="track-now-num">${String(nowServingLatest.number).padStart(3,'0')}</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${nowServingLatest.name} • ${nowServingLatest.service}</div>
-    </div>`:''}
-    ${q.status==='called'?`
-    <div style="background:rgba(74,158,245,.08);border:1px solid rgba(74,158,245,.3);border-radius:var(--radius);padding:16px;text-align:center;animation:pulse 2s infinite">
-      <div style="font-size:24px;margin-bottom:8px">🔔</div>
-      <div style="font-weight:600;color:var(--blue);font-size:15px">Your name is being called!</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Please head to the counter now</div>
-    </div>`:''}
+    <div class="track-info-row"><span class="track-info-key">Posisi kamu</span><strong style="color:var(--gold)">${q.status==='waiting'?`${waitingBefore+1} dari ${totalWaiting}`:q.status==='done'?'Selesai ✅':'Sedang dilayani'}</strong></div>
+    <div class="track-info-row"><span class="track-info-key">Antrian menunggu</span><span>${totalWaiting} orang</span></div>
+    <div class="track-info-row"><span class="track-info-key">Daftar jam</span><span>${q.time}</span></div>
+    <div class="track-info-row"><span class="track-info-key">Nomor antrian</span><span style="font-family:var(--font-display);font-size:17px;color:var(--gold)">${String(q.number).padStart(3,'0')}</span></div>
+    ${q.status==='waiting'?`<div class="track-eta"><div style="font-size:11px;color:var(--purple);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">⏱ Estimasi Waktu Tunggu</div><div style="font-family:var(--font-display);font-size:28px;color:var(--purple)">${etaMin>0?'~'+etaMin+' menit':'Sebentar lagi'}</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Estimasi berdasarkan antrian sebelummu</div></div>`:''}
+    ${nowServingLatest&&q.status==='waiting'?`<div class="track-now-serving"><div style="font-size:11px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Sedang Dilayani</div><div class="track-now-num">${String(nowServingLatest.number).padStart(3,'0')}</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">${nowServingLatest.name} • ${nowServingLatest.service}</div></div>`:''}
+    ${q.status==='called'?`<div style="background:rgba(74,158,245,.08);border:1px solid rgba(74,158,245,.3);border-radius:var(--radius);padding:16px;text-align:center;animation:pulse 2s infinite"><div style="font-size:24px;margin-bottom:8px">🔔</div><div style="font-weight:600;color:var(--blue);font-size:15px">Namamu sedang dipanggil!</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">Segera menuju loket</div></div>`:''}
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px">
       <button class="btn btn-ghost btn-sm" onclick="renderTrackPage('${qId}')">🔄 Refresh</button>
-      <button class="btn btn-ghost btn-sm" onclick="shareTrackWA('${q.id}','${q.name}','${String(q.number).padStart(3,'0')}','${q.service}','${q.slot}')">📱 Send via WA</button>
+      <button class="btn btn-ghost btn-sm" onclick="shareTrackWA('${q.id}','${q.name}','${String(q.number).padStart(3,'0')}','${q.service}','${q.slot}')">📱 Kirim WA</button>
     </div>`;
 }
 
@@ -1682,56 +1646,65 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const svcParam   = params.get('svc');
   const trackParam = params.get('track');
-  const tvParam    = params.get('tv');
 
+  // Load sheetsUrl dari localStorage terlebih dahulu
   try {
     const savedUrl = localStorage.getItem('jdprod_sheetsurl');
     if (savedUrl) state.sheetsUrl = savedUrl;
   } catch(e) {}
 
+  // Load data lokal
   const hasSaved = loadFromLS();
 
-  // ── TV DISPLAY (standalone) ──
-  if (tvParam) { initTVDisplay(); return; }
+  // FIX: Cek URL param SEBELUM load Sheets async berjalan
+  // Ini mencegah navigate('dashboard') terpanggil oleh .then() sheets
+  // bahkan setelah halaman sudah redirect ke customer/track page
+  if (trackParam) {
+    openTrackPage(trackParam);
+    return; // STOP — jangan lanjut ke bawah sama sekali
+  }
 
-  // ── CUSTOMER / TRACK ──
-  if (trackParam) { openTrackPage(trackParam); return; }
   if (svcParam) {
-    if (state.sheetsUrl) await loadFromSheets().catch(() => {});
+    // Untuk customer page, load dari Sheets dulu kalau ada
+    if (state.sheetsUrl) {
+      try { await loadFromSheets(); } catch(e) {}
+    }
     openCustomer(svcParam);
-    return;
+    return; // STOP — jangan lanjut ke bawah sama sekali
   }
 
-  // ── ADMIN ──
-  if (state.sheetsUrl) {
-    loadFromSheets().then(ok => {
-      if (ok) {
-        document.getElementById('sidebar-brand-name').textContent = state.config.name || 'JD Production';
-        document.getElementById('sidebar-logo-icon').textContent  = state.config.logo  || '🎬';
-        navigate('dashboard');
-      }
-    });
-  }
+  // ── Hanya sampai sini kalau ini halaman admin ──
 
+  // Seed sample queue hanya kalau tidak ada data sama sekali
   if (!hasSaved || state.queue.length === 0) {
     if (state.slots.length === 0) state.slots = generateSlots('09:00','20:00',30);
-    state.slotOpen = '09:00'; state.slotClose = '20:00'; state.slotInterval = 30;
     state.queue = [
-      { id:'q1', number:1, name:'Alex Turner',    serviceId:'s1', service:'Photo Studio',    serviceIcon:'📸', slot:'10:00', status:'inprogress', time:'09:45' },
-      { id:'q2', number:2, name:'Brian Santoso',  serviceId:'s2', service:'Video Production',serviceIcon:'🎬', slot:'11:00', status:'waiting',    time:'10:12' },
-      { id:'q3', number:3, name:'Clara Dewi',     serviceId:'s1', service:'Photo Studio',    serviceIcon:'📸', slot:'10:30', status:'called',     time:'10:28' },
-      { id:'q4', number:4, name:'Diana Rahayu',   serviceId:'s3', service:'Edit & Post',     serviceIcon:'✂️', slot:'13:00', status:'waiting',    time:'11:00' },
-      { id:'q5', number:5, name:'Edwin Prasetyo', serviceId:'s1', service:'Photo Studio',    serviceIcon:'📸', slot:'11:30', status:'done',       time:'11:30' },
+      { id:'q1', number:1, name:'Andi Firmansyah', serviceId:'s1', service:'Foto Studio',      serviceIcon:'📸', slot:'10:00', status:'inprogress', time:'09:45' },
+      { id:'q2', number:2, name:'Budi Santoso',    serviceId:'s2', service:'Video Production', serviceIcon:'🎬', slot:'11:00', status:'waiting',    time:'10:12' },
+      { id:'q3', number:3, name:'Citra Dewi',      serviceId:'s1', service:'Foto Studio',      serviceIcon:'📸', slot:'10:30', status:'called',     time:'10:28' },
+      { id:'q4', number:4, name:'Dewi Rahayu',     serviceId:'s3', service:'Edit & Post',      serviceIcon:'✂️', slot:'13:00', status:'waiting',    time:'11:00' },
+      { id:'q5', number:5, name:'Eko Prasetyo',    serviceId:'s1', service:'Foto Studio',      serviceIcon:'📸', slot:'11:30', status:'done',       time:'11:30' },
     ];
     state.nextNumber = 6;
   }
 
   const sb = document.getElementById('sidebar-brand-name');
   if (sb) sb.textContent = state.config.name || 'JD Production';
-  const si = document.getElementById('sidebar-logo-icon');
-  if (si) si.textContent = state.config.logo || '🎬';
 
   navigate('dashboard');
+
+  // Load dari Sheets di background — TANPA memanggil navigate lagi
+  if (state.sheetsUrl) {
+    loadFromSheets().then(ok => {
+      if (ok) {
+        const sb2 = document.getElementById('sidebar-brand-name');
+        if (sb2) sb2.textContent = state.config.name || 'JD Production';
+        // Refresh halaman yang sedang aktif saja, jangan navigate()
+        if (state.currentPage === 'dashboard') renderDashboard();
+        else if (state.currentPage === 'queue') renderQueue();
+      }
+    }).catch(() => {});
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
