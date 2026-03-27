@@ -965,30 +965,79 @@ function renderWaTab() {
   const t = document.getElementById('cfg-template'); if (t && state.waTemplate) t.value = state.waTemplate;
 }
 
-// ─── LOCAL STORAGE ────────────────────────────────────────────────────────
+// ─── SAVE / LOAD (Google Sheets utama, localStorage fallback) ─────────────
 const LS_KEY = 'jdprod_settings';
-function saveToLS() {
-  try {
-    const data = {
-      config: state.config,
-      services: state.services,
-      statuses: state.statuses,
-      slots: state.slots,
-      blockedSlots: [...state.blockedSlots],
-      counters: state.counters,
-      nextNumber: state.nextNumber,
-      sheetsUrl: state.sheetsUrl || '',
-      sheetsId: state.sheetsId || '',
-      apikey: state.apikey || '',
-      sender: state.sender || '',
-      waTemplate: state.waTemplate || '',
-      slotOpen: state.slotOpen || '09:00',
-      slotClose: state.slotClose || '20:00',
-      slotInterval: state.slotInterval || 30,
-    };
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
-  } catch(e) {}
+
+function getFullStatePayload() {
+  return {
+    action: 'save_settings',
+    config: state.config,
+    services: state.services,
+    statuses: state.statuses,
+    queue: state.queue,
+    slots: state.slots,
+    blockedSlots: [...state.blockedSlots],
+    counters: state.counters,
+    nextNumber: state.nextNumber,
+    sheetsUrl: state.sheetsUrl || '',
+    sheetsId: state.sheetsId || '',
+    apikey: state.apikey || '',
+    sender: state.sender || '',
+    waTemplate: state.waTemplate || '',
+    slotOpen: state.slotOpen || '09:00',
+    slotClose: state.slotClose || '20:00',
+    slotInterval: state.slotInterval || 30,
+  };
 }
+
+async function saveToLS(silent) {
+  // Selalu simpan ke localStorage dulu
+  try { localStorage.setItem(LS_KEY, JSON.stringify(getFullStatePayload())); } catch(e) {}
+  // Kalau ada URL Apps Script, simpan ke Sheets juga
+  if (state.sheetsUrl) {
+    try {
+      const res = await fetch(state.sheetsUrl, { method:'POST', body: JSON.stringify(getFullStatePayload()) });
+      const json = await res.json();
+      if (json.sheetId) state.sheetsId = json.sheetId;
+      if (!silent) showNotif('✅ Tersimpan ke Google Sheets & browser!');
+    } catch(e) {
+      if (!silent) showNotif('✅ Tersimpan di browser (Sheets offline)');
+    }
+  } else {
+    if (!silent) showNotif('✅ Tersimpan di browser');
+  }
+}
+
+async function loadFromSheets() {
+  if (!state.sheetsUrl) return false;
+  try {
+    showNotif('⏳ Memuat data dari Google Sheets…');
+    const res = await fetch(state.sheetsUrl + '?action=load_settings');
+    const json = await res.json();
+    if (!json.ok) return false;
+    const s = json.settings || {};
+    if (s.name)         state.config.name    = s.name;
+    if (s.logo)         state.config.logo    = s.logo;
+    if (s.tagline)      state.config.tagline = s.tagline;
+    if (s.color)        state.config.color   = s.color;
+    if (s.apikey)       state.apikey         = s.apikey;
+    if (s.sender)       state.sender         = s.sender;
+    if (s.waTemplate)   state.waTemplate     = s.waTemplate;
+    if (s.slotOpen)     state.slotOpen       = s.slotOpen;
+    if (s.slotClose)    state.slotClose      = s.slotClose;
+    if (s.slotInterval) state.slotInterval   = parseInt(s.slotInterval);
+    if (s.counters)     state.counters       = parseInt(s.counters);
+    if (s.nextNumber)   state.nextNumber     = parseInt(s.nextNumber);
+    if (s.blockedSlots) state.blockedSlots   = new Set(s.blockedSlots.split(',').filter(Boolean));
+    if (s.sheetsId)     state.sheetsId       = s.sheetsId;
+    if (json.services && json.services.length)  state.services = json.services;
+    if (json.statuses && json.statuses.length)  state.statuses = json.statuses;
+    if (json.queue    && json.queue.length)      state.queue    = json.queue;
+    showNotif('✅ Data dimuat dari Google Sheets!');
+    return true;
+  } catch(e) { return false; }
+}
+
 function loadFromLS() {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -997,6 +1046,7 @@ function loadFromLS() {
     if (data.config)    state.config    = data.config;
     if (data.services)  state.services  = data.services;
     if (data.statuses)  state.statuses  = data.statuses;
+    if (data.queue)     state.queue     = data.queue;
     if (data.slots)     state.slots     = data.slots;
     if (data.blockedSlots) state.blockedSlots = new Set(data.blockedSlots);
     if (data.counters)  state.counters  = data.counters;
@@ -1045,69 +1095,169 @@ function copyQRLink() {
 }
 
 // ─── GOOGLE SHEETS SYNC ───────────────────────────────────────────────────
-const APPS_SCRIPT_CODE = `// JD Production — Google Apps Script
-// Deploy sebagai Web App: Execute as Me, Access: Anyone
+const APPS_SCRIPT_CODE = `// ============================================================
+// JD Production — Google Apps Script
+// Deploy: Deploy > New Deployment > Web App
+//   Execute as : Me
+//   Who has access : Anyone
+// ============================================================
 
+const SPREADSHEET_NAME = 'JD Production — Data';
+
+function getOrCreateSS() {
+  const files = DriveApp.getFilesByName(SPREADSHEET_NAME);
+  if (files.hasNext()) return SpreadsheetApp.open(files.next());
+  const ss = SpreadsheetApp.create(SPREADSHEET_NAME);
+  // Buat semua sheet awal
+  ['Settings','Antrian','Layanan','Statuses','Laporan Harian'].forEach(name => {
+    if (!ss.getSheetByName(name)) ss.insertSheet(name);
+  });
+  return ss;
+}
+
+function doGet(e) {
+  return handleRequest(e);
+}
 function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const action = data.action;
-    let ss;
+  return handleRequest(e);
+}
 
-    if (data.sheetId) {
-      ss = SpreadsheetApp.openById(data.sheetId);
-    } else {
-      // Buat spreadsheet baru kalau belum ada
-      const files = DriveApp.getFilesByName('JD Production — Antrian');
-      if (files.hasNext()) {
-        ss = SpreadsheetApp.open(files.next());
-      } else {
-        ss = SpreadsheetApp.create('JD Production — Antrian');
+function handleRequest(e) {
+  try {
+    const p = e.parameter || {};
+    const body = (e.postData && e.postData.contents) ? JSON.parse(e.postData.contents) : {};
+    const action = p.action || body.action;
+    const ss = getOrCreateSS();
+
+    // ── LOAD SETTINGS ──────────────────────────────────────
+    if (action === 'load_settings') {
+      const sheet = ss.getSheetByName('Settings');
+      const data = {};
+      if (sheet && sheet.getLastRow() > 0) {
+        const rows = sheet.getDataRange().getValues();
+        rows.forEach(r => { if (r[0]) data[r[0]] = r[1]; });
       }
+      // Load antrian
+      const qa = ss.getSheetByName('Antrian');
+      const queue = [];
+      if (qa && qa.getLastRow() > 1) {
+        const rows = qa.getDataRange().getValues().slice(1);
+        rows.forEach(r => queue.push({
+          id: r[0], number: r[1], name: r[2], serviceId: r[3],
+          service: r[4], serviceIcon: r[5], slot: r[6], status: r[7], time: r[8]
+        }));
+      }
+      // Load layanan
+      const ls = ss.getSheetByName('Layanan');
+      const services = [];
+      if (ls && ls.getLastRow() > 1) {
+        const rows = ls.getDataRange().getValues().slice(1);
+        rows.forEach(r => services.push({ id:r[0], icon:r[1], name:r[2], est:r[3], max:r[4], desc:r[5]||'' }));
+      }
+      // Load statuses
+      const st = ss.getSheetByName('Statuses');
+      const statuses = [];
+      if (st && st.getLastRow() > 1) {
+        const rows = st.getDataRange().getValues().slice(1);
+        rows.forEach(r => statuses.push({ id:r[0], icon:r[1], label:r[2], color:r[3] }));
+      }
+      return json({ ok:true, settings: data, queue, services, statuses,
+        sheetId: ss.getId(), sheetUrl: ss.getUrl() });
     }
 
+    // ── SAVE SETTINGS ──────────────────────────────────────
+    if (action === 'save_settings') {
+      const sheet = getOrClearSheet(ss, 'Settings');
+      const cfg = body.config || {};
+      const rows = [
+        ['name',        cfg.name     || ''],
+        ['logo',        cfg.logo     || ''],
+        ['tagline',     cfg.tagline  || ''],
+        ['color',       cfg.color    || ''],
+        ['apikey',      body.apikey  || ''],
+        ['sender',      body.sender  || ''],
+        ['waTemplate',  body.waTemplate || ''],
+        ['slotOpen',    body.slotOpen   || '09:00'],
+        ['slotClose',   body.slotClose  || '20:00'],
+        ['slotInterval',body.slotInterval || 30],
+        ['counters',    body.counters    || 2],
+        ['nextNumber',  body.nextNumber  || 1],
+        ['blockedSlots',(body.blockedSlots||[]).join(',')],
+        ['sheetsId',    ss.getId()],
+        ['savedAt',     new Date().toLocaleString('id-ID')],
+      ];
+      rows.forEach(r => sheet.appendRow(r));
+      // Save layanan
+      if (body.services) {
+        const ls = getOrClearSheet(ss, 'Layanan', ['ID','Ikon','Nama','Durasi','Maks/Hari','Deskripsi']);
+        body.services.forEach(s => ls.appendRow([s.id,s.icon,s.name,s.est,s.max,s.desc||'']));
+        styleHeader(ls, 6);
+      }
+      // Save statuses
+      if (body.statuses) {
+        const st = getOrClearSheet(ss, 'Statuses', ['ID','Ikon','Label','Warna']);
+        body.statuses.forEach(s => st.appendRow([s.id,s.icon,s.label,s.color]));
+        styleHeader(st, 4);
+      }
+      // Save antrian
+      if (body.queue) {
+        const qa = getOrClearSheet(ss, 'Antrian', ['ID','No','Nama','ServiceID','Layanan','Ikon','Slot','Status','Waktu']);
+        body.queue.forEach(q => qa.appendRow([q.id,q.number,q.name,q.serviceId,q.service,q.serviceIcon,q.slot,q.status,q.time]));
+        styleHeader(qa, 9);
+      }
+      return json({ ok:true, sheetId: ss.getId(), sheetUrl: ss.getUrl() });
+    }
+
+    // ── SYNC ANTRIAN (append baris baru) ───────────────────
     if (action === 'sync_antrian') {
-      syncSheet(ss, 'Antrian', data.rows,
-        ['No', 'Nama', 'Layanan', 'Slot', 'Status', 'Waktu Daftar']);
+      const qa = getOrClearSheet(ss, 'Antrian', ['ID','No','Nama','ServiceID','Layanan','Ikon','Slot','Status','Waktu']);
+      (body.rows||[]).forEach(r => qa.appendRow(r));
+      styleHeader(qa, 9);
+      return json({ ok:true, sheetId: ss.getId(), sheetUrl: ss.getUrl() });
     }
     if (action === 'sync_laporan') {
-      syncSheet(ss, 'Laporan Harian', data.rows,
-        ['Tanggal', 'Total', 'Selesai', 'Menunggu', 'Dipanggil', 'Diproses']);
+      const sh = getOrClearSheet(ss, 'Laporan Harian', ['Tanggal','Total','Selesai','Menunggu','Dipanggil','Diproses']);
+      (body.rows||[]).forEach(r => sh.appendRow(r));
+      styleHeader(sh, 6);
+      return json({ ok:true, sheetId: ss.getId(), sheetUrl: ss.getUrl() });
     }
     if (action === 'sync_layanan') {
-      syncSheet(ss, 'Layanan', data.rows,
-        ['ID', 'Ikon', 'Nama', 'Durasi (mnt)', 'Maks/Hari', 'Deskripsi']);
+      const sh = getOrClearSheet(ss, 'Layanan', ['ID','Ikon','Nama','Durasi','Maks/Hari','Deskripsi']);
+      (body.rows||[]).forEach(r => sh.appendRow(r));
+      styleHeader(sh, 6);
+      return json({ ok:true, sheetId: ss.getId(), sheetUrl: ss.getUrl() });
     }
+
+    // ── IMPORT DARI SHEET LAIN ─────────────────────────────
     if (action === 'import') {
-      const srcSS = SpreadsheetApp.openById(data.importId);
-      const sheet = srcSS.getSheetByName(data.tabName) || srcSS.getSheets()[0];
-      const values = sheet.getDataRange().getValues();
-      return ContentService.createTextOutput(JSON.stringify({
-        ok: true, rows: values, sheetId: ss.getId(), sheetUrl: ss.getUrl()
-      })).setMimeType(ContentService.MimeType.JSON);
+      const srcSS = SpreadsheetApp.openById(body.importId);
+      const srcSheet = srcSS.getSheetByName(body.tabName) || srcSS.getSheets()[0];
+      const values = srcSheet.getDataRange().getValues();
+      return json({ ok:true, rows: values, sheetId: ss.getId(), sheetUrl: ss.getUrl() });
     }
 
-    return ContentService.createTextOutput(JSON.stringify({
-      ok: true, sheetId: ss.getId(), sheetUrl: ss.getUrl()
-    })).setMimeType(ContentService.MimeType.JSON);
-
+    return json({ ok:false, error: 'Unknown action: ' + action });
   } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({
-      ok: false, error: err.message
-    })).setMimeType(ContentService.MimeType.JSON);
+    return json({ ok:false, error: err.message });
   }
 }
 
-function syncSheet(ss, name, rows, headers) {
+function getOrClearSheet(ss, name, headers) {
   let sheet = ss.getSheetByName(name);
   if (!sheet) sheet = ss.insertSheet(name);
   sheet.clearContents();
-  sheet.appendRow(headers);
-  rows.forEach(r => sheet.appendRow(r));
-  sheet.getRange(1, 1, 1, headers.length)
-    .setBackground('#C8A96E').setFontColor('#000').setFontWeight('bold');
+  if (headers) sheet.appendRow(headers);
+  return sheet;
+}
+function styleHeader(sheet, cols) {
+  sheet.getRange(1,1,1,cols)
+    .setBackground('#C8A96E').setFontColor('#000000').setFontWeight('bold');
+}
+function json(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }`;
-
 function showAppsScript() {
   document.getElementById('appsscript-code').textContent = APPS_SCRIPT_CODE;
   document.getElementById('modal-appsscript').classList.remove('hidden');
@@ -1209,7 +1359,9 @@ async function importFromSheet() {
 function saveSheetsCfg() {
   state.sheetsUrl = document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   state.sheetsId  = document.getElementById('cfg-sheets-id')?.value?.trim() || '';
-  saveToLS();
+  // Simpan URL ke localStorage dulu
+  try { localStorage.setItem('jdprod_sheetsurl', state.sheetsUrl); } catch(e) {}
+  saveToLS(true);
   showNotif('✅ Konfigurasi Google Sheets disimpan!');
 }
 
@@ -1522,11 +1674,32 @@ function renderTrackPage(qId) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
-function init() {
-  // Load settings dari localStorage kalau ada
+async function init() {
+  // Cek apakah ada sheetsUrl tersimpan
+  try {
+    const savedUrl = localStorage.getItem('jdprod_sheetsurl');
+    if (savedUrl) state.sheetsUrl = savedUrl;
+  } catch(e) {}
+
+  // Load dari localStorage dulu (cepat)
   const hasSaved = loadFromLS();
 
-  // Seed sample queue hanya kalau tidak ada data tersimpan
+  // Kalau ada sheetsUrl, coba load dari Sheets (lebih fresh, lintas device)
+  if (state.sheetsUrl) {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get('track') && !params.get('svc')) {
+      // Load dari sheets di background, lalu re-render
+      loadFromSheets().then(ok => {
+        if (ok) {
+          const sb = document.getElementById('sidebar-brand-name');
+          if (sb) sb.textContent = state.config.name || 'JD Production';
+          navigate('dashboard');
+        }
+      });
+    }
+  }
+
+  // Seed sample queue hanya kalau tidak ada data sama sekali
   if (!hasSaved || state.queue.length === 0) {
     if (state.slots.length === 0) state.slots = generateSlots('09:00','20:00',30);
     state.queue = [
@@ -1539,7 +1712,6 @@ function init() {
     state.nextNumber = 6;
   }
 
-  // Apply nama bisnis ke sidebar
   const sb = document.getElementById('sidebar-brand-name');
   if (sb) sb.textContent = state.config.name || 'JD Production';
 
@@ -1547,7 +1719,6 @@ function init() {
   const params = new URLSearchParams(window.location.search);
   const svcParam   = params.get('svc');
   const trackParam = params.get('track');
-
   if (trackParam) { openTrackPage(trackParam); return; }
   if (svcParam)   { openCustomer(svcParam);    return; }
 
