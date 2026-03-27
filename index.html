@@ -148,26 +148,10 @@ input,select,textarea{font-family:inherit;color:inherit}
 .display-current-status{font-size:12px;margin-top:6px;font-weight:500}
 .display-waiting-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--b)}
 .display-waiting-chip{font-family:var(--fd);font-size:20px;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:6px 12px;color:var(--tm)}
-
-/* PERUBAHAN UKURAN TOMBOL (KECIL 50%) */
+/* CTA bar di display TV */
 .display-cta-bar{display:flex;justify-content:center;padding:12px 0 4px}
-.display-cta-btn{
-  background:var(--gold);
-  color:#0A0A0B;
-  font-family:"Bebas Neue",sans-serif;
-  font-size:14px; /* Kecil 50% dari 28px */
-  letter-spacing:.06em;
-  padding:10px 28px; /* Kecil 50% dari 20px 56px */
-  border-radius:8px; /* Kecil 50% dari 16px */
-  cursor:pointer;
-  transition:all .18s ease;
-  display:flex;
-  align-items:center;
-  gap:7px; /* Kecil 50% dari 14px */
-  box-shadow:0 2px 12px rgba(240,192,96,.25)
-}
-.display-cta-btn:hover{background:#F5D070;transform:translateY(-1.5px);box-shadow:0 5px 18px rgba(240,192,96,.4)}
-
+.display-cta-btn{background:var(--gold);color:#0A0A0B;font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.06em;padding:20px 56px;border-radius:16px;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;gap:14px;box-shadow:0 4px 24px rgba(240,192,96,.25)}
+.display-cta-btn:hover{background:#F5D070;transform:translateY(-3px);box-shadow:0 10px 36px rgba(240,192,96,.4)}
 /* Track */
 .track-card{width:100%;max-width:420px}
 .track-num-big{font-family:var(--fd);font-size:100px;letter-spacing:.04em;color:var(--gold);line-height:1;text-align:center;padding:12px 0}
@@ -207,12 +191,13 @@ input,select,textarea{font-family:inherit;color:inherit}
   .studio-pick-grid{grid-template-columns:1fr}
   .page-body{padding:14px}
   .topbar{padding:12px 16px}
-  .display-cta-btn{font-size:14px;padding:8px 20px} /* Penyesuaian mobile */
+  .display-cta-btn{font-size:20px;padding:14px 28px}
 }
 </style>
 </head>
 <body>
 
+<!-- ADMIN APP -->
 <div id="app">
   <aside id="sidebar">
     <div class="brand-area">
@@ -317,6 +302,7 @@ input,select,textarea{font-family:inherit;color:inherit}
   </div>
 </div>
 
+<!-- CUSTOMER PAGE -->
 <div id="customer-page" class="h">
   <button class="btn btn-ghost btn-sm" onclick="closeCustomer()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Admin</button>
   <div class="cust-hdr">
@@ -327,6 +313,7 @@ input,select,textarea{font-family:inherit;color:inherit}
   <div id="customer-inner"></div>
 </div>
 
+<!-- RECEIPT PAGE -->
 <div id="receipt-page" class="h">
   <button class="btn btn-ghost btn-sm" onclick="backToCustomer()" style="position:fixed;top:14px;left:14px;z-index:100">&larr; Kembali</button>
   <div class="receipt-wrap">
@@ -350,6 +337,7 @@ input,select,textarea{font-family:inherit;color:inherit}
         </div>
       </div>
     </div>
+    <!-- COUNTDOWN ke Display TV -->
     <div style="text-align:center;margin-top:22px">
       <div class="countdown-wrap">
         <svg class="ctr" width="90" height="90" viewBox="0 0 90 90">
@@ -368,6 +356,7 @@ input,select,textarea{font-family:inherit;color:inherit}
   </div>
 </div>
 
+<!-- TRACK PAGE -->
 <div id="track-page" class="h">
   <button class="btn btn-ghost btn-sm" onclick="closeTrack()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Tutup</button>
   <div style="text-align:center;margin-bottom:20px">
@@ -379,6 +368,7 @@ input,select,textarea{font-family:inherit;color:inherit}
   <div style="font-size:11px;color:var(--td);margin-top:12px;text-align:center">Auto-update setiap 8 detik &middot; <span id="tr-last">&#8212;</span></div>
 </div>
 
+<!-- DISPLAY TV -->
 <div id="display-page" class="h">
   <button class="btn btn-ghost btn-sm" onclick="closeDisplay()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Admin</button>
   <div class="display-header">
@@ -386,12 +376,583 @@ input,select,textarea{font-family:inherit;color:inherit}
     <div class="display-clock" id="dp-clock">00:00:00</div>
   </div>
   <div class="display-studios-grid" id="dp-studios"></div>
+  <!-- TOMBOL AMBIL ANTRIAN -->
   <div class="display-cta-bar">
     <button class="display-cta-btn" onclick="openCustomerFromDisplay()">
-      <span style="font-size:14px">&#128247;</span> AMBIL NOMOR ANTRIAN
+      <span style="font-size:28px">&#128247;</span> AMBIL NOMOR ANTRIAN
     </button>
   </div>
 </div>
 
+<!-- MODAL GAS -->
+<div id="modal-gas" class="modal-wrap h" onclick="if(event.target===this)this.classList.add('h')">
+  <div class="modal-box" style="max-width:640px">
+    <div class="modal-title">&#128203; Google Apps Script</div>
+    <div style="font-size:12px;color:var(--tm);margin-bottom:12px">Copy semua &rarr; paste ke <strong style="color:var(--t)">script.google.com</strong> &rarr; Deploy sebagai Web App</div>
+    <div class="code-block" id="gas-code-view"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" style="flex:1;justify-content:center" onclick="copyGASScript()">&#128203; Salin Script</button>
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-gas').classList.add('h')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div id="notif" class="notif h"></div>
+
+<script>
+const STUDIOS=[
+  {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
+  {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
+  {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
+  {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
+];
+const DEFAULT_STATUSES=[
+  {id:'waiting',   ico:'⏳',label:'Menunggu',  color:'#7B7885'},
+  {id:'called',    ico:'📢',label:'Dipanggil', color:'#5599F5'},
+  {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
+  {id:'done',      ico:'✅',label:'Selesai',   color:'#45C78A'},
+  {id:'skip',      ico:'⏭️',label:'Dilewati',  color:'#E05555'},
+];
+let state={
+  queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},
+  studios:JSON.parse(JSON.stringify(STUDIOS)),
+  statuses:JSON.parse(JSON.stringify(DEFAULT_STATUSES)),
+  config:{name:'JD Production',logo:'🎬',tagline:'Professional Photography & Production'},
+  gasUrl:'',gasOnline:false,curTrackId:null,
+};
+const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
+
+function nowTime(){const d=new Date(),h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');return h+':'+m;}
+function nowTimeSec(){const d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
+function nowDate(){const d=new Date();const dy=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return dy[d.getDay()]+', '+d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();}
+
+function nav(page){
+  document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('h'));
+  document.getElementById('page-'+page)?.classList.remove('h');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
+  document.getElementById('app').classList.remove('h');
+  ['customer-page','receipt-page','track-page','display-page'].forEach(id=>document.getElementById(id).classList.add('h'));
+  cancelCountdown();
+  if(page==='dashboard')renderDashboard();
+  if(page==='queue')renderQueue();
+  if(page==='settings')renderSettings();
+}
+
+// ── COUNTDOWN ──────────────────────────────────────────
+let _cdrTimer=null, _cdrSec=10;
+const CDR_TOTAL=10;
+function startCountdown(){
+  cancelCountdown();
+  _cdrSec=CDR_TOTAL;
+  _updateCDR(_cdrSec);
+  _cdrTimer=setInterval(()=>{
+    _cdrSec--;
+    _updateCDR(_cdrSec);
+    if(_cdrSec<=0){cancelCountdown();goToDisplayNow();}
+  },1000);
+}
+function cancelCountdown(){if(_cdrTimer){clearInterval(_cdrTimer);_cdrTimer=null;}}
+function _updateCDR(sec){
+  const n=document.getElementById('ctr-num');
+  const b=document.getElementById('ctr-bar');
+  if(n)n.textContent=sec;
+  if(b){const c=2*Math.PI*40;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-sec/CDR_TOTAL);}
+}
+function goToDisplayNow(){
+  cancelCountdown();
+  document.getElementById('receipt-page').classList.add('h');
+  openDisplay();
+}
+
+// ── CUSTOMER FLOW ───────────────────────────────────────
+let custState={step:'pick',studioId:null,name:''};
+let _fromDisplay=false;
+
+function openCustomer(preStudio){
+  _fromDisplay=false;
+  document.getElementById('app').classList.add('h');
+  ['receipt-page','track-page','display-page'].forEach(id=>document.getElementById(id).classList.add('h'));
+  document.getElementById('customer-page').classList.remove('h');
+  custState={step:preStudio?'name':'pick',studioId:preStudio||null,name:''};
+  document.getElementById('c-logo').textContent=state.config.logo;
+  document.getElementById('c-title').textContent=state.config.name;
+  renderCustomer();
+}
+function openCustomerFromDisplay(){
+  _fromDisplay=true;
+  clearInterval(displayInterval);
+  document.getElementById('display-page').classList.add('h');
+  document.getElementById('customer-page').classList.remove('h');
+  custState={step:'pick',studioId:null,name:''};
+  document.getElementById('c-logo').textContent=state.config.logo;
+  document.getElementById('c-title').textContent=state.config.name;
+  renderCustomer();
+}
+function closeCustomer(){
+  cancelCountdown();
+  document.getElementById('customer-page').classList.add('h');
+  if(_fromDisplay){_fromDisplay=false;openDisplay();}
+  else{document.getElementById('app').classList.remove('h');renderDashboard();}
+}
+function renderCustomer(){
+  const el=document.getElementById('customer-inner');
+  if(custState.step==='pick'){
+    el.innerHTML='<div class="studio-pick-grid">'+
+      state.studios.map(s=>`<button class="studio-pick-btn" style="--c:${s.color}" onclick="pickStudio('${s.id}')">
+        <span class="studio-pick-ico">${s.ico}</span>
+        <div class="studio-pick-nm" style="color:${s.color}">${s.name}</div>
+        <div class="studio-pick-desc">${s.desc}</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--tm)">${queueByStudio(s.id).filter(q=>q.status!=='done'&&q.status!=='skip').length} antrian aktif</div>
+      </button>`).join('')+'</div>';
+  } else if(custState.step==='name'){
+    const st=state.studios.find(s=>s.id===custState.studioId);
+    el.innerHTML=`<div class="name-step">
+      <div style="text-align:center;padding:16px;background:var(--s1);border:1px solid var(--b);border-radius:var(--r);border-top:3px solid ${st.color}">
+        <div style="font-size:28px;margin-bottom:6px">${st.ico}</div>
+        <div style="font-family:var(--fd);font-size:18px;color:${st.color};letter-spacing:.04em">${st.name}</div>
+        <div style="font-size:12px;color:var(--tm);margin-top:4px">${st.desc}</div>
+      </div>
+      <div><label class="lbl">Nama Kamu</label>
+        <input class="inp" id="cust-name-inp" placeholder="Masukkan nama lengkap…" value="${custState.name}" onkeydown="if(event.key==='Enter')submitName()">
+      </div>
+      <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center" onclick="submitName()">Ambil Nomor Antrian &rarr;</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="custState.step='pick';renderCustomer()">&larr; Ganti Studio</button>
+    </div>`;
+    setTimeout(()=>document.getElementById('cust-name-inp')?.focus(),100);
+  }
+}
+function pickStudio(id){custState.studioId=id;custState.step='name';renderCustomer();}
+function submitName(){
+  const inp=document.getElementById('cust-name-inp');
+  const name=inp?.value?.trim();
+  if(!name){showNotif('⚠️ Masukkan nama dulu');inp?.focus();return;}
+  custState.name=name;
+  const st=state.studios.find(s=>s.id===custState.studioId);
+  const num=state.nextNum[st.id]++;
+  const numStr=PREFIX[st.id]+String(num).padStart(3,'0');
+  const entry={id:'q'+Date.now(),number:numStr,numRaw:num,name,studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,status:'waiting',time:nowTime()};
+  state.queue.push(entry);
+  saveLS(true);syncNow(false);
+  showReceipt(entry);
+}
+
+// ── RECEIPT ─────────────────────────────────────────────
+let lastReceiptEntry=null;
+function showReceipt(entry){
+  lastReceiptEntry=entry;
+  document.getElementById('customer-page').classList.add('h');
+  document.getElementById('receipt-page').classList.remove('h');
+  document.getElementById('r-logo').textContent=state.config.logo;
+  document.getElementById('r-brand').textContent=state.config.name;
+  document.getElementById('r-studio-name').textContent=entry.studioIco+' '+entry.studioName;
+  document.getElementById('r-number').textContent=entry.number;
+  document.getElementById('r-name').textContent=entry.name;
+  document.getElementById('r-number').style.color=entry.studioColor;
+  const trackLink=buildTrackLink(entry.id);
+  document.getElementById('r-link').textContent=trackLink;
+  document.getElementById('r-link').dataset.link=trackLink;
+  const waitBefore=state.queue.filter(q=>q.studioId===entry.studioId&&q.status==='waiting'&&q.numRaw<entry.numRaw).length;
+  document.getElementById('r-body').innerHTML=[
+    ['Studio',entry.studioIco+' '+entry.studioName],
+    ['Nomor',entry.number],
+    ['Nama',entry.name],
+    ['Daftar jam',entry.time],
+    ['Posisi tunggu',waitBefore>0?(waitBefore+' orang di depanmu'):'Kamu berikutnya!'],
+    ['Status','⏳ Menunggu'],
+  ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('');
+  const qrEl=document.getElementById('r-qr');
+  qrEl.innerHTML='';
+  try{new QRCode(qrEl,{text:trackLink,width:160,height:160,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});}
+  catch(e){qrEl.innerHTML='<div style="font-size:11px;color:var(--tm)">QR tidak tersedia</div>';}
+  // Reset ring dan mulai countdown
+  const b=document.getElementById('ctr-bar');
+  if(b){const c=2*Math.PI*40;b.style.strokeDasharray=c;b.style.strokeDashoffset=0;}
+  startCountdown();
+}
+function buildTrackLink(id){return window.location.origin+window.location.pathname+'?track='+id;}
+function copyReceiptLink(){const link=document.getElementById('r-link').dataset.link||'';navigator.clipboard.writeText(link).then(()=>showNotif('✅ Link disalin!')).catch(()=>prompt('Salin link:',link));}
+function shareWAReceipt(){
+  if(!lastReceiptEntry)return;
+  const e=lastReceiptEntry,link=buildTrackLink(e.id);
+  const msg=`Halo *${e.name}*! 👋
+
+Nomor antrian kamu:
+
+🎫 *${e.number}*
+🎬 Studio: ${e.studioName}
+🕐 Daftar: ${e.time}
+
+Pantau posisi antrian real-time:
+${link}
+
+_${state.config.name}_`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+function openTrackFromReceipt(){if(!lastReceiptEntry)return;cancelCountdown();openTrack(lastReceiptEntry.id);}
+function backToCustomer(){
+  cancelCountdown();
+  document.getElementById('receipt-page').classList.add('h');
+  document.getElementById('customer-page').classList.remove('h');
+  custState.step='pick';custState.name='';
+  renderCustomer();
+}
+
+// ── TRACK ────────────────────────────────────────────────
+let trackInterval;
+function openTrack(id){
+  state.curTrackId=id;
+  ['app','customer-page','receipt-page','display-page'].forEach(i=>document.getElementById(i).classList.add('h'));
+  document.getElementById('track-page').classList.remove('h');
+  document.getElementById('tr-logo').textContent=state.config.logo;
+  document.getElementById('tr-brand').textContent=state.config.name;
+  renderTrack(id);
+  clearInterval(trackInterval);
+  trackInterval=setInterval(async()=>{if(state.gasUrl){try{await loadFromGAS();}catch(e){}}renderTrack(id);},8000);
+}
+function closeTrack(){
+  clearInterval(trackInterval);state.curTrackId=null;
+  document.getElementById('track-page').classList.add('h');
+  if(lastReceiptEntry){document.getElementById('receipt-page').classList.remove('h');startCountdown();}
+  else{document.getElementById('app').classList.remove('h');nav('dashboard');}
+}
+function renderTrack(id){
+  const el=document.getElementById('track-card');
+  const upd=document.getElementById('tr-last');
+  if(upd)upd.textContent='Update: '+nowTime();
+  if(!el)return;
+  const q=state.queue.find(q=>q.id===id);
+  if(!q){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Memuat data antrian…</div></div>';return;}
+  const steps=[{id:'waiting',lbl:'Menunggu',ico:'⏳'},{id:'called',lbl:'Dipanggil',ico:'📢'},{id:'inprogress',lbl:'Dalam Sesi',ico:'⚙️'},{id:'done',lbl:'Selesai',ico:'✅'}];
+  const stOrder=['waiting','called','inprogress','done'];
+  const curIdx=stOrder.indexOf(q.status);
+  const waitBefore=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting'&&w.numRaw<q.numRaw).length;
+  const totalWait=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting').length;
+  const nowServing=state.queue.filter(w=>w.studioId===q.studioId&&(w.status==='called'||w.status==='inprogress'));
+  const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
+  const stColor={waiting:'var(--tm)',called:'var(--blue)',inprogress:'#F5A142',done:'var(--green)',skip:'var(--red)'};
+  const stBg={waiting:'rgba(123,120,133,.08)',called:'rgba(85,153,245,.08)',inprogress:'rgba(245,161,66,.08)',done:'rgba(69,199,138,.08)',skip:'rgba(224,85,85,.08)'};
+  el.innerHTML=`
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="font-size:13px;color:var(--tm);margin-bottom:2px">${q.studioIco} ${q.studioName}</div>
+      <div class="track-num-big" style="color:${q.studioColor}">${q.number}</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:10px">${q.name}</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:100px;background:${stBg[q.status]||stBg.waiting};border:1px solid ${st.color}30;color:${st.color};font-weight:600;font-size:13px">${st.ico} ${st.label}</div>
+      <div class="track-bar" style="margin-top:20px">
+        ${steps.map((step,i)=>{const done=i<curIdx,cur=i===curIdx;return`<div class="track-step"><div class="track-dot ${done?'done':cur?'cur':''}">${done?'✓':step.ico}</div><div class="track-lbl ${done?'done':cur?'cur':''}">${step.lbl}</div></div>`;}).join('')}
+      </div>
+    </div>
+    <div class="divider" style="margin:0"></div>
+    <div class="track-info">
+      <div class="track-row"><span class="track-key">Nomor antrian</span><strong style="font-family:var(--fd);font-size:18px;color:${q.studioColor}">${q.number}</strong></div>
+      <div class="track-row"><span class="track-key">Studio</span><span>${q.studioIco} ${q.studioName}</span></div>
+      <div class="track-row"><span class="track-key">Daftar jam</span><span>${q.time}</span></div>
+      <div class="track-row"><span class="track-key">Posisi antrian</span><strong style="color:${stColor[q.status]||stColor.waiting}">${q.status==='waiting'?(waitBefore+1)+' dari '+totalWait:q.status==='done'?'Selesai ✅':'Sedang dilayani'}</strong></div>
+    </div>
+    ${q.status==='waiting'?`<div class="eta-box"><div style="font-size:11px;color:var(--pur);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">⏱ Estimasi Tunggu</div><div class="eta-num">${waitBefore>0?'~'+(waitBefore*30)+' mnt':'Sebentar lagi'}</div></div>`:''}
+    ${q.status==='called'?`<div class="called-box"><div style="font-size:22px;margin-bottom:6px">🔔</div><div style="font-weight:600;color:var(--blue);font-size:15px">Namamu sedang dipanggil!</div><div style="font-size:12px;color:var(--tm);margin-top:4px">Segera ke ${q.studioName}</div></div>`:''}
+    ${nowServing.length&&q.status==='waiting'?`<div style="background:var(--s1);border:1px solid var(--b);border-radius:var(--rs);padding:12px;text-align:center;margin-top:10px"><div style="font-size:11px;color:var(--tm);margin-bottom:4px">Sedang dilayani di ${q.studioName}</div><div style="font-family:var(--fd);font-size:28px;color:var(--gold)">${nowServing[nowServing.length-1].number}</div></div>`:''}
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="renderTrack('${id}')">🔄 Refresh</button>
+      <button class="btn btn-ghost btn-sm" onclick="shareWAReceipt()">📱 Kirim WA</button>
+    </div>`;
+}
+
+// ── DISPLAY TV ───────────────────────────────────────────
+let displayInterval;
+function openDisplay(){
+  document.getElementById('app').classList.add('h');
+  ['customer-page','receipt-page','track-page'].forEach(id=>document.getElementById(id).classList.add('h'));
+  document.getElementById('display-page').classList.remove('h');
+  document.getElementById('dp-brand').textContent=state.config.logo+' '+state.config.name;
+  renderDisplay();
+  clearInterval(displayInterval);
+  displayInterval=setInterval(()=>{
+    const el=document.getElementById('dp-clock');
+    if(el)el.textContent=nowTimeSec();
+    renderDisplay();
+  },1000);
+}
+function closeDisplay(){
+  clearInterval(displayInterval);_fromDisplay=false;
+  document.getElementById('display-page').classList.add('h');
+  document.getElementById('app').classList.remove('h');
+  nav('dashboard');
+}
+function renderDisplay(){
+  const el=document.getElementById('dp-studios');if(!el)return;
+  el.innerHTML=state.studios.map(studio=>{
+    const sq=state.queue.filter(q=>q.studioId===studio.id);
+    const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
+    const waiting=sq.filter(q=>q.status==='waiting');
+    const current=called[called.length-1];
+    const stObj=current?state.statuses.find(s=>s.id===current.status):null;
+    return`<div class="display-studio" style="--c:${studio.color}">
+      <div style="font-size:24px;margin-bottom:2px">${studio.ico}</div>
+      <div class="display-studio-name">${studio.name}</div>
+      ${current?`<div class="display-current-label">Sedang Dilayani</div>
+        <div class="display-current-num" style="color:${studio.color}">${current.number}</div>
+        <div class="display-current-name">${current.name}</div>
+        <div class="display-current-status" style="color:${stObj?.color||studio.color}">${stObj?.ico||''} ${stObj?.label||''}</div>`
+      :`<div class="display-current-label" style="margin-top:16px">Belum ada</div><div style="font-family:var(--fd);font-size:40px;color:var(--td);margin:8px 0">—</div>`}
+      <div class="display-waiting-row">
+        ${waiting.length?waiting.slice(0,6).map(q=>`<div class="display-waiting-chip">${q.number}</div>`).join(''):'<div style="font-size:12px;color:var(--td)">Kosong</div>'}
+      </div>
+      <div style="font-size:11px;color:var(--tm);margin-top:8px">${waiting.length} menunggu</div>
+    </div>`;
+  }).join('');
+}
+
+// ── DASHBOARD ────────────────────────────────────────────
+function renderDashboard(){
+  const dd=document.getElementById('dash-date');if(dd)dd.textContent=nowDate();
+  updateStats();
+  const el=document.getElementById('dash-studios');if(!el)return;
+  el.innerHTML=state.studios.map(studio=>{
+    const sq=state.queue.filter(q=>q.studioId===studio.id&&q.status!=='done'&&q.status!=='skip');
+    const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
+    return`<div class="studio-card fadeUp" style="--c:${studio.color}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div><div class="studio-ico">${studio.ico}</div><div class="studio-nm" style="color:${studio.color}">${studio.name}</div><div class="studio-meta">${studio.desc}</div></div>
+        <div style="text-align:right"><div class="studio-count" style="color:${studio.color}">${sq.length}</div><div style="font-size:10px;color:var(--tm)">aktif</div></div>
+      </div>
+      ${called.length?`<div style="font-size:11px;color:${studio.color};margin-bottom:6px;font-weight:500">📢 ${called[called.length-1].number} — ${called[called.length-1].name}</div>`:''}
+      <div class="studio-queue-list">
+        ${sq.slice(0,5).map(q=>{const st=state.statuses.find(s=>s.id===q.status);return`<div class="sq-item"><span class="sq-num">${q.number}</span><span style="color:var(--tm)">${q.name}</span><span style="color:${st?.color||studio.color};font-size:11px">${st?.ico||''} ${st?.label||''}</span></div>`;}).join('')}
+        ${sq.length===0?'<div style="text-align:center;padding:10px;color:var(--td);font-size:12px">Kosong</div>':''}
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:10px" onclick="nav('queue')">Lihat Semua →</button>
+    </div>`;
+  }).join('');
+}
+function updateStats(){
+  const all=state.queue,s=id=>document.getElementById(id);
+  if(s('s-total'))s('s-total').textContent=all.length;
+  if(s('s-wait'))s('s-wait').textContent=all.filter(q=>q.status==='waiting').length;
+  if(s('s-prog'))s('s-prog').textContent=all.filter(q=>q.status==='called'||q.status==='inprogress').length;
+  if(s('s-done'))s('s-done').textContent=all.filter(q=>q.status==='done').length;
+}
+
+// ── QUEUE MANAGEMENT ─────────────────────────────────────
+function queueByStudio(id){return state.queue.filter(q=>q.studioId===id);}
+function renderQueue(){
+  const studioF=document.getElementById('q-studio-filter')?.value||'all';
+  const statusF=document.getElementById('q-status-filter')?.value||'all';
+  const sf=document.getElementById('q-studio-filter');
+  if(sf&&sf.options.length===1)state.studios.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.name;sf.appendChild(o);});
+  const statusSel=document.getElementById('q-status-filter');
+  if(statusSel&&statusSel.options.length===1)state.statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.label;statusSel.appendChild(o);});
+  const list=state.queue.filter(q=>(studioF==='all'||q.studioId===studioF)&&(statusF==='all'||q.status===statusF)).sort((a,b)=>a.numRaw-b.numRaw);
+  const el=document.getElementById('queue-list');if(!el)return;
+  const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' antrian';
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>';return;}
+  el.innerHTML=list.map(q=>{
+    const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
+    const opts=state.statuses.map(s=>`<option value="${s.id}" ${q.status===s.id?'selected':''}>${s.ico} ${s.label}</option>`).join('');
+    return`<div class="q-card fadeUp" style="--c:${q.studioColor}">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <div class="q-number" style="color:${q.studioColor}">${q.number}</div>
+        <div style="flex:1">
+          <div class="q-name">${q.name} <span style="font-size:11px;color:var(--tm);font-weight:400;background:var(--s2);padding:2px 8px;border-radius:100px;margin-left:4px">${q.studioIco} ${q.studioName}</span></div>
+          <div class="q-meta">Daftar: ${q.time} · No. ${q.number}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <select class="status-sel" style="color:${st.color};border-color:${st.color}40" onchange="setStatus('${q.id}',this.value)">${opts}</select>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openTrack('${q.id}')" title="Pantau">👁</button>
+            <button class="btn btn-red btn-sm btn-icon" onclick="removeQueue('${q.id}')" title="Hapus">🗑</button>
+          </div>
+        </div>
+        <div style="flex-shrink:0"><button class="btn btn-gold btn-sm" onclick="callOne('${q.id}')">📢 Panggil</button></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setStatus(id,status){const q=state.queue.find(q=>q.id===id);if(q){q.status=status;renderQueue();renderDashboard();saveLS(true);syncNow(false);}}
+function removeQueue(id){state.queue=state.queue.filter(q=>q.id!==id);renderQueue();renderDashboard();saveLS(true);syncNow(false);}
+function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';renderQueue();renderDashboard();renderDisplay();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncNow(false);}}
+function callNext(){const next=state.queue.find(q=>q.status==='waiting');if(next)callOne(next.id);else showNotif('Tidak ada antrian menunggu');}
+
+// ── SETTINGS ─────────────────────────────────────────────
+function renderSettings(){switchTab('gas');}
+function switchTab(tab){
+  document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('h'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
+  const el=document.getElementById('tab-'+tab);if(el)el.classList.remove('h');
+  if(tab==='studio')renderStudioSettings();
+  if(tab==='status')renderStatusSettings();
+  if(tab==='gas'){const u=document.getElementById('cfg-gas-url');if(u)u.value=state.gasUrl||'';}
+  if(tab==='bisnis'){
+    const n=document.getElementById('cfg-nm');if(n)n.value=state.config.name;
+    const l=document.getElementById('cfg-logo');if(l)l.value=state.config.logo;
+    const t=document.getElementById('cfg-tag');if(t)t.value=state.config.tagline;
+  }
+}
+function saveBisnis(){
+  state.config.name=document.getElementById('cfg-nm').value||'JD Production';
+  state.config.logo=document.getElementById('cfg-logo').value||'🎬';
+  state.config.tagline=document.getElementById('cfg-tag').value||'';
+  document.getElementById('sb-name').textContent=state.config.name;
+  document.getElementById('sb-ico').textContent=state.config.logo;
+  saveLS();showNotif('✅ Bisnis disimpan!');
+}
+function renderStudioSettings(){
+  const el=document.getElementById('studio-settings-list');if(!el)return;
+  el.innerHTML=state.studios.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);border-left:3px solid ${s.color};margin-bottom:8px">
+      <input class="inp" value="${s.ico}" style="width:54px;text-align:center;font-size:18px;padding:6px" onchange="updateStudio('${s.id}','ico',this.value)">
+      <input class="inp" value="${s.name}" style="flex:1" onchange="updateStudio('${s.id}','name',this.value)">
+      <input class="inp" value="${s.desc}" style="flex:2;font-size:12px" placeholder="Deskripsi…" onchange="updateStudio('${s.id}','desc',this.value)">
+      <input type="color" value="${s.color}" style="width:38px;height:38px;border:1px solid var(--b);border-radius:6px;cursor:pointer;background:none;padding:2px" onchange="updateStudio('${s.id}','color',this.value)">
+    </div>`).join('');
+}
+function updateStudio(id,key,val){const s=state.studios.find(s=>s.id===id);if(s){s[key]=val;saveLS();}}
+function renderStatusSettings(){
+  const el=document.getElementById('status-settings-list');if(!el)return;
+  el.innerHTML=state.statuses.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);margin-bottom:6px">
+      <span style="font-size:18px">${s.ico}</span>
+      <span style="flex:1;font-weight:500">${s.label}</span>
+      <span class="tag" style="color:${s.color};border-color:${s.color}30;background:${s.color}10;font-size:11px">${s.id}</span>
+      <button class="btn btn-red btn-sm btn-icon" onclick="deleteStatus('${s.id}')" ${['waiting','called','done'].includes(s.id)?'disabled':''}>✕</button>
+    </div>`).join('');
+}
+function addStatus(){
+  const ico=document.getElementById('new-st-ico').value.trim()||'🔵';
+  const lbl=document.getElementById('new-st-lbl').value.trim();
+  if(!lbl){showNotif('⚠️ Nama status wajib');return;}
+  state.statuses.push({id:'st'+Date.now(),ico,label:lbl,color:'#7B7885'});
+  document.getElementById('new-st-lbl').value='';
+  renderStatusSettings();saveLS();showNotif('✅ Status ditambahkan!');
+}
+function deleteStatus(id){
+  if(['waiting','called','done'].includes(id)){showNotif('⚠️ Status default tidak bisa dihapus');return;}
+  state.statuses=state.statuses.filter(s=>s.id!==id);renderStatusSettings();saveLS();
+}
+async function saveGasUrl(){
+  const url=document.getElementById('cfg-gas-url').value.trim();
+  state.gasUrl=url;saveLS();
+  if(!url){showNotif('⚠️ URL tidak boleh kosong');return;}
+  showNotif('⏳ Testing koneksi ke GAS…');
+  try{
+    const res=await fetch(url+'?action=ping');const j=await res.json();
+    if(j.ok){state.gasOnline=true;updateGASBadge(true);setTestResult('✅ Koneksi berhasil!','ok');showNotif('✅ GAS terhubung!');}
+    else throw new Error(j.error||'Unknown');
+  }catch(e){state.gasOnline=false;updateGASBadge(false);setTestResult('❌ Gagal: '+e.message,'err');showNotif('❌ GAS tidak terhubung: '+e.message);}
+}
+function setTestResult(msg,type){
+  const el=document.getElementById('gas-test-result');if(!el)return;
+  el.style.display='block';el.style.background=type==='ok'?'rgba(69,199,138,.1)':'rgba(224,85,85,.1)';
+  el.style.border='1px solid '+(type==='ok'?'rgba(69,199,138,.3)':'rgba(224,85,85,.3)');
+  el.style.color=type==='ok'?'var(--green)':'var(--red)';el.textContent=msg;
+}
+function updateGASBadge(online){
+  const el=document.getElementById('gas-badge-main');
+  if(el){el.textContent=online?'⬤ GAS Online':'⬤ GAS Offline';el.className='gas-badge'+(online?'':' off');}
+  const lbl=document.getElementById('gas-status-lbl');
+  if(lbl)lbl.textContent=online?'GAS Online':'Sistem Lokal';
+}
+
+// ── GAS SCRIPT ───────────────────────────────────────────
+const GAS_SCRIPT=`// ============================================================
+// JD Production — Google Apps Script Backend
+// Deploy: Deploy > New Deployment > Web App
+//   Execute as : Me | Who has access : Anyone
+// ============================================================
+const SHEET_NAME='JD Production Antrian';
+function getOrCreateSS(){const files=DriveApp.getFilesByName(SHEET_NAME);if(files.hasNext())return SpreadsheetApp.open(files.next());const ss=SpreadsheetApp.create(SHEET_NAME);['Antrian','Config','Studios','Statuses'].forEach(name=>{if(!ss.getSheetByName(name))ss.insertSheet(name);});return ss;}
+function doGet(e){return handle(e);}
+function doPost(e){return handle(e);}
+function handle(e){
+  try{
+    const p=e.parameter||{};const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};
+    const action=p.action||body.action||'';const ss=getOrCreateSS();
+    if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK',sheetId:ss.getId()});
+    if(action==='load'){
+      const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);
+      const config=readKV(ss,'Config');const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);
+      return ok({ok:true,queue,config,studios,statuses,sheetId:ss.getId()});
+    }
+    if(action==='save_queue'){const queue=body.queue||[];writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],queue.map(q=>[q.id,q.number,q.numRaw,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));return ok({ok:true,sheetId:ss.getId()});}
+    if(action==='save_config'){const cfg=body.config||{};const sheet=getOrClear(ss,'Config');Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));return ok({ok:true});}
+    if(action==='save_studios'){writeSheet(ss,'Studios',['id','name','ico','color','desc'],(body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'']));return ok({ok:true});}
+    if(action==='save_statuses'){writeSheet(ss,'Statuses',['id','ico','label','color'],(body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));return ok({ok:true});}
+    return ok({ok:false,error:'Unknown action: '+action});
+  }catch(err){return ok({ok:false,error:err.message});}
+}
+function readSheet(ss,name,fields){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()<2)return[];return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues().filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));}
+function writeSheet(ss,name,headers,rows){const sheet=getOrClear(ss,name,headers);if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);styleHeader(sheet,headers.length);}
+function readKV(ss,name){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()===0)return{};const data={};sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});return data;}
+function getOrClear(ss,name,headers){let sheet=ss.getSheetByName(name);if(!sheet)sheet=ss.insertSheet(name);sheet.clearContents();if(headers)sheet.appendRow(headers);return sheet;}
+function styleHeader(sheet,cols){if(sheet.getLastRow()<1)return;sheet.getRange(1,1,1,cols).setBackground('#F0C060').setFontColor('#000').setFontWeight('bold');}
+function ok(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}`;
+
+function showGASScript(){document.getElementById('gas-code-view').textContent=GAS_SCRIPT;document.getElementById('modal-gas').classList.remove('h');}
+function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>showNotif('✅ Script GAS disalin!')).catch(()=>prompt('Salin manual:',GAS_SCRIPT));}
+
+// ── GAS SYNC ─────────────────────────────────────────────
+async function syncNow(showFeedback){
+  if(!state.gasUrl)return;
+  try{
+    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue})});
+    const j=await res.json();
+    if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Data tersinkron ke Google Sheets!');}
+    else throw new Error(j.error);
+  }catch(e){state.gasOnline=false;updateGASBadge(false);if(showFeedback)showNotif('❌ Sync gagal: '+e.message);}
+}
+async function loadFromGAS(){
+  if(!state.gasUrl)return;
+  try{
+    const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
+    if(!j.ok)throw new Error(j.error);
+    if(j.queue&&j.queue.length)state.queue=j.queue;
+    if(j.studios&&j.studios.length)state.studios=j.studios;
+    if(j.statuses&&j.statuses.length)state.statuses=j.statuses;
+    if(j.config&&j.config.name)state.config.name=j.config.name;
+    state.gasOnline=true;updateGASBadge(true);
+  }catch(e){state.gasOnline=false;updateGASBadge(false);}
+}
+
+// ── LOCAL STORAGE ────────────────────────────────────────
+const LS='jdprod_v2';
+function saveLS(silent){
+  try{localStorage.setItem(LS,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
+  if(!silent)showNotif('✅ Tersimpan!');
+}
+function loadLS(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS)||'{}');
+    if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;
+    if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;
+    if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;
+    return true;
+  }catch(e){return false;}
+}
+
+// ── NOTIF ─────────────────────────────────────────────────
+let ntimer;
+function showNotif(msg){const el=document.getElementById('notif');el.textContent=msg;el.classList.remove('h');clearTimeout(ntimer);ntimer=setTimeout(()=>el.classList.add('h'),2800);}
+
+// ── INIT ──────────────────────────────────────────────────
+async function init(){
+  const params=new URLSearchParams(window.location.search);
+  const trackParam=params.get('track'),svcParam=params.get('svc');
+  loadLS();
+  if(!state.queue.length){
+    state.queue=[
+      {id:'q1',number:'S1-001',numRaw:1,name:'Andi Firmansyah',studioId:'s1',studioName:'Studio 1',studioIco:'📸',studioColor:'#F0C060',status:'inprogress',time:'09:30'},
+      {id:'q2',number:'S1-002',numRaw:2,name:'Budi Santoso',studioId:'s1',studioName:'Studio 1',studioIco:'📸',studioColor:'#F0C060',status:'waiting',time:'09:45'},
+      {id:'q3',number:'S2-001',numRaw:1,name:'Citra Dewi',studioId:'s2',studioName:'Studio 2',studioIco:'🎬',studioColor:'#5599F5',status:'called',time:'10:00'},
+      {id:'q4',number:'PB-001',numRaw:1,name:'Dewi Rahayu',studioId:'s3',studioName:'Photobox',studioIco:'🤳',studioColor:'#45C78A',status:'waiting',time:'10:15'},
+      {id:'q5',number:'WB-001',numRaw:1,name:'Eko Prasetyo',studioId:'s4',studioName:'Widebox',studioIco:'🖼️',studioColor:'#A07FF0',status:'waiting',time:'10:30'},
+    ];
+    state.nextNum={s1:3,s2:2,s3:2,s4:2};
+  }
+  if(trackParam){if(state.gasUrl)try{await loadFromGAS();}catch(e){}openTrack(trackParam);return;}
+  if(svcParam){openCustomer(svcParam);return;}
+  document.getElementById('sb-name').textContent=state.config.name;
+  document.getElementById('sb-ico').textContent=state.config.logo;
+  nav('dashboard');
+  if(state.gasUrl)loadFromGAS().then(()=>renderDashboard()).catch(()=>{});
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
 </body>
 </html>
