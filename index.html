@@ -672,6 +672,8 @@ function custConfirm() {
   state.queue.push(entry);
   state.customer.entry = entry;
   state.customer.step = 'done';
+  // Simpan ke Sheets segera supaya link tracking bisa diakses dari device lain
+  saveToLS(true);
   renderCustomer();
   updateStats();
 }
@@ -1548,16 +1550,40 @@ function shareTrackWA(qId, name, number, service, slot) {
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
 
-function openTrackPage(qId) {
+async function openTrackPage(qId) {
   document.getElementById('app').classList.add('hidden');
   document.getElementById('customer-page').classList.add('hidden');
   document.getElementById('display-page').classList.add('hidden');
   document.getElementById('track-page').classList.remove('hidden');
-  document.getElementById('track-brand-name').textContent = state.config.name;
+  document.getElementById('track-brand-name').textContent = state.config.name || 'JD Production';
+
+  // Tampilkan loading dulu
+  const el = document.getElementById('track-card');
+  if (el) el.innerHTML = `
+    <div style="text-align:center;padding:48px;color:var(--text-muted)">
+      <div style="font-size:36px;margin-bottom:12px;animation:pulse 1.5s infinite">⏳</div>
+      <div style="font-weight:500">Memuat data antrian…</div>
+      <div style="font-size:12px;margin-top:6px;color:var(--text-dim)">Mengambil dari Google Sheets</div>
+    </div>`;
+
+  // Coba load dari Sheets dulu (biar sinkron lintas device)
+  if (state.sheetsUrl) {
+    await loadFromSheets().catch(() => {});
+  }
+
+  // Kalau masih belum ketemu, coba load dari localStorage
+  if (!state.queue.find(q => q.id === qId)) {
+    loadFromLS();
+  }
+
   renderTrackPage(qId);
-  // auto refresh setiap 5 detik
+
+  // Auto refresh setiap 8 detik (ambil dari Sheets tiap refresh)
   if (window._trackInterval) clearInterval(window._trackInterval);
-  window._trackInterval = setInterval(() => renderTrackPage(qId), 5000);
+  window._trackInterval = setInterval(async () => {
+    if (state.sheetsUrl) await loadFromSheets().catch(() => {});
+    renderTrackPage(qId);
+  }, 8000);
 }
 
 function closeTrackPage() {
@@ -1675,28 +1701,38 @@ function renderTrackPage(qId) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 async function init() {
-  // Cek apakah ada sheetsUrl tersimpan
+  // Cek URL param duluan sebelum apapun
+  const params = new URLSearchParams(window.location.search);
+  const svcParam   = params.get('svc');
+  const trackParam = params.get('track');
+
+  // Load sheetsUrl dari localStorage (selalu, termasuk untuk track page)
   try {
     const savedUrl = localStorage.getItem('jdprod_sheetsurl');
     if (savedUrl) state.sheetsUrl = savedUrl;
   } catch(e) {}
 
-  // Load dari localStorage dulu (cepat)
+  // Load data lokal dulu (cepat)
   const hasSaved = loadFromLS();
 
-  // Kalau ada sheetsUrl, coba load dari Sheets (lebih fresh, lintas device)
+  // Kalau ini track/svc page → langsung handle, fungsinya sudah async load Sheets sendiri
+  if (trackParam) { openTrackPage(trackParam); return; }
+  if (svcParam)   {
+    // Untuk customer page, load dari Sheets dulu kalau ada
+    if (state.sheetsUrl) await loadFromSheets().catch(() => {});
+    openCustomer(svcParam);
+    return;
+  }
+
+  // Admin dashboard: load dari Sheets di background
   if (state.sheetsUrl) {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.get('track') && !params.get('svc')) {
-      // Load dari sheets di background, lalu re-render
-      loadFromSheets().then(ok => {
-        if (ok) {
-          const sb = document.getElementById('sidebar-brand-name');
-          if (sb) sb.textContent = state.config.name || 'JD Production';
-          navigate('dashboard');
-        }
-      });
-    }
+    loadFromSheets().then(ok => {
+      if (ok) {
+        const sb = document.getElementById('sidebar-brand-name');
+        if (sb) sb.textContent = state.config.name || 'JD Production';
+        navigate('dashboard');
+      }
+    });
   }
 
   // Seed sample queue hanya kalau tidak ada data sama sekali
@@ -1714,13 +1750,6 @@ async function init() {
 
   const sb = document.getElementById('sidebar-brand-name');
   if (sb) sb.textContent = state.config.name || 'JD Production';
-
-  // Check URL param
-  const params = new URLSearchParams(window.location.search);
-  const svcParam   = params.get('svc');
-  const trackParam = params.get('track');
-  if (trackParam) { openTrackPage(trackParam); return; }
-  if (svcParam)   { openCustomer(svcParam);    return; }
 
   navigate('dashboard');
 }
