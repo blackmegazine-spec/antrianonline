@@ -393,3 +393,621 @@ _JD Production_</textarea>
 </div>
 
 <div id="notif" class="notif hidden"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let state = {
+  queue: [],
+  nextNumber: 1,
+  services: [
+    { id: 's1', icon: '📸', name: 'Foto Studio', est: 60, max: 10, desc: 'Sesi foto studio profesional' },
+    { id: 's2', icon: '🎬', name: 'Video Production', est: 120, max: 5, desc: 'Produksi video komersial' },
+    { id: 's3', icon: '✂️', name: 'Edit & Post', est: 90, max: 8, desc: 'Editing foto & video' },
+  ],
+  statuses: [
+    { id: 'waiting',    icon: '⏳', label: 'Menunggu',      color: '#7A7880' },
+    { id: 'called',     icon: '📢', label: 'Dipanggil',     color: '#4A9EF5' },
+    { id: 'inprogress', icon: '⚙️', label: 'Dalam Proses',  color: '#F5A142' },
+    { id: 'done',       icon: '✅', label: 'Selesai',       color: '#4EC994' },
+    { id: 'skip',       icon: '⏭️', label: 'Dilewati',      color: '#E05454' },
+  ],
+  slots: [],
+  blockedSlots: new Set(),
+  currentPage: 'dashboard',
+  currentTab: 'bisnis',
+  customer: { step: 'select-service', service: null, slot: null },
+  config: { name: 'JD Production', logo: '🎬', tagline: 'Professional Photography & Production', color: '#C8A96E' },
+  counters: 2,
+};
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────
+function navigate(page) {
+  document.querySelectorAll('section[id^="page-"]').forEach(s => s.classList.add('hidden'));
+  document.getElementById('page-' + page)?.classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.nav === page);
+  });
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('customer-page').classList.add('hidden');
+  document.getElementById('display-page').classList.add('hidden');
+  state.currentPage = page;
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'queue') renderQueue();
+  if (page === 'bookings') renderBookings();
+  if (page === 'reports') renderReports();
+  if (page === 'settings') renderSettings();
+}
+
+// ─── CUSTOMER PAGE ────────────────────────────────────────────────────────
+function openCustomer(serviceId) {
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('display-page').classList.add('hidden');
+  document.getElementById('customer-page').classList.remove('hidden');
+  state.customer = { step: 'select-service', service: null, slot: null };
+  if (serviceId) {
+    const svc = state.services.find(s => s.id === serviceId);
+    if (svc) { state.customer.service = svc; state.customer.step = 'select-slot'; }
+  }
+  renderCustomer();
+}
+function closeCustomer() {
+  document.getElementById('customer-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  renderDashboard();
+}
+
+function renderCustomer() {
+  const card = document.getElementById('cust-card');
+  const logo = document.getElementById('cust-card')?.closest('#customer-page')?.querySelector('.cust-logo');
+  if (logo) logo.textContent = state.config.logo;
+  document.querySelector('#customer-page .cust-title').textContent = state.config.name;
+
+  if (state.customer.step === 'select-service') {
+    card.innerHTML = `<div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Pilih Layanan</div>` +
+      state.services.map(s => `
+        <button class="mode-btn" onclick="custSelectService('${s.id}')">
+          <div class="mode-icon">${s.icon}</div>
+          <div class="mode-title">${s.name}</div>
+          <div class="mode-desc">${s.desc || 'Estimasi ' + s.est + ' menit • Maks ' + s.max + '/hari'}</div>
+        </button>`).join('');
+    return;
+  }
+
+  if (state.customer.step === 'select-slot') {
+    const svc = state.customer.service;
+    const usedSlots = state.queue.filter(q => q.serviceId === svc.id && q.status !== 'done' && q.status !== 'skip').map(q => q.slot);
+    card.innerHTML = `
+      <button onclick="state.customer.step='select-service';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Kembali</button>
+      <div style="font-family:var(--font-display);font-size:18px;margin-bottom:4px">${svc.icon} ${svc.name}</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px">Pilih slot waktu yang tersedia</div>
+      <div style="margin-bottom:8px"><label class="label">Nama Kamu</label><input class="input-field" id="cust-name" placeholder="Masukkan nama…"></div>
+      <div class="slot-grid" style="margin-top:16px">` +
+      state.slots.filter(sl => !state.blockedSlots.has(sl)).map(sl => {
+        const taken = usedSlots.includes(sl);
+        return `<button class="slot-btn${taken ? ' taken' : ''}" onclick="custSelectSlot('${sl}')" ${taken ? 'disabled' : ''}>${sl}${taken ? '<span class="slot-taken-lbl">Penuh</span>' : ''}</button>`;
+      }).join('') +
+      `</div>`;
+    return;
+  }
+
+  if (state.customer.step === 'confirm') {
+    const svc = state.customer.service;
+    card.innerHTML = `
+      <button onclick="state.customer.step='select-slot';renderCustomer()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:16px">← Kembali</button>
+      <div style="font-family:var(--font-display);font-size:18px;margin-bottom:18px">Konfirmasi Booking</div>
+      <div class="confirm-row"><span class="confirm-key">Layanan</span><span>${svc.icon} ${svc.name}</span></div>
+      <div class="confirm-row"><span class="confirm-key">Slot</span><strong>${state.customer.slot}</strong></div>
+      <div class="confirm-row"><span class="confirm-key">Nama</span><span>${state.customer.name || '-'}</span></div>
+      <div class="confirm-row"><span class="confirm-key">Estimasi</span><span>${svc.est} menit</span></div>
+      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px" onclick="custConfirm()">✅ Ambil Nomor Antrian</button>`;
+    return;
+  }
+
+  if (state.customer.step === 'done') {
+    const entry = state.customer.entry;
+    card.innerHTML = `
+      <div style="text-align:center;padding:10px 0">
+        <div class="done-number">${String(entry.number).padStart(3,'0')}</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">${entry.name}</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">${entry.service} — ${entry.slot}</div>
+        <div class="tag" style="background:rgba(78,201,148,.12);border-color:rgba(78,201,148,.3);color:var(--green);margin:0 auto 20px">✅ Terdaftar</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Pantau antrian di layar display atau tunggu dipanggil</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="state.customer.step='select-service';renderCustomer()">+ Booking Lagi</button>
+          <button class="btn btn-primary" onclick="closeCustomer()">Kembali ke Admin</button>
+        </div>
+      </div>`;
+  }
+}
+
+function custSelectService(id) {
+  state.customer.service = state.services.find(s => s.id === id);
+  state.customer.step = 'select-slot';
+  renderCustomer();
+}
+function custSelectSlot(slot) {
+  const name = document.getElementById('cust-name')?.value?.trim();
+  state.customer.name = name;
+  state.customer.slot = slot;
+  state.customer.step = 'confirm';
+  renderCustomer();
+}
+function custConfirm() {
+  const svc = state.customer.service;
+  const entry = {
+    id: 'q' + Date.now(),
+    number: state.nextNumber++,
+    name: state.customer.name || 'Customer',
+    serviceId: svc.id,
+    service: svc.name,
+    serviceIcon: svc.icon,
+    slot: state.customer.slot,
+    status: 'waiting',
+    time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+  };
+  state.queue.push(entry);
+  state.customer.entry = entry;
+  state.customer.step = 'done';
+  renderCustomer();
+  updateStats();
+}
+
+// ─── DISPLAY TV ───────────────────────────────────────────────────────────
+let displayInterval;
+function openDisplay() {
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('customer-page').classList.add('hidden');
+  document.getElementById('display-page').classList.remove('hidden');
+  renderDisplay();
+  displayInterval = setInterval(() => {
+    updateDisplayClock();
+    renderDisplay();
+  }, 1000);
+}
+function closeDisplay() {
+  clearInterval(displayInterval);
+  document.getElementById('display-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+function updateDisplayClock() {
+  const el = document.getElementById('display-clock');
+  if (el) el.textContent = new Date().toLocaleTimeString('id-ID');
+}
+function renderDisplay() {
+  const called = state.queue.filter(q => q.status === 'called');
+  const inprog = state.queue.filter(q => q.status === 'inprogress');
+  const waiting = state.queue.filter(q => q.status === 'waiting');
+
+  const calledEl = document.getElementById('display-called-content');
+  if (calledEl) {
+    if (called.length > 0) {
+      const c = called[called.length - 1];
+      calledEl.innerHTML = `
+        <div class="display-called-number">${String(c.number).padStart(3,'0')}</div>
+        <div class="display-called-name">${c.name}</div>
+        <div class="display-called-svc">${c.serviceIcon} ${c.service}</div>
+        <div class="display-called-counter">🕐 Slot: ${c.slot}</div>`;
+    } else {
+      calledEl.innerHTML = `<div style="font-family:var(--font-display);font-size:40px;color:var(--text-dim)">— Menunggu —</div>`;
+    }
+  }
+
+  const inprogEl = document.getElementById('display-inprog-list');
+  if (inprogEl) {
+    inprogEl.innerHTML = inprog.length
+      ? inprog.map(q => `<div class="inprog-row"><div><div class="inprog-num">${String(q.number).padStart(3,'0')}</div><div class="inprog-name">${q.name}</div></div><div style="font-size:12px;color:var(--text-muted)">${q.slot}</div></div>`).join('')
+      : '<div style="color:var(--text-dim);font-size:14px">Kosong</div>';
+  }
+
+  const waitEl = document.getElementById('display-waiting-chips');
+  if (waitEl) {
+    waitEl.innerHTML = waiting.map(q => `<div class="waiting-chip">${String(q.number).padStart(3,'0')}</div>`).join('') || '<div style="color:var(--text-dim)">Tidak ada antrian</div>';
+  }
+}
+
+// ─── QUEUE ────────────────────────────────────────────────────────────────
+function renderQueue() {
+  const search = document.getElementById('q-search')?.value?.toLowerCase() || '';
+  const filter = document.getElementById('q-filter')?.value || 'all';
+
+  // populate filter dropdown
+  const sel = document.getElementById('q-filter');
+  if (sel && sel.children.length === 1) {
+    state.statuses.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id; opt.textContent = s.icon + ' ' + s.label;
+      sel.appendChild(opt);
+    });
+  }
+
+  let list = state.queue.filter(q => {
+    const matchSearch = !search || q.name.toLowerCase().includes(search) || String(q.number).includes(search);
+    const matchFilter = filter === 'all' || q.status === filter;
+    return matchSearch && matchFilter;
+  });
+
+  const el = document.getElementById('queue-list');
+  if (!el) return;
+
+  const label = document.getElementById('queue-count-label');
+  if (label) label.textContent = `${list.length} antrian`;
+
+  if (list.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="openCustomer()">+ Simulasi Customer</button></div>`;
+    return;
+  }
+
+  el.innerHTML = list.map(q => {
+    const st = state.statuses.find(s => s.id === q.status) || state.statuses[0];
+    return `<div class="queue-card fade-in" style="border-left-color:${st.color}">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div class="qnum">${String(q.number).padStart(3,'0')}</div>
+        <div class="qbody">
+          <div class="qname">${q.name} <span class="qmode-badge">${q.serviceIcon} ${q.service}</span></div>
+          <div class="qmeta">Slot: ${q.slot} • Daftar: ${q.time}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${state.statuses.map(s => `<button class="btn btn-sm ${q.status===s.id?'btn-primary':'btn-ghost'}" onclick="setStatus('${q.id}','${s.id}')" style="${q.status===s.id?'':''}${s.id==='done'?'border-color:rgba(78,201,148,.3);color:var(--green)':s.id==='skip'?'border-color:rgba(224,84,84,.3);color:var(--red)':''}">${s.icon} ${s.label}</button>`).join('')}
+            <button class="btn btn-danger btn-sm" onclick="removeQueue('${q.id}')">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderStatusStrip();
+  updateStats();
+}
+
+function setStatus(id, status) {
+  const q = state.queue.find(q => q.id === id);
+  if (q) { q.status = status; renderQueue(); renderDashboard(); }
+}
+function removeQueue(id) {
+  state.queue = state.queue.filter(q => q.id !== id);
+  renderQueue(); renderDashboard();
+}
+function callNext() {
+  const next = state.queue.find(q => q.status === 'waiting');
+  if (next) { next.status = 'called'; renderQueue(); showNotif('📢 Memanggil ' + next.name + ' — No. ' + String(next.number).padStart(3,'0')); }
+  else showNotif('Tidak ada antrian menunggu');
+}
+function renderStatusStrip() {
+  const el = document.getElementById('status-strip');
+  if (!el) return;
+  el.innerHTML = state.statuses.map(s => {
+    const count = state.queue.filter(q => q.status === s.id).length;
+    return `<span class="tag" style="background:rgba(0,0,0,0.2);border-color:${s.color}40;color:${s.color}">${s.icon} ${s.label} <strong>${count}</strong></span>`;
+  }).join('');
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────
+function renderDashboard() {
+  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  updateStats();
+
+  // booking links
+  const bl = document.getElementById('dash-booking-links');
+  if (bl) {
+    bl.innerHTML = state.services.map(s => {
+      const link = buildLink(s.id);
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px"><span>${s.icon}</span><span style="font-weight:500">${s.name}</span></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="openCustomer('${s.id}')">👤 Simulasi</button>
+          <button class="link-chip" onclick="showLinkModal('${s.id}')">🔗 Link</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // queue preview
+  const dq = document.getElementById('dash-queue-list');
+  if (dq) {
+    const preview = state.queue.filter(q => q.status !== 'done' && q.status !== 'skip').slice(0, 4);
+    dq.innerHTML = preview.length
+      ? preview.map(q => {
+          const st = state.statuses.find(s => s.id === q.status);
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-family:var(--font-display);font-size:18px;color:var(--gold);min-width:42px">${String(q.number).padStart(3,'0')}</div>
+              <div><div style="font-size:13px;font-weight:500">${q.name}</div><div style="font-size:11px;color:var(--text-muted)">${q.serviceIcon} ${q.service} • ${q.slot}</div></div>
+            </div>
+            <span class="tag" style="border-color:${st?.color}40;color:${st?.color}">${st?.icon} ${st?.label}</span>
+          </div>`;
+        }).join('')
+      : '<div style="text-align:center;padding:30px;color:var(--text-muted)">Belum ada antrian aktif</div>';
+  }
+
+  // services grid
+  const ds = document.getElementById('dash-services');
+  if (ds) {
+    ds.innerHTML = state.services.map(s => {
+      const count = state.queue.filter(q => q.serviceId === s.id && q.status !== 'done').length;
+      return `<div class="stat-card" style="gap:6px">
+        <div style="font-size:22px">${s.icon}</div>
+        <div style="font-weight:600;font-size:13px">${s.name}</div>
+        <div style="font-family:var(--font-display);font-size:24px;color:var(--gold)">${count}</div>
+        <div style="font-size:11px;color:var(--text-muted)">antrian aktif</div>
+      </div>`;
+    }).join('');
+  }
+
+  renderBarChart('bar-chart');
+}
+
+function updateStats() {
+  const active = state.queue.filter(q => q.status === 'waiting' || q.status === 'inprogress').length;
+  const called = state.queue.filter(q => q.status === 'called').length;
+  const done   = state.queue.filter(q => q.status === 'done').length;
+  const sa = document.getElementById('stat-active'); if (sa) sa.textContent = active;
+  const sc = document.getElementById('stat-called'); if (sc) sc.textContent = called;
+  const sd = document.getElementById('stat-done');   if (sd) sd.textContent = done;
+}
+
+function renderBarChart(elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const hours = ['08','09','10','11','12','13','14','15','16','17','18','19'];
+  const vals  = [2,4,8,11,6,5,7,9,4,3,2,1];
+  const max   = Math.max(...vals);
+  el.innerHTML = hours.map((h, i) => `
+    <div class="bar-col">
+      <div class="bar-val" style="color:var(--gold)">${vals[i]}</div>
+      <div class="bar" style="height:${Math.round((vals[i]/max)*100)}%;background:${vals[i]===max?'var(--gold)':'var(--surface3)'}"></div>
+      <div class="bar-lbl">${h}</div>
+    </div>`).join('');
+}
+
+// ─── BOOKING LINKS ────────────────────────────────────────────────────────
+function buildLink(serviceId) {
+  return window.location.origin + window.location.pathname + '?svc=' + serviceId;
+}
+function renderBookings() {
+  const el = document.getElementById('bookings-content');
+  if (!el) return;
+  el.innerHTML = state.services.map(s => {
+    const link = buildLink(s.id);
+    const count = state.queue.filter(q => q.serviceId === s.id).length;
+    return `<div class="card card-elevated" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px">${s.icon}</div>
+        <div><div style="font-family:var(--font-display);font-size:17px">${s.name}</div><div style="font-size:12px;color:var(--text-muted)">Estimasi ${s.est} mnt • Maks ${s.max}/hari • ${count} antrian hari ini</div></div>
+      </div>
+      <div class="link-box" style="cursor:text">${link}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="showLinkModal('${s.id}')">📋 Salin & Bagikan</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCustomer('${s.id}')">👤 Simulasi</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showLinkModal(serviceId) {
+  const svc = state.services.find(s => s.id === serviceId);
+  const link = buildLink(serviceId);
+  document.getElementById('modal-link-title').textContent = '🔗 ' + svc.icon + ' ' + svc.name;
+  document.getElementById('modal-link-url').textContent = link;
+  document.getElementById('modal-link-url').dataset.link = link;
+  document.getElementById('modal-link').classList.remove('hidden');
+}
+function copyLink() {
+  const link = document.getElementById('modal-link-url').dataset.link;
+  navigator.clipboard.writeText(link).then(() => showNotif('✅ Link disalin!')).catch(() => {
+    prompt('Salin link ini:', link);
+  });
+}
+function shareWaLink() {
+  const link = document.getElementById('modal-link-url').dataset.link;
+  window.open('https://wa.me/?text=' + encodeURIComponent('Booking antrian JD Production: ' + link), '_blank');
+}
+
+// ─── REPORTS ──────────────────────────────────────────────────────────────
+function renderReports() {
+  renderBarChart('report-chart');
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────────────────
+function renderSettings() {
+  switchTab(state.currentTab);
+}
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.tab-item').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+  const tabEl = document.getElementById('tab-' + tab);
+  if (tabEl) tabEl.classList.remove('hidden');
+  if (tab === 'layanan') renderServicesList();
+  if (tab === 'waktu') renderSlotsSettings();
+  if (tab === 'antrian') renderStatusSettings();
+  if (tab === 'operasional') renderCounters();
+}
+
+function saveBisnis() {
+  state.config.name = document.getElementById('cfg-name').value;
+  state.config.logo = document.getElementById('cfg-logo').value;
+  state.config.tagline = document.getElementById('cfg-tagline').value;
+  document.getElementById('sidebar-brand-name').textContent = state.config.name;
+  showNotif('✅ Informasi bisnis disimpan!');
+}
+function syncColor() {
+  const val = document.getElementById('cfg-color').value;
+  document.getElementById('cfg-color-hex').value = val;
+}
+function syncColorHex() {
+  const val = document.getElementById('cfg-color-hex').value;
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) document.getElementById('cfg-color').value = val;
+}
+
+function renderServicesList() {
+  const el = document.getElementById('services-list');
+  if (!el) return;
+  el.innerHTML = state.services.map(s => `
+    <div class="svc-row">
+      <div class="svc-icon">${s.icon}</div>
+      <div class="svc-info"><div class="svc-name">${s.name}</div><div class="svc-meta">${s.est} menit • Maks ${s.max}/hari${s.desc?' • '+s.desc:''}</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="openEditService('${s.id}')">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">🗑</button>
+    </div>`).join('');
+}
+function addService() {
+  const icon = document.getElementById('new-svc-icon').value.trim() || '🎬';
+  const name = document.getElementById('new-svc-name').value.trim();
+  const est  = parseInt(document.getElementById('new-svc-est').value) || 30;
+  const max  = parseInt(document.getElementById('new-svc-max').value) || 20;
+  if (!name) { showNotif('⚠️ Nama layanan wajib diisi'); return; }
+  state.services.push({ id: 's'+Date.now(), icon, name, est, max, desc: '' });
+  document.getElementById('new-svc-name').value = '';
+  renderServicesList();
+  showNotif('✅ Layanan ditambahkan!');
+}
+function deleteService(id) {
+  if (confirm('Hapus layanan ini?')) { state.services = state.services.filter(s => s.id !== id); renderServicesList(); showNotif('Layanan dihapus'); }
+}
+function openEditService(id) {
+  const s = state.services.find(s => s.id === id);
+  if (!s) return;
+  document.getElementById('edit-svc-id').value = s.id;
+  document.getElementById('edit-svc-icon').value = s.icon;
+  document.getElementById('edit-svc-name').value = s.name;
+  document.getElementById('edit-svc-est').value = s.est;
+  document.getElementById('edit-svc-max').value = s.max;
+  document.getElementById('edit-svc-desc').value = s.desc || '';
+  document.getElementById('modal-svc').classList.remove('hidden');
+}
+function saveEditService() {
+  const id = document.getElementById('edit-svc-id').value;
+  const s = state.services.find(s => s.id === id);
+  if (s) {
+    s.icon = document.getElementById('edit-svc-icon').value;
+    s.name = document.getElementById('edit-svc-name').value;
+    s.est  = parseInt(document.getElementById('edit-svc-est').value);
+    s.max  = parseInt(document.getElementById('edit-svc-max').value);
+    s.desc = document.getElementById('edit-svc-desc').value;
+  }
+  document.getElementById('modal-svc').classList.add('hidden');
+  renderServicesList();
+  showNotif('✅ Layanan diperbarui!');
+}
+
+// ─── SLOT SETTINGS ────────────────────────────────────────────────────────
+function generateSlots(open, close, interval) {
+  const slots = [];
+  let [h, m] = open.split(':').map(Number);
+  const [ch, cm] = close.split(':').map(Number);
+  const closeMin = ch * 60 + cm;
+  while (h * 60 + m < closeMin) {
+    slots.push(String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0'));
+    m += interval;
+    if (m >= 60) { h += Math.floor(m/60); m = m % 60; }
+  }
+  return slots;
+}
+function regenerateSlots() {
+  const open     = document.getElementById('slot-open')?.value || '09:00';
+  const close    = document.getElementById('slot-close')?.value || '20:00';
+  const interval = parseInt(document.getElementById('slot-interval')?.value || '30');
+  state.slots = generateSlots(open, close, interval);
+  state.blockedSlots = new Set();
+  renderSlotsSettings();
+}
+function renderSlotsSettings() {
+  if (state.slots.length === 0) regenerateSlots();
+  const el = document.getElementById('slot-settings-grid');
+  const lbl = document.getElementById('slot-count-label');
+  if (!el) return;
+  if (lbl) lbl.textContent = state.slots.length + ' slot';
+  el.innerHTML = state.slots.map(sl => {
+    const blocked = state.blockedSlots.has(sl);
+    return `<div class="slot-setting-item${blocked?' blocked':''}">
+      <span>${sl}</span>
+      <button class="btn btn-sm ${blocked?'btn-success':'btn-danger'}" style="padding:3px 8px;font-size:11px" onclick="toggleSlot('${sl}')">${blocked?'Buka':'Blokir'}</button>
+    </div>`;
+  }).join('');
+}
+function toggleSlot(sl) {
+  if (state.blockedSlots.has(sl)) state.blockedSlots.delete(sl); else state.blockedSlots.add(sl);
+  renderSlotsSettings();
+}
+function toggleAllSlots(active) {
+  if (active) state.blockedSlots.clear(); else state.slots.forEach(s => state.blockedSlots.add(s));
+  renderSlotsSettings();
+}
+
+// ─── STATUS SETTINGS ─────────────────────────────────────────────────────
+function renderStatusSettings() {
+  const el = document.getElementById('status-list-settings');
+  if (!el) return;
+  el.innerHTML = state.statuses.map(s => `
+    <div class="svc-row" style="margin-bottom:8px">
+      <span style="font-size:18px">${s.icon}</span>
+      <div class="svc-info"><div class="svc-name">${s.label}</div></div>
+      <button class="btn btn-danger btn-sm" onclick="deleteStatus('${s.id}')" ${['waiting','called','done'].includes(s.id)?'disabled':''}>🗑</button>
+    </div>`).join('');
+}
+function addStatus() {
+  const icon  = document.getElementById('new-status-icon').value.trim() || '🔵';
+  const label = document.getElementById('new-status-label').value.trim();
+  if (!label) { showNotif('⚠️ Nama status wajib diisi'); return; }
+  state.statuses.push({ id: 'st'+Date.now(), icon, label, color: '#7A7880' });
+  document.getElementById('new-status-label').value = '';
+  renderStatusSettings();
+  showNotif('✅ Status ditambahkan!');
+}
+function deleteStatus(id) {
+  state.statuses = state.statuses.filter(s => s.id !== id);
+  renderStatusSettings();
+}
+
+// ─── COUNTERS ─────────────────────────────────────────────────────────────
+function renderCounters() {
+  const n = parseInt(document.getElementById('cfg-counters')?.value || 2);
+  state.counters = n;
+  const el = document.getElementById('counter-tags');
+  if (!el) return;
+  el.innerHTML = Array.from({length: n}, (_, i) => `<span class="tag" style="background:rgba(74,158,245,.1);border-color:rgba(74,158,245,.3);color:var(--blue)">Loket ${i+1}</span>`).join('');
+}
+
+// ─── WA TEST ──────────────────────────────────────────────────────────────
+function testWa() {
+  const apikey = document.getElementById('cfg-apikey')?.value;
+  if (!apikey || apikey === 'YOUR_FONNTE_API_KEY') { showNotif('⚠️ Masukkan API Key Fonnte dulu'); return; }
+  showNotif('📤 Test WA terkirim (simulasi)');
+}
+
+// ─── NOTIF ────────────────────────────────────────────────────────────────
+let notifTimer;
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.add('hidden'), 2800);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  // Check URL param for customer mode
+  const params = new URLSearchParams(window.location.search);
+  const svcParam = params.get('svc');
+  if (svcParam) {
+    openCustomer(svcParam);
+    return;
+  }
+
+  // Seed sample queue
+  state.slots = generateSlots('09:00','20:00',30);
+  state.queue = [
+    { id:'q1', number:1, name:'Andi Firmansyah', serviceId:'s1', service:'Foto Studio', serviceIcon:'📸', slot:'10:00', status:'inprogress', time:'09:45' },
+    { id:'q2', number:2, name:'Budi Santoso',    serviceId:'s2', service:'Video Production', serviceIcon:'🎬', slot:'11:00', status:'waiting',    time:'10:12' },
+    { id:'q3', number:3, name:'Citra Dewi',      serviceId:'s1', service:'Foto Studio', serviceIcon:'📸', slot:'10:30', status:'called',     time:'10:28' },
+    { id:'q4', number:4, name:'Dewi Rahayu',     serviceId:'s3', service:'Edit & Post', serviceIcon:'✂️', slot:'13:00', status:'waiting',    time:'11:00' },
+    { id:'q5', number:5, name:'Eko Prasetyo',    serviceId:'s1', service:'Foto Studio', serviceIcon:'📸', slot:'11:30', status:'done',       time:'11:30' },
+  ];
+  state.nextNumber = 6;
+  navigate('dashboard');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
