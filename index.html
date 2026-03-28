@@ -213,6 +213,13 @@ input,select,textarea{font-family:inherit;color:inherit}
           <div class="stat-c"><div class="stat-lbl">Selesai</div><div class="stat-val" style="color:var(--green)" id="s-done">0</div><div class="stat-sub">Dilayani</div></div>
         </div>
         <div class="studios-grid" id="dash-studios"></div>
+        <div id="dash-done-wrap" style="display:none">
+          <div style="font-family:var(--fd);font-size:14px;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            <span style="color:var(--green)">&#x2705;</span> SELESAI HARI INI
+            <span id="dash-done-count" style="background:rgba(69,199,138,.12);border:1px solid rgba(69,199,138,.25);color:var(--green);font-size:11px;padding:2px 10px;border-radius:100px;font-family:var(--fb)">0</span>
+          </div>
+          <div id="dash-done-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
       </div>
     </section>
 
@@ -406,6 +413,27 @@ function renderDashboard(){
       <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="nav('queue')">Lihat Semua →</button>
     </div>`;
   }).join('');
+
+  // ── Section Selesai Hari Ini ──
+  const doneList=state.queue.filter(q=>q.status==='done'||q.status==='skip');
+  const doneWrap=document.getElementById('dash-done-wrap');
+  const doneCount=document.getElementById('dash-done-count');
+  const doneEl=document.getElementById('dash-done-list');
+  if(doneWrap){doneWrap.style.display=doneList.length?'block':'none';}
+  if(doneCount)doneCount.textContent=doneList.length;
+  if(doneEl){
+    doneEl.innerHTML=doneList.map(q=>{
+      const st=state.statuses.find(s=>s.id===q.status);
+      return`<div style="display:flex;align-items:center;gap:12px;background:var(--s2);border:1px solid rgba(69,199,138,.12);border-radius:var(--rs);padding:10px 14px;opacity:.75">
+        <div style="font-family:var(--fd);font-size:18px;color:${q.studioColor};min-width:70px">${q.number}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${q.name}</div>
+          <div style="font-size:11px;color:var(--tm)">${q.studioIco} ${q.studioName} · ${q.time}</div>
+        </div>
+        <div style="font-size:12px;color:${st?.color||'var(--green)'};font-weight:600">${st?.ico||'✅'} ${st?.label||'Selesai'}</div>
+      </div>`;
+    }).join('');
+  }
 }
 function updateStats(){
   const all=state.queue;
