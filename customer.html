@@ -108,6 +108,22 @@ let lastEntry=null;
 function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
 let _nt;
 function showNotif(msg){const el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:18px;right:14px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:10px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:var(--t);max-width:90vw';clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',2800);}
+function todayStr(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function checkDayReset(){
+  try{
+    const d=JSON.parse(localStorage.getItem('jdprod_v2')||'{}');
+    const today=todayStr();
+    if(d.savedDate && d.savedDate!==today){
+      if(d.studios)state.studios=d.studios;
+      if(d.statuses)state.statuses=d.statuses;
+      if(d.config)state.config=d.config;
+      if(d.gasUrl)state.gasUrl=d.gasUrl;
+      state.queue=[];
+      state.nextNum={s1:1,s2:1,s3:1,s4:1};
+      localStorage.setItem('jdprod_v2',JSON.stringify({...d,queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},savedDate:today}));
+    }
+  }catch(e){}
+}
 function loadLS(){
   try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
     if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;

@@ -452,9 +452,12 @@ function renderQueue(){
   if(sf&&sf.options.length===1)state.studios.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.name;sf.appendChild(o);});
   const statusSel=document.getElementById('q-status-filter');
   if(statusSel&&statusSel.options.length===1)state.statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.label;statusSel.appendChild(o);});
-  const list=state.queue.filter(q=>(stF==='all'||q.studioId===stF)&&(stF2==='all'||q.status===stF2)).sort((a,b)=>a.numRaw-b.numRaw);
+  // Pisah aktif vs selesai
+  const allFiltered=state.queue.filter(q=>(stF==='all'||q.studioId===stF)&&(stF2==='all'||q.status===stF2));
+  const list=allFiltered.filter(q=>q.status!=='done'&&q.status!=='skip').sort((a,b)=>a.numRaw-b.numRaw);
+  const doneCount=allFiltered.filter(q=>q.status==='done'||q.status==='skip').length;
   const el=document.getElementById('queue-list');if(!el)return;
-  const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' antrian';
+  const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' aktif · '+doneCount+' selesai';
 
   // Smart render: skip jika data tidak berubah
   const snap=JSON.stringify(list.map(q=>({id:q.id,status:q.status})));
@@ -463,11 +466,12 @@ function renderQueue(){
 
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>';return;}
   el.innerHTML=list.map(q=>{
+    const isDone=q.status==='done'||q.status==='skip';
     const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
     const opts=state.statuses.map(s=>`<option value="${s.id}"${q.status===s.id?' selected':''}>${s.ico} ${s.label}</option>`).join('');
-    return`<div class="q-card fadeUp" style="--c:${q.studioColor}">
+    return`<div class="q-card fadeUp" style="--c:${q.studioColor};${isDone?'opacity:.5;filter:grayscale(.4)':''}">
       <div style="display:flex;align-items:flex-start;gap:12px">
-        <div class="q-number" style="color:${q.studioColor}">${q.number}</div>
+        <div class="q-number" style="color:${isDone?'var(--td)':q.studioColor};${isDone?'text-decoration:line-through':''}">${q.number}</div>
         <div style="flex:1">
           <div class="q-name">${q.name} <span style="font-size:11px;color:var(--tm);font-weight:400;background:var(--s2);padding:2px 8px;border-radius:100px;margin-left:4px">${q.studioIco} ${q.studioName}</span></div>
           <div class="q-meta">Daftar: ${q.time} · ${q.number}</div>
@@ -698,12 +702,36 @@ async function loadFromGAS(){
 }
 
 // ── LocalStorage ──────────────────────────────────────────
+function todayStr(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 function saveLS(silent){
-  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
+  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl,savedDate:todayStr()}));}catch(e){}
   try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
   if(!silent)showNotif('✅ Tersimpan!');
 }
-function loadLS(){try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;return true;}catch(e){return false;}}
+function loadLS(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    const today=todayStr();
+    // Hari baru — reset antrian & nomor, pertahankan settings
+    if(d.savedDate && d.savedDate!==today){
+      if(d.studios)state.studios=d.studios;
+      if(d.statuses)state.statuses=d.statuses;
+      if(d.config)state.config=d.config;
+      if(d.gasUrl)state.gasUrl=d.gasUrl;
+      state.queue=[];
+      state.nextNum={s1:1,s2:1,s3:1,s4:1};
+      saveLS(true);
+      return true;
+    }
+    if(d.queue)state.queue=d.queue;
+    if(d.nextNum)state.nextNum=d.nextNum;
+    if(d.studios)state.studios=d.studios;
+    if(d.statuses)state.statuses=d.statuses;
+    if(d.config)state.config=d.config;
+    if(d.gasUrl)state.gasUrl=d.gasUrl;
+    return true;
+  }catch(e){return false;}
+}
 
 // ── Auto sync antar komputer ─────────────────────────────
 // BroadcastChannel: sync antar TAB di browser yang sama

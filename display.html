@@ -126,6 +126,22 @@ let state={
 function nowTimeSec(){const d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
 function nowDate(){const d=new Date();const dy=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return dy[d.getDay()]+', '+d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();}
 
+function todayStr(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function checkDayReset(){
+  try{
+    const d=JSON.parse(localStorage.getItem('jdprod_v2')||'{}');
+    const today=todayStr();
+    if(d.savedDate && d.savedDate!==today){
+      if(d.studios)state.studios=d.studios;
+      if(d.statuses)state.statuses=d.statuses;
+      if(d.config)state.config=d.config;
+      if(d.gasUrl)state.gasUrl=d.gasUrl;
+      state.queue=[];
+      state.nextNum={s1:1,s2:1,s3:1,s4:1};
+      localStorage.setItem('jdprod_v2',JSON.stringify({...d,queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},savedDate:today}));
+    }
+  }catch(e){}
+}
 function loadLS(){
   try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
     if(d.queue)state.queue=d.queue;if(d.studios)state.studios=d.studios;
