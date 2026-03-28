@@ -4,19 +4,20 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>JD Production — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- Font default; diganti dinamis oleh applyFont() -->
+<link id="font-api-link" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
---bg:#0A0A0B;--s1:#111114;--s2:#18181C;--s3:#222228;
---b:rgba(255,255,255,.06);--ba:rgba(255,210,100,.35);
---t:#F2EEE8;--tm:#7B7885;--td:#3A3840;
---gold:#F0C060;--gold2:#D4A840;--gd:rgba(240,192,96,.1);
---red:#E05555;--green:#45C78A;--blue:#5599F5;--pur:#A07FF0;
---r:14px;--rs:8px;
---sh:0 4px 32px rgba(0,0,0,.5);--shg:0 4px 24px rgba(240,192,96,.18);
---fd:"Bebas Neue",sans-serif;--fb:"DM Sans",sans-serif;--fm:"JetBrains Mono",monospace;
---tr:.18s cubic-bezier(.4,0,.2,1);
+  --bg:#0A0A0B;--s1:#111114;--s2:#18181C;--s3:#222228;
+  --b:rgba(255,255,255,.06);--ba:rgba(255,210,100,.35);
+  --t:#F2EEE8;--tm:#7B7885;--td:#3A3840;
+  --gold:#F0C060;--gold2:#D4A840;--gd:rgba(240,192,96,.1);
+  --red:#E05555;--green:#45C78A;--blue:#5599F5;--pur:#A07FF0;
+  --r:14px;--rs:8px;
+  --sh:0 4px 32px rgba(0,0,0,.5);--shg:0 4px 24px rgba(240,192,96,.18);
+  --fd:"Bebas Neue",sans-serif;--fb:"DM Sans",sans-serif;--fm:"JetBrains Mono",monospace;
+  --tr:.18s cubic-bezier(.4,0,.2,1);
 }
 html,body{height:100%;background:var(--bg)}
 body{font-family:var(--fb);font-size:14px;color:var(--t);-webkit-font-smoothing:antialiased}
@@ -29,7 +30,6 @@ input,select,textarea{font-family:inherit;color:inherit}
 @keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(2.4);opacity:0}}
 .fadeUp{animation:fadeUp .32s ease forwards}
 .pulse{animation:pulse 2s infinite}
-/* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap}
 .btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600}
 .btn-gold:hover{background:#F5D070;transform:translateY(-1px);box-shadow:var(--shg)}
@@ -39,13 +39,10 @@ input,select,textarea{font-family:inherit;color:inherit}
 .btn-red:hover{background:rgba(224,85,85,.28)}
 .btn-green{background:rgba(69,199,138,.14);color:var(--green);border:1px solid rgba(69,199,138,.25)}
 .btn-green:hover{background:rgba(69,199,138,.28)}
-.btn-blue{background:rgba(85,153,245,.14);color:var(--blue);border:1px solid rgba(85,153,245,.25)}
-.btn-blue:hover{background:rgba(85,153,245,.28)}
 .btn-sm{padding:6px 12px;font-size:12px}
 .btn-lg{padding:14px 32px;font-size:15px;font-weight:600;border-radius:var(--r)}
 .btn-icon{padding:8px}
 .btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-/* ── Inputs ── */
 .inp{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:11px 14px;color:var(--t);font-size:14px;outline:none;transition:border var(--tr)}
 .inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,96,.1)}
 .inp::placeholder{color:var(--td)}
@@ -54,7 +51,6 @@ input,select,textarea{font-family:inherit;color:inherit}
 .card2{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:20px}
 .divider{height:1px;background:var(--b);margin:18px 0}
 .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:12px;font-weight:500;border:1px solid}
-/* ── Layout ── */
 #app{display:flex;min-height:100vh}
 #sidebar{width:210px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;flex-shrink:0;transition:transform .3s ease}
 #main-content{flex:1;overflow:auto;min-height:100vh}
@@ -73,17 +69,14 @@ input,select,textarea{font-family:inherit;color:inherit}
 .ni:hover:not(.active){color:var(--t);background:rgba(255,255,255,.03)}
 .ni-ico{font-size:15px;width:20px;text-align:center}
 .live-area{padding:10px 14px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px}
-/* Live dot */
 .live-dot-wrap{position:relative;display:inline-flex;width:8px;height:8px;flex-shrink:0}
 .live-ping{position:absolute;inset:0;border-radius:50%;background:var(--green);opacity:.4;animation:ping 1.5s ease-in-out infinite}
 .live-core{width:8px;height:8px;border-radius:50%;background:var(--green);display:block}
-/* ── Stats ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .stat-c{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:16px}
 .stat-lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:6px}
 .stat-val{font-family:var(--fd);font-size:34px;letter-spacing:.02em;line-height:1}
 .stat-sub{font-size:11px;color:var(--tm);margin-top:5px}
-/* ── Studio cards ── */
 .studios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .studio-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:18px;transition:all var(--tr);cursor:pointer;position:relative;overflow:hidden}
 .studio-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
@@ -95,65 +88,56 @@ input,select,textarea{font-family:inherit;color:inherit}
 .studio-queue-list{margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:130px;overflow-y:auto}
 .sq-item{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--s2);border-radius:6px;border:1px solid var(--b);font-size:12px}
 .sq-num{font-family:var(--fd);font-size:15px;color:var(--gold)}
-/* estimasi badge */
-.estim-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(160,127,240,.1);border:1px solid rgba(160,127,240,.25);border-radius:100px;font-size:11px;color:var(--pur);font-weight:500;margin-top:6px}
-/* ── Queue cards ── */
 .q-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:14px;border-left:3px solid var(--c,var(--gold));transition:all var(--tr)}
 .q-card:hover{background:var(--s2)}
 .q-number{font-family:var(--fd);font-size:26px;color:var(--gold);letter-spacing:.04em;min-width:68px;height:68px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b);flex-shrink:0}
 .q-name{font-size:14px;font-weight:600;margin-bottom:3px}
 .q-meta{font-size:11px;color:var(--tm);margin-bottom:8px}
 .status-sel{background:var(--s2);border:1px solid;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:500;cursor:pointer;outline:none}
-/* ── Badges ── */
 .gas-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(69,199,138,.1);border:1px solid rgba(69,199,138,.25);border-radius:100px;font-size:11px;color:var(--green);font-weight:500}
 .gas-badge.off{background:rgba(224,85,85,.1);border-color:rgba(224,85,85,.25);color:var(--red)}
 .sync-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(85,153,245,.12);border:1px solid rgba(85,153,245,.25);border-radius:100px;font-size:11px;color:var(--blue);cursor:pointer;transition:all var(--tr)}
 .sync-btn:hover{background:rgba(85,153,245,.22)}
-/* ── Greeting banner ── */
 .greeting-bar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(240,192,96,.07);border:1px solid rgba(240,192,96,.2);border-radius:var(--r)}
-.greeting-ico{font-size:24px}
 .greeting-text{font-size:13px;font-weight:500}
 .greeting-sub{font-size:11px;color:var(--tm);margin-top:2px}
-/* ── Tabs ── */
 .tab-row{display:flex;gap:4px;flex-wrap:wrap;background:var(--s1);padding:4px;border-radius:10px;border:1px solid var(--b);width:fit-content}
 .tab-btn{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;color:var(--tm);transition:all var(--tr)}
 .tab-btn.active{background:var(--s2);color:var(--t);border-color:var(--b)}
 .code-block{background:var(--s3);border:1px solid var(--b);border-radius:var(--rs);padding:12px;font-family:var(--fm);font-size:11px;line-height:1.8;max-height:320px;overflow-y:auto;white-space:pre;color:var(--t)}
-/* ── Version badge ── */
 .version-badge{font-size:10px;color:var(--td);padding:2px 8px;background:var(--s3);border-radius:100px;font-family:var(--fm)}
-/* ── Modal ── */
 .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
 .modal-box{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:22px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp .28s ease}
 .modal-title{font-family:var(--fd);font-size:18px;letter-spacing:.04em;margin-bottom:16px}
 .modal-actions{display:flex;gap:10px;margin-top:18px}
-/* ── Mobile hamburger ── */
+/* font preview box */
+.font-preview{background:var(--s2);border:1px solid var(--ba);border-radius:var(--rs);padding:14px 16px;font-size:22px;letter-spacing:.04em;line-height:1.4;min-height:54px;transition:all .3s ease}
+/* font preset chips */
+.font-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:12px;border:1px solid var(--b);cursor:pointer;transition:all var(--tr);background:var(--s2)}
+.font-chip:hover{border-color:var(--ba);color:var(--gold)}
+.font-chip.active{border-color:var(--gold);color:var(--gold);background:var(--gd)}
 #mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:8px 10px;font-size:16px;cursor:pointer;color:var(--t)}
 #sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150}
-/* ── Sheet link box ── */
-.sheet-link-box{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(69,199,138,.06);border:1px solid rgba(69,199,138,.2);border-radius:var(--rs)}
-/* ── Responsive ── */
 @media(max-width:900px){.studios-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){
-#mob-toggle{display:flex}
-#sidebar{position:fixed;top:0;left:0;z-index:160;transform:translateX(-100%);height:100%;width:220px}
-#sidebar.open{transform:translateX(0)}
-#sidebar-overlay.open{display:block}
-#main-content{padding-top:0}
-.stats-row{grid-template-columns:repeat(2,1fr)}
-.studios-grid{grid-template-columns:1fr 1fr}
-.topbar{padding:10px 14px;padding-left:50px}
-.page-body{padding:12px}
-.topbar-right{gap:6px}
-.btn-sm{padding:5px 10px;font-size:11px}
+  #mob-toggle{display:flex}
+  #sidebar{position:fixed;top:0;left:0;z-index:160;transform:translateX(-100%);height:100%;width:220px}
+  #sidebar.open{transform:translateX(0)}
+  #sidebar-overlay.open{display:block}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .studios-grid{grid-template-columns:1fr 1fr}
+  .topbar{padding:10px 14px;padding-left:50px}
+  .page-body{padding:12px}
+  .topbar-right{gap:6px}
+  .btn-sm{padding:5px 10px;font-size:11px}
 }
 </style>
 </head>
 <body>
-<!-- Mobile toggle -->
 <button id="mob-toggle" onclick="toggleSidebar()">☰</button>
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
 <div id="app">
+
 <!-- SIDEBAR -->
 <aside id="sidebar">
   <div class="brand-area">
@@ -186,180 +170,167 @@ input,select,textarea{font-family:inherit;color:inherit}
 <!-- MAIN -->
 <div id="main-content">
 
-<!-- DASHBOARD -->
-<section id="page-dashboard">
-  <div class="topbar">
-    <div><div class="topbar-title">Dashboard</div><div class="topbar-sub" id="dash-date"></div></div>
-    <div class="topbar-right">
-      <span class="gas-badge off" data-gas-badge>⬤ GAS Offline</span>
-      <button class="sync-btn" onclick="syncNow(true)">⟳ Sync</button>
-      <button class="btn btn-ghost btn-sm" onclick="nav('queue')">≡ Antrian</button>
-    </div>
-  </div>
-  <div class="page-body">
-    <div id="greeting-banner"></div>
-    <div class="stats-row">
-      <div class="stat-c"><div class="stat-lbl">Total</div><div class="stat-val" style="color:var(--gold)" id="s-total">0</div><div class="stat-sub">Hari ini</div></div>
-      <div class="stat-c"><div class="stat-lbl">Menunggu</div><div class="stat-val" style="color:var(--blue)" id="s-wait">0</div><div class="stat-sub">Belum dipanggil</div></div>
-      <div class="stat-c"><div class="stat-lbl">Proses</div><div class="stat-val" style="color:var(--pur)" id="s-prog">0</div><div class="stat-sub">Di studio</div></div>
-      <div class="stat-c"><div class="stat-lbl">Selesai</div><div class="stat-val" style="color:var(--green)" id="s-done">0</div><div class="stat-sub">Dilayani</div></div>
-    </div>
-    <div class="studios-grid" id="dash-studios"></div>
-    <div id="dash-done-wrap" style="display:none">
-      <div style="font-family:var(--fd);font-size:14px;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;display:flex;align-items:center;gap:8px">
-        <span style="color:var(--green)">&#x2705;</span> SELESAI HARI INI
-        <span id="dash-done-count" style="background:rgba(69,199,138,.12);border:1px solid rgba(69,199,138,.25);color:var(--green);font-size:11px;padding:2px 10px;border-radius:100px;font-family:var(--fb)">0</span>
+  <!-- DASHBOARD -->
+  <section id="page-dashboard">
+    <div class="topbar">
+      <div><div class="topbar-title">Dashboard</div><div class="topbar-sub" id="dash-date"></div></div>
+      <div class="topbar-right">
+        <span class="gas-badge off" data-gas-badge>⬤ GAS Offline</span>
+        <button class="sync-btn" onclick="syncNow(true)">⟳ Sync</button>
+        <button class="btn btn-ghost btn-sm" onclick="nav('queue')">≡ Antrian</button>
       </div>
-      <div id="dash-done-list" style="display:flex;flex-direction:column;gap:8px"></div>
     </div>
-  </div>
-</section>
-
-<!-- QUEUE -->
-<section id="page-queue" class="h">
-  <div class="topbar">
-    <div><div class="topbar-title">Antrian</div><div class="topbar-sub" id="q-sub"></div></div>
-    <div class="topbar-right">
-      <select class="inp" id="q-studio-filter" style="max-width:140px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Studio</option></select>
-      <select class="inp" id="q-status-filter" style="max-width:130px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Status</option></select>
-      <button class="btn btn-gold btn-sm" onclick="callNext()">📢 Panggil Berikutnya</button>
-    </div>
-  </div>
-  <div class="page-body"><div id="queue-list" style="display:flex;flex-direction:column;gap:10px"></div></div>
-</section>
-
-<!-- SETTINGS -->
-<section id="page-settings" class="h">
-  <div class="topbar"><div><div class="topbar-title">Pengaturan</div><div class="topbar-sub">Konfigurasi sistem</div></div></div>
-  <div class="page-body">
-    <div class="tab-row">
-      <button class="tab-btn active" data-tab="gas" onclick="switchTab('gas')">📊 GAS</button>
-      <button class="tab-btn" data-tab="sheet" onclick="switchTab('sheet')">📋 Google Sheet</button>
-      <button class="tab-btn" data-tab="studio" onclick="switchTab('studio')">🎬 Studio</button>
-      <button class="tab-btn" data-tab="estimasi" onclick="switchTab('estimasi')">⏱ Estimasi</button>
-      <button class="tab-btn" data-tab="status" onclick="switchTab('status')">📋 Status</button>
-      <button class="tab-btn" data-tab="bisnis" onclick="switchTab('bisnis')">🏢 Bisnis</button>
-    </div>
-
-    <!-- GAS Tab -->
-    <div id="tab-gas" class="card" style="max-width:620px;display:flex;flex-direction:column;gap:16px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📊 Google Apps Script Backend</div>
-      <div style="background:var(--gd);border:1px solid var(--ba);border-radius:var(--rs);padding:12px 14px;font-size:12px;line-height:1.9;color:var(--tm)">
-        <strong style="color:var(--gold)">Setup sekali — gratis selamanya:</strong><br>
-        1. Buka <strong style="color:var(--t)">script.google.com</strong> → New Project<br>
-        2. Hapus semua → paste script di bawah<br>
-        3. <strong style="color:var(--t)">Deploy → New Deployment → Web App</strong><br>
-        4. Execute as: <strong style="color:var(--t)">Me</strong> | Access: <strong style="color:var(--t)">Anyone</strong><br>
-        5. Copy URL → paste di bawah → Simpan & Test
+    <div class="page-body">
+      <div id="greeting-banner"></div>
+      <div class="stats-row">
+        <div class="stat-c"><div class="stat-lbl">Total</div><div class="stat-val" style="color:var(--gold)" id="s-total">0</div><div class="stat-sub">Hari ini</div></div>
+        <div class="stat-c"><div class="stat-lbl">Menunggu</div><div class="stat-val" style="color:var(--blue)" id="s-wait">0</div><div class="stat-sub">Belum dipanggil</div></div>
+        <div class="stat-c"><div class="stat-lbl">Proses</div><div class="stat-val" style="color:var(--pur)" id="s-prog">0</div><div class="stat-sub">Di studio</div></div>
+        <div class="stat-c"><div class="stat-lbl">Selesai</div><div class="stat-val" style="color:var(--green)" id="s-done">0</div><div class="stat-sub">Dilayani</div></div>
       </div>
-      <div><button class="btn btn-ghost btn-sm" onclick="showGASScript()">📋 Lihat & Salin Script GAS</button></div>
-      <div><label class="lbl">URL Web App Google Apps Script</label><input class="inp" id="cfg-gas-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-green" onclick="saveGasUrl()">💾 Simpan & Test</button>
-        <button class="btn btn-ghost btn-sm" onclick="syncNow(true)">⟳ Sync Sekarang</button>
-        <button class="btn btn-ghost btn-sm" onclick="syncAllSettings()">☁ Sync Semua Setting</button>
+      <div class="studios-grid" id="dash-studios"></div>
+      <div id="dash-done-wrap" style="display:none">
+        <div style="font-family:var(--fd);font-size:14px;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          <span style="color:var(--green)">✅</span> SELESAI HARI INI
+          <span id="dash-done-count" style="background:rgba(69,199,138,.12);border:1px solid rgba(69,199,138,.25);color:var(--green);font-size:11px;padding:2px 10px;border-radius:100px">0</span>
+        </div>
+        <div id="dash-done-list" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
-      <div id="gas-test-result" style="display:none;padding:10px 14px;border-radius:var(--rs);font-size:12px"></div>
     </div>
+  </section>
 
-    <!-- Google Sheet Tab (NEW) -->
-    <div id="tab-sheet" class="card h" style="max-width:620px;display:flex;flex-direction:column;gap:16px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📋 Google Sheet Data</div>
+  <!-- QUEUE -->
+  <section id="page-queue" class="h">
+    <div class="topbar">
+      <div><div class="topbar-title">Antrian</div><div class="topbar-sub" id="q-sub"></div></div>
+      <div class="topbar-right">
+        <select class="inp" id="q-studio-filter" style="max-width:140px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Studio</option></select>
+        <select class="inp" id="q-status-filter" style="max-width:130px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Status</option></select>
+        <button class="btn btn-gold btn-sm" onclick="callNext()">📢 Panggil Berikutnya</button>
+      </div>
+    </div>
+    <div class="page-body"><div id="queue-list" style="display:flex;flex-direction:column;gap:10px"></div></div>
+  </section>
 
-      <div id="sheet-link-wrap">
-        <div style="font-size:12px;color:var(--tm);margin-bottom:8px">Hubungkan GAS terlebih dahulu agar Sheet ID terdeteksi otomatis.</div>
-        <div class="sheet-link-box" id="sheet-link-box" style="display:none">
-          <span style="font-size:18px">📊</span>
-          <div style="flex:1">
-            <div style="font-size:13px;font-weight:600;color:var(--green)">Google Sheet Terhubung</div>
-            <div id="sheet-id-lbl" style="font-size:11px;color:var(--tm);font-family:var(--fm);margin-top:2px"></div>
-          </div>
-          <button class="btn btn-green btn-sm" id="sheet-open-btn" onclick="openSheet()">🔗 Buka Sheet</button>
+  <!-- SETTINGS -->
+  <section id="page-settings" class="h">
+    <div class="topbar"><div><div class="topbar-title">Pengaturan</div><div class="topbar-sub">Konfigurasi sistem</div></div></div>
+    <div class="page-body">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="gas" onclick="switchTab('gas')">📊 GAS</button>
+        <button class="tab-btn" data-tab="studio" onclick="switchTab('studio')">🎬 Studio</button>
+        <button class="tab-btn" data-tab="status" onclick="switchTab('status')">📋 Status</button>
+        <button class="tab-btn" data-tab="bisnis" onclick="switchTab('bisnis')">🏢 Bisnis</button>
+        <!-- ✦ TAB BARU: FONTE -->
+        <button class="tab-btn" data-tab="fonte" onclick="switchTab('fonte')">🔤 Fonte</button>
+      </div>
+
+      <!-- GAS Tab -->
+      <div id="tab-gas" class="card" style="max-width:620px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📊 Google Apps Script Backend</div>
+        <div style="background:var(--gd);border:1px solid var(--ba);border-radius:var(--rs);padding:12px 14px;font-size:12px;line-height:1.9;color:var(--tm)">
+          <strong style="color:var(--gold)">Setup sekali — gratis selamanya:</strong><br>
+          1. Buka <strong style="color:var(--t)">script.google.com</strong> → New Project<br>
+          2. Hapus semua → paste script di bawah<br>
+          3. <strong style="color:var(--t)">Deploy → New Deployment → Web App</strong><br>
+          4. Execute as: <strong style="color:var(--t)">Me</strong> | Access: <strong style="color:var(--t)">Anyone</strong><br>
+          5. Copy URL → paste di bawah → Simpan & Test
+        </div>
+        <div><button class="btn btn-ghost btn-sm" onclick="showGASScript()">📋 Lihat & Salin Script GAS</button></div>
+        <div><label class="lbl">URL Web App Google Apps Script</label><input class="inp" id="cfg-gas-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-green" onclick="saveGasUrl()">💾 Simpan & Test</button>
+          <button class="btn btn-ghost btn-sm" onclick="syncNow(true)">⟳ Sync Sekarang</button>
+        </div>
+        <div id="gas-test-result" style="display:none;padding:10px 14px;border-radius:var(--rs);font-size:12px"></div>
+      </div>
+
+      <!-- Studio Tab -->
+      <div id="tab-studio" class="card h" style="max-width:620px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🎬 Pengaturan Studio</div>
+        <div id="studio-settings-list"></div>
+      </div>
+
+      <!-- Status Tab -->
+      <div id="tab-status" class="card h" style="max-width:520px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📋 Custom Status Antrian</div>
+        <div id="status-settings-list"></div>
+        <div class="divider"></div>
+        <div style="display:flex;gap:8px">
+          <input class="inp" id="new-st-ico" value="🔵" style="width:60px;text-align:center">
+          <input class="inp" id="new-st-lbl" placeholder="Nama status…" style="flex:1">
+          <button class="btn btn-gold btn-sm" onclick="addStatus()">+ Tambah</button>
         </div>
       </div>
 
-      <div class="divider"></div>
-
-      <div style="font-size:13px;font-weight:600;margin-bottom:4px">Sync Settings ke Sheet</div>
-      <div style="font-size:12px;color:var(--tm);margin-bottom:12px">Simpan semua pengaturan (studio, status, bisnis, estimasi) ke Google Sheet agar tersimpan permanen.</div>
-
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b)">
-          <div>
-            <div style="font-size:13px;font-weight:500">🏢 Info Bisnis</div>
-            <div style="font-size:11px;color:var(--tm)">Nama, logo, tagline</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="syncConfig()">Sync</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b)">
-          <div>
-            <div style="font-size:13px;font-weight:500">🎬 Data Studio</div>
-            <div style="font-size:11px;color:var(--tm)">Nama, ikon, warna, estimasi</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="syncStudios()">Sync</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b)">
-          <div>
-            <div style="font-size:13px;font-weight:500">📋 Status Antrian</div>
-            <div style="font-size:11px;color:var(--tm)">Daftar semua status</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="syncStatuses()">Sync</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b)">
-          <div>
-            <div style="font-size:13px;font-weight:500">📑 Data Antrian</div>
-            <div style="font-size:11px;color:var(--tm)">Semua antrian hari ini</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="syncNow(true)">Sync</button>
-        </div>
+      <!-- Bisnis Tab -->
+      <div id="tab-bisnis" class="card h" style="max-width:480px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🏢 Informasi Bisnis</div>
+        <div><label class="lbl">Nama Bisnis</label><input class="inp" id="cfg-nm" value="JD Production"></div>
+        <div><label class="lbl">Logo (emoji)</label><input class="inp" id="cfg-logo" value="🎬"></div>
+        <div><label class="lbl">Tagline</label><input class="inp" id="cfg-tag" value="Professional Photography & Production"></div>
+        <button class="btn btn-gold" style="align-self:flex-start" onclick="saveBisnis()">💾 Simpan</button>
       </div>
 
-      <button class="btn btn-gold" style="align-self:flex-start" onclick="syncAllSettings()">☁ Sync Semua Sekarang</button>
-      <div id="sheet-sync-result" style="display:none;padding:10px 14px;border-radius:var(--rs);font-size:12px"></div>
-    </div>
+      <!-- ═══════════════════════════════════════════════
+           ✦ FONTE TAB — pengaturan font via Google Fonts API
+      ══════════════════════════════════════════════════ -->
+      <div id="tab-fonte" class="card h" style="max-width:600px;display:flex;flex-direction:column;gap:18px">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🔤 Pengaturan Fonte (Tipografi)</div>
 
-    <!-- Studio Tab -->
-    <div id="tab-studio" class="card h" style="max-width:620px;display:flex;flex-direction:column;gap:14px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🎬 Pengaturan Studio</div>
-      <div id="studio-settings-list"></div>
-      <button class="btn btn-gold btn-sm" style="align-self:flex-start" onclick="saveStudioSettings()">💾 Simpan Studio</button>
-    </div>
+        <!-- Info box -->
+        <div style="background:var(--gd);border:1px solid var(--ba);border-radius:var(--rs);padding:12px 14px;font-size:12px;line-height:1.9;color:var(--tm)">
+          <strong style="color:var(--gold)">Google Fonts API</strong> — Masukkan URL dari
+          <strong style="color:var(--t)">fonts.googleapis.com</strong><br>
+          Font aktif akan diterapkan ke halaman <strong style="color:var(--t)">Admin, Customer & Display</strong>.<br>
+          Kosongkan untuk kembali ke font default.
+        </div>
 
-    <!-- Estimasi Tab (NEW) -->
-    <div id="tab-estimasi" class="card h" style="max-width:560px;display:flex;flex-direction:column;gap:14px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">⏱ Estimasi Waktu Tunggu</div>
-      <div style="font-size:12px;color:var(--tm);line-height:1.7">
-        Set berapa menit rata-rata per orang di setiap studio. Estimasi akan ditampilkan ke customer saat pesan tiket & ambil nomor antrian.
+        <!-- Preset Pilihan Cepat -->
+        <div>
+          <label class="lbl">Preset Cepat</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="font-presets"></div>
+        </div>
+
+        <!-- Manual Input -->
+        <div>
+          <label class="lbl">URL Google Fonts (API)</label>
+          <input class="inp" id="cfg-font-url"
+            placeholder="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+            oninput="previewFont(this.value)">
+          <div style="font-size:11px;color:var(--td);margin-top:5px">
+            Contoh: <span style="font-family:var(--fm);color:var(--blue)">https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap</span>
+          </div>
+        </div>
+
+        <!-- Nama Font untuk CSS var -->
+        <div>
+          <label class="lbl">Nama Font (untuk CSS — harus sama dengan nama di URL)</label>
+          <input class="inp" id="cfg-font-name" placeholder="contoh: Poppins" oninput="previewFont()">
+        </div>
+
+        <!-- Preview -->
+        <div>
+          <label class="lbl">Preview</label>
+          <div class="font-preview" id="font-preview-box">
+            Selamat datang di JD Production — Antrian Online 🎬
+          </div>
+          <div style="font-size:11px;color:var(--td);margin-top:5px" id="font-preview-label">Font aktif: <strong id="font-active-name">Default (DM Sans)</strong></div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="saveFont()">💾 Simpan & Terapkan</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetFont()">↺ Reset ke Default</button>
+        </div>
+        <div id="font-save-result" style="display:none;padding:10px 14px;border-radius:var(--rs);font-size:12px"></div>
       </div>
-      <div id="estimasi-settings-list" style="display:flex;flex-direction:column;gap:10px"></div>
-      <button class="btn btn-gold btn-sm" style="align-self:flex-start" onclick="saveEstimasiSettings()">💾 Simpan Estimasi</button>
-    </div>
 
-    <!-- Status Tab -->
-    <div id="tab-status" class="card h" style="max-width:520px;display:flex;flex-direction:column;gap:14px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📋 Custom Status Antrian</div>
-      <div id="status-settings-list"></div>
-      <div class="divider"></div>
-      <div style="display:flex;gap:8px">
-        <input class="inp" id="new-st-ico" value="🔵" style="width:60px;text-align:center">
-        <input class="inp" id="new-st-lbl" placeholder="Nama status…" style="flex:1">
-        <button class="btn btn-gold btn-sm" onclick="addStatus()">+ Tambah</button>
-      </div>
     </div>
+  </section>
 
-    <!-- Bisnis Tab -->
-    <div id="tab-bisnis" class="card h" style="max-width:480px;display:flex;flex-direction:column;gap:14px">
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🏢 Informasi Bisnis</div>
-      <div><label class="lbl">Nama Bisnis</label><input class="inp" id="cfg-nm" value="JD Production"></div>
-      <div><label class="lbl">Logo (emoji)</label><input class="inp" id="cfg-logo" value="🎬"></div>
-      <div><label class="lbl">Tagline</label><input class="inp" id="cfg-tag" value="Professional Photography & Production"></div>
-      <button class="btn btn-gold" style="align-self:flex-start" onclick="saveBisnis()">💾 Simpan</button>
-    </div>
-  </div>
-</section>
-
-</div>
-</div>
+</div><!-- /main-content -->
+</div><!-- /app -->
 
 <!-- Modal GAS Script -->
 <div id="modal-gas" class="modal-wrap h" onclick="if(event.target===this)this.classList.add('h')">
@@ -388,62 +359,163 @@ input,select,textarea{font-family:inherit;color:inherit}
 <div id="notif"></div>
 
 <script>
-// ── State ───────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════
 const APP_VERSION='2.1.0';
 const LS_KEY='jdprod_v2';
 const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
+
+// Preset font yang tersedia
+const FONT_PRESETS=[
+  {name:'Default (DM Sans)',  url:'https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap', family:'DM Sans'},
+  {name:'Poppins',            url:'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap', family:'Poppins'},
+  {name:'Inter',              url:'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap', family:'Inter'},
+  {name:'Plus Jakarta Sans',  url:'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap', family:'Plus Jakarta Sans'},
+  {name:'Nunito',             url:'https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600&display=swap', family:'Nunito'},
+  {name:'Raleway',            url:'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap', family:'Raleway'},
+  {name:'Sora',               url:'https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap', family:'Sora'},
+  {name:'Space Grotesk',      url:'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap', family:'Space Grotesk'},
+];
+
 const CHANGELOG=[
-  {ver:'2.1.0',date:'2025',desc:['Tab baru: Google Sheet — buka langsung dari pengaturan','Settings (studio, status, bisnis, estimasi) tersync ke Google Sheet','Fitur estimasi waktu tunggu per studio','Tombol ambil antrian jauh lebih cepat (optimistic update)','Sync settings tersendiri per kategori','Script GAS diperbarui untuk support sheetId & settings sync']},
-  {ver:'2.0.0',date:'2025',desc:['Pisah halaman menjadi 4 file terpisah (admin, customer, display, track)','Tombol Ambil Antrian di Display TV diperkecil & lebih rapi','Support penuh mobile/HP di semua halaman','Greeting banner + lampu hijau tiap pagi','Versi & changelog ditambahkan','Kode lebih modular & mudah di-maintain']},
+  {ver:'2.1.0',date:'2025',desc:['Tambah tab Fonte di Pengaturan — ganti font via Google Fonts API','Preset font populer (Poppins, Inter, Raleway, dll)','Preview font real-time sebelum disimpan','Font tersimpan di localStorage, otomatis diterapkan ke semua halaman','customer.html: tambah tombol Cetak Thermal (struk 58mm)','Cetak thermal mendukung nama bisnis, nomor, studio, waktu, QR/link']},
+  {ver:'2.0.0',date:'2025',desc:['Pisah halaman menjadi 4 file terpisah','Tombol Ambil Antrian di Display TV lebih rapi','Support penuh mobile','Greeting banner + lampu hijau tiap pagi','Versi & changelog']},
   {ver:'1.0.0',date:'2024',desc:['Rilis pertama — semua dalam 1 file','Queue management, Display TV, Customer flow','Google Apps Script backend','QR code & WhatsApp share']},
 ];
 
 let state={
   queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},
   studios:[
-    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga',estimMenit:15},
-    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial',estimMenit:20},
-    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip',estimMenit:10},
-    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama',estimMenit:20},
+    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
+    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
+    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
+    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
   ],
   statuses:[
-    {id:'waiting', ico:'⏳',label:'Menunggu', color:'#7B7885'},
-    {id:'called', ico:'📢',label:'Dipanggil', color:'#5599F5'},
+    {id:'waiting',  ico:'⏳',label:'Menunggu',  color:'#7B7885'},
+    {id:'called',   ico:'📢',label:'Dipanggil', color:'#5599F5'},
     {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
-    {id:'done', ico:'✅',label:'Selesai', color:'#45C78A'},
-    {id:'skip', ico:'⏭️',label:'Dilewati', color:'#E05555'},
+    {id:'done',     ico:'✅',label:'Selesai',   color:'#45C78A'},
+    {id:'skip',     ico:'⏭️',label:'Dilewati',  color:'#E05555'},
   ],
   config:{name:'JD Production',logo:'🎬',tagline:'Professional Photography & Production'},
   gasUrl:'https://script.google.com/macros/s/AKfycby7EJ-3X0UxIKfuP6ghV7p4dwby85p5Ng-TRl2r3jU1esJrxJJfI1QLsK4jtHLYbrdM_g/exec',
   gasOnline:false,
-  sheetId:'', // disimpan dari response GAS
+  /* ✦ FONT CONFIG */
+  fontUrl:'',
+  fontFamily:'',
 };
 
-// ── Helpers ──────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  FONT API
+// ════════════════════════════════════════════════════════
+function applyFont(url,family){
+  const link=document.getElementById('font-api-link');
+  if(!url){
+    // reset ke default
+    link.href='https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap';
+    document.documentElement.style.setProperty('--fb','"DM Sans",sans-serif');
+    return;
+  }
+  link.href=url;
+  if(family){
+    document.documentElement.style.setProperty('--fb',`"${family}",sans-serif`);
+  }
+}
+
+function renderFontTab(){
+  // render preset chips
+  const container=document.getElementById('font-presets');
+  if(!container)return;
+  container.innerHTML=FONT_PRESETS.map(p=>`
+    <button class="font-chip ${state.fontFamily===p.family?'active':''}"
+      onclick="selectPreset(${JSON.stringify(p).replace(/"/g,"'")})"
+      style="font-family:'${p.family}',sans-serif">
+      ${p.name}
+    </button>`).join('');
+  // fill inputs
+  const urlEl=document.getElementById('cfg-font-url');
+  const nmEl=document.getElementById('cfg-font-name');
+  if(urlEl)urlEl.value=state.fontUrl||'';
+  if(nmEl)nmEl.value=state.fontFamily||'';
+  updateActiveFontLabel();
+}
+
+function selectPreset(p){
+  document.getElementById('cfg-font-url').value=p.url;
+  document.getElementById('cfg-font-name').value=p.family;
+  previewFont(p.url,p.family);
+  // refresh chips
+  renderFontTab();
+}
+
+function previewFont(url,family){
+  url  = url   || document.getElementById('cfg-font-url')?.value  || '';
+  family=family|| document.getElementById('cfg-font-name')?.value || '';
+  const box=document.getElementById('font-preview-box');
+  if(!box)return;
+  if(!url){box.style.fontFamily='var(--fb)';return;}
+  // inject temp link
+  let tmp=document.getElementById('font-tmp-link');
+  if(!tmp){tmp=document.createElement('link');tmp.rel='stylesheet';tmp.id='font-tmp-link';document.head.appendChild(tmp);}
+  tmp.href=url;
+  if(family) box.style.fontFamily=`"${family}",sans-serif`;
+  // update label
+  const lbl=document.getElementById('font-active-name');
+  if(lbl)lbl.textContent=family||'Kustom';
+}
+
+function updateActiveFontLabel(){
+  const lbl=document.getElementById('font-active-name');
+  if(lbl)lbl.textContent=state.fontFamily||'Default (DM Sans)';
+  const box=document.getElementById('font-preview-box');
+  if(box)box.style.fontFamily=state.fontFamily?`"${state.fontFamily}",sans-serif`:'var(--fb)';
+}
+
+function saveFont(){
+  const url=(document.getElementById('cfg-font-url')?.value||'').trim();
+  const family=(document.getElementById('cfg-font-name')?.value||'').trim();
+  state.fontUrl=url;
+  state.fontFamily=family;
+  saveLS();
+  applyFont(url,family);
+  renderFontTab();
+  const res=document.getElementById('font-save-result');
+  if(res){
+    res.style.display='block';
+    res.style.background='rgba(69,199,138,.1)';
+    res.style.border='1px solid rgba(69,199,138,.3)';
+    res.style.color='var(--green)';
+    res.textContent=family?`✅ Font "${family}" berhasil diterapkan!`:'✅ Font direset ke default!';
+    setTimeout(()=>res.style.display='none',3000);
+  }
+  showNotif(family?`🔤 Font "${family}" diterapkan!`:'🔤 Font direset ke default');
+}
+
+function resetFont(){
+  document.getElementById('cfg-font-url').value='';
+  document.getElementById('cfg-font-name').value='';
+  state.fontUrl='';state.fontFamily='';
+  saveLS();
+  applyFont('','');
+  renderFontTab();
+  showNotif('↺ Font direset ke default (DM Sans)');
+}
+
+// ════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════
 function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
 function nowDate(){const d=new Date();const dy=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return dy[d.getDay()]+', '+d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();}
 function getGreeting(){const h=new Date().getHours();if(h>=6&&h<11)return{text:'Selamat Pagi 🌅',sub:'Mulai hari yang produktif!',color:'#F0C060',isGreen:true};if(h>=11&&h<15)return{text:'Selamat Siang ☀️',sub:'Semangat terus melayani!',color:'#F5A142',isGreen:false};if(h>=15&&h<18)return{text:'Selamat Sore 🌤️',sub:'Tetap semangat sampai tutup!',color:'#A07FF0',isGreen:false};return{text:'Selamat Malam 🌙',sub:'Terima kasih sudah bekerja keras.',color:'#5599F5',isGreen:false};}
-
-// ── Estimasi Waktu ────────────────────────────────────────
-function hitungEstimasi(studioId) {
-  const studio = state.studios.find(s=>s.id===studioId);
-  if(!studio) return null;
-  const menit = studio.estimMenit || 15;
-  const antrianAktif = state.queue.filter(q=>q.studioId===studioId && (q.status==='waiting'||q.status==='called'||q.status==='inprogress'));
-  const totalMenit = antrianAktif.length * menit;
-  if(totalMenit===0) return 'Langsung dilayani';
-  if(totalMenit<60) return '~'+totalMenit+' menit';
-  const jam=Math.floor(totalMenit/60);const sisa=totalMenit%60;
-  return '~'+jam+' jam'+(sisa?' '+sisa+' menit':'');
-}
-
-let _ntimer;
-function showNotif(msg){let el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:20px;right:16px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:11px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .28s ease;color:var(--t);max-width:90vw';clearTimeout(_ntimer);_ntimer=setTimeout(()=>{el.style.display='none';},3000);}
-
-// ── Sidebar mobile ───────────────────────────────────────
+let _nt;
+function showNotif(msg){let el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:20px;right:16px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:11px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .28s ease;color:var(--t);max-width:90vw';clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',3000);}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').classList.toggle('open');}
 
-// ── Navigation ───────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════
 function nav(page){
   document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('h'));
   document.getElementById('page-'+page)?.classList.remove('h');
@@ -455,68 +527,95 @@ function nav(page){
   if(page==='settings')renderSettings();
 }
 
-// ── Greeting ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  LOCAL STORAGE
+// ════════════════════════════════════════════════════════
+function loadLS(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    if(d.queue)state.queue=d.queue;
+    if(d.nextNum)state.nextNum=d.nextNum;
+    if(d.studios)state.studios=d.studios;
+    if(d.statuses)state.statuses=d.statuses;
+    if(d.config)state.config=d.config;
+    if(d.gasUrl)state.gasUrl=d.gasUrl;
+    // ✦ load font config
+    if(d.fontUrl!==undefined)state.fontUrl=d.fontUrl;
+    if(d.fontFamily!==undefined)state.fontFamily=d.fontFamily;
+  }catch(e){}
+}
+function saveLS(broadcast){
+  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl,fontUrl:state.fontUrl,fontFamily:state.fontFamily}));}catch(e){}
+  if(broadcast)try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
+}
+
+// ════════════════════════════════════════════════════════
+//  GAS SYNC
+// ════════════════════════════════════════════════════════
+async function syncNow(showMsg){
+  if(!state.gasUrl)return;
+  try{
+    const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
+    const j=await res.json();
+    if(!j.ok)throw new Error(j.error||'fail');
+    if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:String(q.time||'')}));
+    if(j.nextNum)Object.keys(j.nextNum).forEach(k=>state.nextNum[k]=parseInt(j.nextNum[k])||1);
+    if(j.studios&&j.studios.length)state.studios=j.studios;
+    if(j.config&&j.config.name)state.config.name=j.config.name;
+    state.gasOnline=true;updateGASBadge(true);
+    _lastDashSnap='';_lastQueueSnap='';
+    renderDashboard();
+    if(showMsg)showNotif('✅ Sync berhasil!');
+  }catch(e){state.gasOnline=false;updateGASBadge(false);if(showMsg)showNotif('⚠️ Sync gagal: '+e.message);}
+}
+async function syncToGAS(){
+  if(!state.gasUrl)return;
+  try{await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})});}catch(e){}
+}
+
+// ════════════════════════════════════════════════════════
+//  GREETING & DASHBOARD
+// ════════════════════════════════════════════════════════
 function renderGreeting(){
   const el=document.getElementById('greeting-banner');if(!el)return;
   const g=getGreeting();
   const dot=g.isGreen?`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:8px"></span>`:'';
   el.innerHTML=`<div class="greeting-bar" style="border-color:${g.color}30;background:${g.color}08">
-<div style="font-size:22px">${g.text.split(' ')[2]||'👋'}</div>
-<div><div class="greeting-text" style="color:${g.color}">${dot}${g.text.split(' ').slice(0,2).join(' ')} — ${state.config.name}</div><div class="greeting-sub">${g.sub} · ${nowDate()}</div></div>
-</div>`;
+    <div style="font-size:22px">${g.text.split(' ')[2]||'👋'}</div>
+    <div><div class="greeting-text" style="color:${g.color}">${dot}${g.text.split(' ').slice(0,2).join(' ')} — ${state.config.name}</div><div class="greeting-sub">${g.sub} · ${nowDate()}</div></div>
+  </div>`;
 }
 
-// ── Dashboard ────────────────────────────────────────────
 let _lastDashSnap='',_lastQueueSnap='';
 function _queueSnap(){return JSON.stringify(state.queue.map(q=>({id:q.id,status:q.status,studioId:q.studioId})));}
+
 function renderDashboard(){
   const dd=document.getElementById('dash-date');if(dd)dd.textContent=nowDate();
   renderGreeting();updateStats();
   const el=document.getElementById('dash-studios');if(!el)return;
-  const snap=_queueSnap();
-  if(snap===_lastDashSnap)return;
-  _lastDashSnap=snap;
+  const snap=_queueSnap();if(snap===_lastDashSnap)return;_lastDashSnap=snap;
   el.innerHTML=state.studios.map(studio=>{
     const sq=state.queue.filter(q=>q.studioId===studio.id&&q.status!=='done'&&q.status!=='skip');
     const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
-    const estim=hitungEstimasi(studio.id);
     return`<div class="studio-card fadeUp" style="--c:${studio.color}">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-<div><div class="studio-ico">${studio.ico}</div><div class="studio-nm" style="color:${studio.color}">${studio.name}</div><div class="studio-meta">${studio.desc}</div></div>
-<div style="text-align:right"><div class="studio-count" style="color:${studio.color}">${sq.length}</div><div style="font-size:10px;color:var(--tm)">aktif</div></div>
-</div>
-${called.length?`<div style="font-size:11px;color:${studio.color};margin-bottom:6px;font-weight:500">📢 ${called[called.length-1].number} — ${called[called.length-1].name}</div>`:''}
-<div class="estim-badge">⏱ ${estim}</div>
-<div class="studio-queue-list" style="margin-top:8px">
-${sq.slice(0,5).map(q=>{const st=state.statuses.find(s=>s.id===q.status);return`<div class="sq-item"><span class="sq-num">${q.number}</span><span style="color:var(--tm)">${q.name}</span><span style="color:${st?.color||studio.color};font-size:11px">${st?.ico||''} ${st?.label||''}</span></div>`;}).join('')}
-${sq.length===0?'<div style="text-align:center;padding:10px;color:var(--td);font-size:12px">Kosong</div>':''}
-</div>
-<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="nav('queue')">Lihat Semua →</button>
-</div>`;
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div><div class="studio-ico">${studio.ico}</div><div class="studio-nm" style="color:${studio.color}">${studio.name}</div><div class="studio-meta">${studio.desc}</div></div>
+        <div style="text-align:right"><div class="studio-count" style="color:${studio.color}">${sq.length}</div><div style="font-size:10px;color:var(--tm)">aktif</div></div>
+      </div>
+      ${called.length?`<div style="font-size:11px;color:${studio.color};margin-bottom:6px;font-weight:500">📢 ${called[called.length-1].number} — ${called[called.length-1].name}</div>`:''}
+      <div class="studio-queue-list">
+        ${sq.slice(0,5).map(q=>{const st=state.statuses.find(s=>s.id===q.status);return`<div class="sq-item"><span class="sq-num">${q.number}</span><span style="color:var(--tm)">${q.name}</span><span style="color:${st?.color||studio.color};font-size:11px">${st?.ico||''} ${st?.label||''}</span></div>`;}).join('')}
+        ${sq.length===0?'<div style="text-align:center;padding:10px;color:var(--td);font-size:12px">Kosong</div>':''}
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="nav(\'queue\')">Lihat Semua →</button>
+    </div>`;
   }).join('');
-
-  // ── Section Selesai Hari Ini ──
   const doneList=state.queue.filter(q=>q.status==='done'||q.status==='skip');
-  const doneWrap=document.getElementById('dash-done-wrap');
-  const doneCount=document.getElementById('dash-done-count');
-  const doneEl=document.getElementById('dash-done-list');
-  if(doneWrap){doneWrap.style.display=doneList.length?'block':'none';}
+  const doneWrap=document.getElementById('dash-done-wrap');const doneCount=document.getElementById('dash-done-count');const doneEl=document.getElementById('dash-done-list');
+  if(doneWrap)doneWrap.style.display=doneList.length?'block':'none';
   if(doneCount)doneCount.textContent=doneList.length;
-  if(doneEl){
-    doneEl.innerHTML=doneList.map(q=>{
-      const st=state.statuses.find(s=>s.id===q.status);
-      return`<div style="display:flex;align-items:center;gap:12px;background:var(--s2);border:1px solid rgba(69,199,138,.12);border-radius:var(--rs);padding:10px 14px;opacity:.75">
-<div style="font-family:var(--fd);font-size:18px;color:${q.studioColor};min-width:70px">${q.number}</div>
-<div style="flex:1">
-<div style="font-size:13px;font-weight:500">${q.name}</div>
-<div style="font-size:11px;color:var(--tm)">${q.studioIco} ${q.studioName} · ${q.time}</div>
-</div>
-<div style="font-size:12px;color:${st?.color||'var(--green)'};font-weight:600">${st?.ico||'✅'} ${st?.label||'Selesai'}</div>
-</div>`;
-    }).join('');
-  }
+  if(doneEl){doneEl.innerHTML=doneList.map(q=>{const st=state.statuses.find(s=>s.id===q.status);return`<div style="display:flex;align-items:center;gap:12px;background:var(--s2);border:1px solid rgba(69,199,138,.12);border-radius:var(--rs);padding:10px 14px;opacity:.75"><div style="font-family:var(--fd);font-size:18px;color:${q.studioColor};min-width:70px">${q.number}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${q.name}</div><div style="font-size:11px;color:var(--tm)">${q.studioIco} ${q.studioName} · ${q.time}</div></div><div style="font-size:12px;color:${st?.color||'var(--green)'};font-weight:600">${st?.ico||'✅'} ${st?.label||'Selesai'}</div></div>`;}).join('');}
 }
-
 function updateStats(){
   const all=state.queue;
   const s=id=>document.getElementById(id);
@@ -526,7 +625,9 @@ function updateStats(){
   if(s('s-done'))s('s-done').textContent=all.filter(q=>q.status==='done').length;
 }
 
-// ── Queue ────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  QUEUE
+// ════════════════════════════════════════════════════════
 function renderQueue(){
   const stF=document.getElementById('q-studio-filter')?.value||'all';
   const stF2=document.getElementById('q-status-filter')?.value||'all';
@@ -534,68 +635,43 @@ function renderQueue(){
   if(sf&&sf.options.length===1)state.studios.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.name;sf.appendChild(o);});
   const statusSel=document.getElementById('q-status-filter');
   if(statusSel&&statusSel.options.length===1)state.statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.label;statusSel.appendChild(o);});
-
   const allFiltered=state.queue.filter(q=>(stF==='all'||q.studioId===stF)&&(stF2==='all'||q.status===stF2));
   const list=allFiltered.filter(q=>q.status!=='done'&&q.status!=='skip').sort((a,b)=>a.numRaw-b.numRaw);
   const doneCount=allFiltered.filter(q=>q.status==='done'||q.status==='skip').length;
   const el=document.getElementById('queue-list');if(!el)return;
   const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' aktif · '+doneCount+' selesai';
-
-  const snap=JSON.stringify(list.map(q=>({id:q.id,status:q.status})));
-  if(snap===_lastQueueSnap)return;
-  _lastQueueSnap=snap;
-
+  const snap=JSON.stringify(list.map(q=>({id:q.id,status:q.status})));if(snap===_lastQueueSnap)return;_lastQueueSnap=snap;
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>';return;}
   el.innerHTML=list.map(q=>{
     const isDone=q.status==='done'||q.status==='skip';
     const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
     const opts=state.statuses.map(s=>`<option value="${s.id}"${q.status===s.id?' selected':''}>${s.ico} ${s.label}</option>`).join('');
-    const studio=state.studios.find(s=>s.id===q.studioId);
-    const estimInfo=studio?`<span class="estim-badge" style="font-size:10px;padding:2px 8px">⏱ ${hitungEstimasi(q.studioId)}</span>`:'';
     return`<div class="q-card fadeUp" style="--c:${q.studioColor};${isDone?'opacity:.5;filter:grayscale(.4)':''}">
-<div style="display:flex;align-items:flex-start;gap:12px">
-<div class="q-number" style="color:${isDone?'var(--td)':q.studioColor};${isDone?'text-decoration:line-through':''}">${q.number}</div>
-<div style="flex:1">
-<div class="q-name">${q.name} <span style="font-size:11px;color:var(--tm);font-weight:400;background:var(--s2);padding:2px 8px;border-radius:100px;margin-left:4px">${q.studioIco} ${q.studioName}</span></div>
-<div class="q-meta">Daftar: ${q.time} · ${q.number} ${estimInfo}</div>
-<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-<select class="status-sel" style="color:${st.color};border-color:${st.color}40" onchange="setStatus('${q.id}',this.value)">${opts}</select>
-<button class="btn btn-ghost btn-sm btn-icon" onclick="openTrackWindow('${q.id}')" title="Pantau">👁</button>
-<button class="btn btn-red btn-sm btn-icon" onclick="removeQueue('${q.id}')" title="Hapus">🗑</button>
-</div>
-</div>
-<button class="btn btn-gold btn-sm" onclick="callOne('${q.id}')">📢 Panggil</button>
-</div>
-</div>`;
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="q-number" style="color:${isDone?'var(--td)':q.studioColor};${isDone?'text-decoration:line-through':''}">${q.number}</div>
+        <div style="flex:1">
+          <div class="q-name">${q.name} <span style="font-size:11px;color:var(--tm);font-weight:400;background:var(--s2);padding:2px 8px;border-radius:100px;margin-left:4px">${q.studioIco} ${q.studioName}</span></div>
+          <div class="q-meta">Daftar: ${q.time} · ${q.number}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <select class="status-sel" style="color:${st.color};border-color:${st.color}40" onchange="setStatus('${q.id}',this.value)">${opts}</select>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openTrackWindow('${q.id}')" title="Pantau">👁</button>
+            <button class="btn btn-red btn-sm btn-icon" onclick="removeQueue('${q.id}')" title="Hapus">🗑</button>
+          </div>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="callOne('${q.id}')">📢 Panggil</button>
+      </div>
+    </div>`;
   }).join('');
 }
-
-// OPTIMISTIC UPDATE: UI langsung, sync background
-function setStatus(id,status){
-  const q=state.queue.find(q=>q.id===id);
-  if(q){q.status=status;_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncBackground();}
-}
-function removeQueue(id){
-  if(!confirm('Hapus antrian ini?'))return;
-  state.queue=state.queue.filter(q=>q.id!==id);_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncBackground();
-}
-function callOne(id){
-  const q=state.queue.find(q=>q.id===id);
-  if(q){q.status='called';_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncBackground();}
-}
+function setStatus(id,status){const q=state.queue.find(q=>q.id===id);if(q){q.status=status;_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncToGAS();}}
+function removeQueue(id){if(!confirm('Hapus antrian ini?'))return;state.queue=state.queue.filter(q=>q.id!==id);_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncToGAS();}
+function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncToGAS();}}
 function callNext(){const next=state.queue.find(q=>q.status==='waiting');if(next)callOne(next.id);else showNotif('Tidak ada antrian menunggu');}
 function openTrackWindow(id){window.open('track.html?track='+id,'_blank');}
 
-// Sync background — tidak blokir UI
-function syncBackground(){
-  if(!state.gasUrl)return;
-  fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})})
-    .then(r=>r.json())
-    .then(j=>{if(j.ok){state.gasOnline=true;updateGASBadge(true);}})
-    .catch(()=>{state.gasOnline=false;updateGASBadge(false);});
-}
-
-// ── Settings ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  SETTINGS
+// ════════════════════════════════════════════════════════
 function renderSettings(){switchTab('gas');}
 function switchTab(tab){
   document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('h'));
@@ -603,16 +679,10 @@ function switchTab(tab){
   document.getElementById('tab-'+tab)?.classList.remove('h');
   if(tab==='studio')renderStudioSettings();
   if(tab==='status')renderStatusSettings();
-  if(tab==='estimasi')renderEstimasiSettings();
-  if(tab==='sheet')renderSheetTab();
   if(tab==='gas'){const u=document.getElementById('cfg-gas-url');if(u)u.value=state.gasUrl||'';}
-  if(tab==='bisnis'){
-    const n=document.getElementById('cfg-nm');if(n)n.value=state.config.name;
-    const l=document.getElementById('cfg-logo');if(l)l.value=state.config.logo;
-    const t=document.getElementById('cfg-tag');if(t)t.value=state.config.tagline;
-  }
+  if(tab==='bisnis'){const n=document.getElementById('cfg-nm');if(n)n.value=state.config.name;const l=document.getElementById('cfg-logo');if(l)l.value=state.config.logo;const t=document.getElementById('cfg-tag');if(t)t.value=state.config.tagline;}
+  if(tab==='fonte')renderFontTab();
 }
-
 function saveBisnis(){
   state.config.name=document.getElementById('cfg-nm').value||'JD Production';
   state.config.logo=document.getElementById('cfg-logo').value||'🎬';
@@ -620,119 +690,25 @@ function saveBisnis(){
   document.getElementById('sb-name').textContent=state.config.name;
   document.getElementById('sb-ico').textContent=state.config.logo;
   saveLS();showNotif('✅ Bisnis disimpan!');
-  syncConfig();
 }
-
 function renderStudioSettings(){
   const el=document.getElementById('studio-settings-list');if(!el)return;
   el.innerHTML=state.studios.map(s=>`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);border-left:3px solid ${s.color};margin-bottom:8px">
-<input class="inp" value="${s.ico}" style="width:50px;text-align:center;font-size:16px;padding:5px" onchange="updateStudio('${s.id}','ico',this.value)">
-<input class="inp" value="${s.name}" style="flex:1;font-size:13px" onchange="updateStudio('${s.id}','name',this.value)">
-<input class="inp" value="${s.desc}" style="flex:2;font-size:11px" placeholder="Deskripsi…" onchange="updateStudio('${s.id}','desc',this.value)">
-<input type="color" value="${s.color}" style="width:36px;height:36px;border:1px solid var(--b);border-radius:6px;cursor:pointer;background:none;padding:2px" onchange="updateStudio('${s.id}','color',this.value)">
-</div>`).join('');
+    <input class="inp" value="${s.ico}" style="width:50px;text-align:center;font-size:16px;padding:5px" onchange="updateStudio('${s.id}','ico',this.value)">
+    <input class="inp" value="${s.name}" style="flex:1;font-size:13px" onchange="updateStudio('${s.id}','name',this.value)">
+    <input class="inp" value="${s.desc}" style="flex:2;font-size:11px" placeholder="Deskripsi…" onchange="updateStudio('${s.id}','desc',this.value)">
+    <input type="color" value="${s.color}" style="width:36px;height:36px;border:1px solid var(--b);border-radius:6px;cursor:pointer;background:none;padding:2px" onchange="updateStudio('${s.id}','color',this.value)">
+  </div>`).join('');
 }
 function updateStudio(id,key,val){const s=state.studios.find(s=>s.id===id);if(s){s[key]=val;saveLS();}}
-function saveStudioSettings(){saveLS();syncStudios();showNotif('✅ Studio disimpan & sync ke Sheet!');}
-
-// ── Estimasi Settings ─────────────────────────────────────
-function renderEstimasiSettings(){
-  const el=document.getElementById('estimasi-settings-list');if(!el)return;
-  el.innerHTML=state.studios.map(s=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);border-left:3px solid ${s.color}">
-<span style="font-size:20px">${s.ico}</span>
-<div style="flex:1">
-<div style="font-size:13px;font-weight:600">${s.name}</div>
-<div style="font-size:11px;color:var(--tm)">${s.desc}</div>
-</div>
-<div style="display:flex;align-items:center;gap:8px">
-<input type="number" class="inp" value="${s.estimMenit||15}" min="1" max="120" style="width:70px;text-align:center" onchange="updateStudio('${s.id}','estimMenit',parseInt(this.value)||15)" id="estim-${s.id}">
-<span style="font-size:12px;color:var(--tm);white-space:nowrap">menit/orang</span>
-</div>
-<div class="estim-badge" id="estim-preview-${s.id}">⏱ ${hitungEstimasi(s.id)}</div>
-</div>`).join('');
-}
-function saveEstimasiSettings(){
-  state.studios.forEach(s=>{
-    const inp=document.getElementById('estim-'+s.id);
-    if(inp)s.estimMenit=parseInt(inp.value)||15;
-  });
-  saveLS();syncStudios();_lastDashSnap='';renderDashboard();showNotif('✅ Estimasi disimpan & sync ke Sheet!');
-}
-
-// ── Google Sheet Tab ──────────────────────────────────────
-function renderSheetTab(){
-  const box=document.getElementById('sheet-link-box');
-  const lbl=document.getElementById('sheet-id-lbl');
-  if(state.sheetId){
-    if(box)box.style.display='flex';
-    if(lbl)lbl.textContent='Sheet ID: '+state.sheetId;
-  } else {
-    if(box)box.style.display='none';
-  }
-}
-function openSheet(){
-  if(!state.sheetId){showNotif('⚠️ Sheet ID belum tersedia, sync GAS dulu');return;}
-  window.open('https://docs.google.com/spreadsheets/d/'+state.sheetId,'_blank');
-}
-
-// ── Sync Settings ke GAS/Sheet ───────────────────────────
-async function syncConfig(){
-  if(!state.gasUrl){showNotif('⚠️ GAS URL belum diset');return;}
-  try{
-    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_config',config:state.config})});
-    const j=await res.json();
-    if(j.ok)showNotif('✅ Config bisnis tersync!');
-    else throw new Error(j.error);
-  }catch(e){showNotif('❌ Sync config gagal: '+e.message);}
-}
-async function syncStudios(){
-  if(!state.gasUrl){showNotif('⚠️ GAS URL belum diset');return;}
-  try{
-    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_studios',studios:state.studios})});
-    const j=await res.json();
-    if(j.ok)showNotif('✅ Data studio tersync!');
-    else throw new Error(j.error);
-  }catch(e){showNotif('❌ Sync studio gagal: '+e.message);}
-}
-async function syncStatuses(){
-  if(!state.gasUrl){showNotif('⚠️ GAS URL belum diset');return;}
-  try{
-    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_statuses',statuses:state.statuses})});
-    const j=await res.json();
-    if(j.ok)showNotif('✅ Status tersync!');
-    else throw new Error(j.error);
-  }catch(e){showNotif('❌ Sync status gagal: '+e.message);}
-}
-async function syncAllSettings(){
-  if(!state.gasUrl){showNotif('⚠️ GAS URL belum diset');return;}
-  showNotif('⏳ Sync semua settings...');
-  const results=await Promise.allSettled([
-    fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_config',config:state.config})}).then(r=>r.json()),
-    fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_studios',studios:state.studios})}).then(r=>r.json()),
-    fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_statuses',statuses:state.statuses})}).then(r=>r.json()),
-    fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})}).then(r=>r.json()),
-  ]);
-  const allOk=results.every(r=>r.status==='fulfilled'&&r.value?.ok);
-  const el=document.getElementById('sheet-sync-result');
-  if(el){
-    el.style.display='block';
-    el.style.background=allOk?'rgba(69,199,138,.1)':'rgba(224,85,85,.1)';
-    el.style.border='1px solid '+(allOk?'rgba(69,199,138,.3)':'rgba(224,85,85,.3)');
-    el.style.color=allOk?'var(--green)':'var(--red)';
-    el.textContent=allOk?'✅ Semua settings berhasil tersync ke Google Sheet!':'⚠️ Sebagian sync berhasil, cek koneksi GAS.';
-  }
-  if(allOk){state.gasOnline=true;updateGASBadge(true);}
-  showNotif(allOk?'✅ Semua settings tersync!':'⚠️ Sync sebagian berhasil');
-}
-
 function renderStatusSettings(){
   const el=document.getElementById('status-settings-list');if(!el)return;
   el.innerHTML=state.statuses.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);margin-bottom:6px">
-<span style="font-size:16px">${s.ico}</span>
-<span style="flex:1;font-weight:500;font-size:13px">${s.label}</span>
-<span style="font-size:11px;color:var(--td);font-family:var(--fm)">${s.id}</span>
-<button class="btn btn-red btn-sm btn-icon" onclick="deleteStatus('${s.id}')"${['waiting','called','done'].includes(s.id)?' disabled':''}>✕</button>
-</div>`).join('');
+    <span style="font-size:16px">${s.ico}</span>
+    <span style="flex:1;font-weight:500;font-size:13px">${s.label}</span>
+    <span style="font-size:11px;color:var(--td);font-family:var(--fm)">${s.id}</span>
+    <button class="btn btn-red btn-sm btn-icon" onclick="deleteStatus('${s.id}')"${['waiting','called','done'].includes(s.id)?' disabled':''}>✕</button>
+  </div>`).join('');
 }
 function addStatus(){
   const ico=document.getElementById('new-st-ico').value.trim()||'🔵';
@@ -746,7 +722,6 @@ function deleteStatus(id){
   if(['waiting','called','done'].includes(id)){showNotif('⚠️ Status default tidak bisa dihapus');return;}
   state.statuses=state.statuses.filter(s=>s.id!==id);renderStatusSettings();saveLS();
 }
-
 async function saveGasUrl(){
   const url=document.getElementById('cfg-gas-url').value.trim();
   state.gasUrl=url;saveLS();
@@ -754,12 +729,8 @@ async function saveGasUrl(){
   showNotif('⏳ Testing koneksi…');
   try{
     const res=await fetch(url+'?action=ping');const j=await res.json();
-    if(j.ok){
-      state.gasOnline=true;
-      // Ambil sheetId dari response ping jika ada
-      if(j.sheetId){state.sheetId=j.sheetId;saveLS(true);}
-      updateGASBadge(true);setTestResult('✅ Koneksi berhasil!'+( j.sheetId?' Sheet ID: '+j.sheetId:''),'ok');showNotif('✅ GAS terhubung!');
-    }else throw new Error(j.error||'Unknown');
+    if(j.ok){state.gasOnline=true;updateGASBadge(true);setTestResult('✅ Koneksi berhasil!','ok');showNotif('✅ GAS terhubung!');}
+    else throw new Error(j.error||'Unknown');
   }catch(e){state.gasOnline=false;updateGASBadge(false);setTestResult('❌ Gagal: '+e.message,'err');showNotif('❌ GAS tidak terhubung');}
 }
 function setTestResult(msg,type){
@@ -773,228 +744,72 @@ function updateGASBadge(online){
   const lbl=document.getElementById('gas-status-lbl');if(lbl)lbl.textContent=online?'GAS Online':'Sistem Lokal';
 }
 
-// ── Changelog ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  CHANGELOG
+// ════════════════════════════════════════════════════════
 function showChangelog(){
   const el=document.getElementById('changelog-body');if(!el)return;
   el.innerHTML=CHANGELOG.map(c=>`<div style="padding:12px;background:var(--s1);border-radius:var(--rs);border:1px solid var(--b)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-<span style="font-family:var(--fm);font-size:12px;color:var(--gold);background:rgba(240,192,96,.1);padding:2px 10px;border-radius:100px">v${c.ver}</span>
-<span style="font-size:11px;color:var(--tm)">${c.date}</span>
-</div>
-<ul style="list-style:none;display:flex;flex-direction:column;gap:5px">${c.desc.map(d=>`<li style="font-size:12px;color:var(--tm);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--green)">•</span>${d}</li>`).join('')}</ul>
-</div>`).join('');
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-family:var(--fm);font-size:12px;color:var(--gold);background:rgba(240,192,96,.1);padding:2px 10px;border-radius:100px">v${c.ver}</span>
+      <span style="font-size:11px;color:var(--tm)">${c.date}</span>
+    </div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:5px">${c.desc.map(d=>`<li style="font-size:12px;color:var(--tm);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--green)">•</span>${d}</li>`).join('')}</ul>
+  </div>`).join('');
   document.getElementById('modal-changelog').classList.remove('h');
 }
 
-// ── GAS Script (Updated v2.2 — supports sheetId in ping, estimMenit, settings) ──
-const GAS_SCRIPT=`// JD Production — Google Apps Script Backend v2.2
-// Deploy: Deploy > New Deployment > Web App
-// Execute as: Me | Access: Anyone
-// PENTING: setiap update code, buat NEW DEPLOYMENT (bukan edit existing)
-
+// GAS Script view
+const GAS_SCRIPT=`// JD Production — GAS Backend (simpan ini ke script.google.com)
 const SHEET_NAME='JD Production Antrian';
-
-function getOrCreateSS(){
-  const files=DriveApp.getFilesByName(SHEET_NAME);
-  if(files.hasNext())return SpreadsheetApp.open(files.next());
-  const ss=SpreadsheetApp.create(SHEET_NAME);
-  ['Antrian','Config','Studios','Statuses','NextNum'].forEach(name=>{
-    if(!ss.getSheetByName(name))ss.insertSheet(name);
-  });
-  return ss;
-}
-
+function getOrCreateSS(){const files=DriveApp.getFilesByName(SHEET_NAME);if(files.hasNext())return SpreadsheetApp.open(files.next());const ss=SpreadsheetApp.create(SHEET_NAME);['Antrian','Config','Studios','Statuses','NextNum'].forEach(name=>{if(!ss.getSheetByName(name))ss.insertSheet(name);});return ss;}
 function doGet(e){return handle(e);}
 function doPost(e){return handle(e);}
-
 function handle(e){
   try{
-    const p=e.parameter||{};
-    const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};
-    const action=p.action||body.action||'';
-    const ss=getOrCreateSS();
-
-    if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK v2.2',sheetId:ss.getId()});
-
+    const p=e.parameter||{};const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};
+    const action=p.action||body.action||'';const ss=getOrCreateSS();
+    if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK'});
     if(action==='load'){
       const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);
-      const config=readKV(ss,'Config');
-      const studios=readSheet(ss,'Studios',['id','name','ico','color','desc','estimMenit']);
-      const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);
-      const nextNum=readKV(ss,'NextNum');
-      const sheetId=ss.getId();
+      const config=readKV(ss,'Config');const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);
+      const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);const nextNum=readKV(ss,'NextNum');
       Object.keys(nextNum).forEach(k=>nextNum[k]=parseInt(nextNum[k])||1);
-      // estimMenit pastikan integer
-      studios.forEach(s=>s.estimMenit=parseInt(s.estimMenit)||15);
-      return ok({ok:true,queue,config,studios,statuses,nextNum,sheetId});
+      return ok({ok:true,queue,config,studios,statuses,nextNum,sheetId:ss.getId()});
     }
-
     if(action==='save_queue'){
       const queue=body.queue||[];
       writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],
         queue.map(q=>[q.id,q.number,q.numRaw||0,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));
-      if(body.nextNum){
-        const sheet=getOrClear(ss,'NextNum');
-        Object.entries(body.nextNum).forEach(([k,v])=>sheet.appendRow([k,v]));
-      }
+      if(body.nextNum){const sheet=getOrClear(ss,'NextNum');Object.entries(body.nextNum).forEach(([k,v])=>sheet.appendRow([k,v]));}
       return ok({ok:true});
     }
-
-    if(action==='save_config'){
-      const cfg=body.config||{};
-      const sheet=getOrClear(ss,'Config');
-      Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));
-      return ok({ok:true});
-    }
-
-    if(action==='save_studios'){
-      writeSheet(ss,'Studios',['id','name','ico','color','desc','estimMenit'],
-        (body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'',s.estimMenit||15]));
-      return ok({ok:true});
-    }
-
-    if(action==='save_statuses'){
-      writeSheet(ss,'Statuses',['id','ico','label','color'],
-        (body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));
-      return ok({ok:true});
-    }
-
-    return ok({ok:false,error:'Unknown action: '+action});
+    return ok({ok:false,error:'Unknown action'});
   }catch(err){return ok({ok:false,error:err.message});}
 }
-
-function readSheet(ss,name,fields){
-  const sheet=ss.getSheetByName(name);
-  if(!sheet||sheet.getLastRow()<2)return[];
-  return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues()
-    .filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));
-}
-
-function writeSheet(ss,name,headers,rows){
-  const sheet=getOrClear(ss,name,headers);
-  if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);
-  styleHeader(sheet,headers.length);
-}
-
-function readKV(ss,name){
-  const sheet=ss.getSheetByName(name);
-  if(!sheet||sheet.getLastRow()===0)return{};
-  const data={};
-  sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});
-  return data;
-}
-
-function getOrClear(ss,name,headers){
-  let sheet=ss.getSheetByName(name);
-  if(!sheet)sheet=ss.insertSheet(name);
-  sheet.clearContents();
-  if(headers)sheet.appendRow(headers);
-  return sheet;
-}
-
-function styleHeader(sheet,cols){
-  if(sheet.getLastRow()<1)return;
-  sheet.getRange(1,1,1,cols).setBackground('#F0C060').setFontColor('#000').setFontWeight('bold');
-}
-
-function ok(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}`;
+function readSheet(ss,name,fields){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()<2)return[];return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues().filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));}
+function writeSheet(ss,name,headers,rows){const sheet=getOrClear(ss,name,headers);if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);}
+function readKV(ss,name){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()===0)return{};const data={};sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});return data;}
+function getOrClear(ss,name,headers){let sheet=ss.getSheetByName(name);if(!sheet)sheet=ss.insertSheet(name);sheet.clearContents();if(headers)sheet.appendRow(headers);return sheet;}
+function ok(data){return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);}`;
 
 function showGASScript(){document.getElementById('gas-code-view').textContent=GAS_SCRIPT;document.getElementById('modal-gas').classList.remove('h');}
-function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>showNotif('✅ Script GAS disalin!')).catch(()=>prompt('Salin manual:',GAS_SCRIPT));}
+function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>showNotif('✅ Script disalin!')).catch(()=>{});}
 
-// ── Sync (show feedback) ──────────────────────────────────
-async function syncNow(showFeedback){
-  if(!state.gasUrl)return;
-  try{
-    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})});
-    const j=await res.json();
-    if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Tersinkron ke Google Sheets!');}
-    else throw new Error(j.error);
-  }catch(e){state.gasOnline=false;updateGASBadge(false);if(showFeedback)showNotif('❌ Sync gagal: '+e.message);}
-}
-
-async function loadFromGAS(){
-  if(!state.gasUrl)return false;
-  try{
-    const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
-    const j=await res.json();if(!j.ok)throw new Error(j.error);
-    if(j.queue&&j.queue.length)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==='string'?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':'):String(q.time||''))}));
-    if(j.studios&&j.studios.length)state.studios=j.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
-    if(j.statuses&&j.statuses.length)state.statuses=j.statuses;
-    if(j.config&&j.config.name)state.config.name=j.config.name;
-    if(j.sheetId){state.sheetId=j.sheetId;}
-    if(j.nextNum){Object.keys(j.nextNum).forEach(k=>{const v=parseInt(j.nextNum[k])||1;if(v>(state.nextNum[k]||1))state.nextNum[k]=v;});}
-    state.gasOnline=true;updateGASBadge(true);
-    saveLS(true);
-    return true;
-  }catch(e){state.gasOnline=false;updateGASBadge(false);return false;}
-}
-
-// ── LocalStorage ──────────────────────────────────────────
-function todayStr(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function saveLS(silent){
-  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl,sheetId:state.sheetId,savedDate:todayStr()}));}catch(e){}
-  try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
-  if(!silent)showNotif('✅ Tersimpan!');
-}
-function loadLS(){
-  try{
-    const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
-    const today=todayStr();
-    if(d.savedDate && d.savedDate!==today){
-      if(d.studios)state.studios=d.studios;
-      if(d.statuses)state.statuses=d.statuses;
-      if(d.config)state.config=d.config;
-      if(d.gasUrl)state.gasUrl=d.gasUrl;
-      if(d.sheetId)state.sheetId=d.sheetId;
-      state.queue=[];
-      state.nextNum={s1:1,s2:1,s3:1,s4:1};
-      saveLS(true);
-      return true;
-    }
-    if(d.queue)state.queue=d.queue;
-    if(d.nextNum)state.nextNum=d.nextNum;
-    if(d.studios)state.studios=d.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
-    if(d.statuses)state.statuses=d.statuses;
-    if(d.config)state.config=d.config;
-    if(d.gasUrl)state.gasUrl=d.gasUrl;
-    if(d.sheetId)state.sheetId=d.sheetId;
-    return true;
-  }catch(e){return false;}
-}
-
-// ── BroadcastChannel sync antar tab ─────────────────────
-try{
-  const bc=new BroadcastChannel('jdprod');
-  bc.onmessage=()=>{loadLS();renderDashboard();if(document.getElementById('page-queue')&&!document.getElementById('page-queue').classList.contains('h'))renderQueue();};
-}catch(e){}
-
-// GAS polling tiap 5 detik
-setInterval(async()=>{
-  if(!state.gasUrl)return;
-  const ok=await loadFromGAS();
-  if(ok){renderDashboard();if(document.getElementById('page-queue')&&!document.getElementById('page-queue').classList.contains('h'))renderQueue();}
-},5000);
-
-// ── Init ─────────────────────────────────────────────────
-function init(){
+// ════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════
+async function init(){
   loadLS();
-  if(!state.queue.length){
-    state.queue=[
-      {id:'q1',number:'S1-001',numRaw:1,name:'Andi Firmansyah',studioId:'s1',studioName:'Studio 1',studioIco:'📸',studioColor:'#F0C060',status:'inprogress',time:'09:30'},
-      {id:'q2',number:'S1-002',numRaw:2,name:'Budi Santoso',studioId:'s1',studioName:'Studio 1',studioIco:'📸',studioColor:'#F0C060',status:'waiting',time:'09:45'},
-      {id:'q3',number:'S2-001',numRaw:1,name:'Citra Dewi',studioId:'s2',studioName:'Studio 2',studioIco:'🎬',studioColor:'#5599F5',status:'called',time:'10:00'},
-      {id:'q4',number:'PB-001',numRaw:1,name:'Dewi Rahayu',studioId:'s3',studioName:'Photobox',studioIco:'🤳',studioColor:'#45C78A',status:'waiting',time:'10:15'},
-      {id:'q5',number:'WB-001',numRaw:1,name:'Eko Prasetyo',studioId:'s4',studioName:'Widebox',studioIco:'🖼️',studioColor:'#A07FF0',status:'waiting',time:'10:30'},
-    ];
-    state.nextNum={s1:3,s2:2,s3:2,s4:2};
-  }
+  // apply saved font immediately
+  if(state.fontUrl)applyFont(state.fontUrl,state.fontFamily);
   document.getElementById('sb-name').textContent=state.config.name;
   document.getElementById('sb-ico').textContent=state.config.logo;
-  nav('dashboard');
-  if(state.gasUrl)loadFromGAS().then(()=>renderDashboard()).catch(()=>{});
+  renderDashboard();
+  syncNow(false);
+  setInterval(()=>{syncNow(false);renderDashboard();},15000);
+  try{new BroadcastChannel('jdprod').onmessage=()=>{loadLS();_lastDashSnap='';_lastQueueSnap='';renderDashboard();};}catch(e){}
 }
-
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
