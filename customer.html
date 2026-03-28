@@ -22,6 +22,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--fb);font-size:1
 button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;text-decoration:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes tickIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
 .fadeUp{animation:fadeUp .3s ease forwards}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap}
 .btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600}
@@ -43,7 +44,15 @@ button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;colo
 .s-ico{font-size:28px;line-height:1}
 .s-nm{font-family:var(--fd);font-size:18px;letter-spacing:.04em}
 .s-desc{font-size:11px;color:var(--tm);line-height:1.4}
-.s-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--tm);background:var(--s2);padding:3px 8px;border-radius:100px;margin-top:3px}
+.s-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--tm);background:var(--s2);padding:3px 8px;border-radius:100px;margin-top:2px}
+.s-estim{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--pur);background:rgba(160,127,240,.12);border:1px solid rgba(160,127,240,.2);padding:3px 8px;border-radius:100px;margin-top:2px;font-weight:500}
+
+/* Loading overlay saat tombol diklik */
+.studio-btn .s-loading{display:none;position:absolute;inset:0;background:rgba(10,10,11,.7);align-items:center;justify-content:center;border-radius:var(--r)}
+.studio-btn.loading .s-loading{display:flex}
+.studio-btn.loading .s-content{opacity:.3}
+.spinner{width:24px;height:24px;border:3px solid rgba(240,192,96,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+
 .receipt-wrap{width:100%;max-width:380px;animation:fadeUp .3s ease}
 .receipt-box{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);overflow:hidden}
 .receipt-head{padding:22px 20px 16px;text-align:center;border-bottom:1px solid var(--b);background:linear-gradient(135deg,rgba(240,192,96,.09),transparent)}
@@ -51,7 +60,7 @@ button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;colo
 .receipt-studio{font-size:12px;color:var(--tm);margin-top:3px}
 .receipt-number{font-family:var(--fd);font-size:80px;letter-spacing:.04em;line-height:1;padding:14px 0 4px;animation:tickIn .4s ease}
 .receipt-body{padding:14px 18px}
-.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--b);font-size:12px}
+.receipt-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed var(--b);font-size:12px}
 .receipt-row:last-child{border-bottom:none}
 .receipt-key{color:var(--tm)}
 .receipt-footer{background:var(--s2);padding:12px 16px}
@@ -63,195 +72,337 @@ button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;colo
 .ctr-bar{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-dasharray:213;transition:stroke-dashoffset 1s linear}
 .ctr-num{font-family:var(--fd);font-size:20px;color:var(--gold);text-align:center;margin-top:-2px;line-height:1}
 .ctr-lbl{font-size:10px;color:var(--tm);text-align:center;margin-top:1px}
+
+/* Estimasi box di receipt */
+.estim-box{background:rgba(160,127,240,.08);border:1px solid rgba(160,127,240,.2);border-radius:var(--rs);padding:10px 14px;margin:8px 0;text-align:center}
+.estim-big{font-family:var(--fd);font-size:28px;letter-spacing:.04em;color:var(--pur);line-height:1}
+.estim-sub{font-size:11px;color:var(--tm);margin-top:3px}
+
 @media(max-width:360px){
-  .studio-grid{gap:8px}
-  .studio-btn{padding:16px 10px 14px}
-  .s-ico{font-size:22px}
-  .s-nm{font-size:15px}
-  .receipt-number{font-size:64px}
+.studio-grid{gap:8px}
+.studio-btn{padding:16px 10px 14px}
+.s-ico{font-size:22px}
+.s-nm{font-size:15px}
+.receipt-number{font-size:64px}
 }
 </style>
 </head>
 <body>
 <a class="btn btn-ghost btn-sm" href="index.html" style="position:fixed;top:12px;left:12px;z-index:100">← Admin</a>
+
 <div id="root">
-  <header class="cust-hdr" style="display:none">
+  <header class="cust-hdr">
     <div class="cust-hdr-logo" id="c-logo">🎬</div>
     <div class="cust-hdr-title" id="c-title">JD Production</div>
+    <div class="cust-hdr-sub" id="c-sub">Pilih studio untuk ambil nomor antrian</div>
   </header>
   <div id="inner"></div>
 </div>
+
 <div id="notif"></div>
+
 <script>
 const LS_KEY='jdprod_v2';
 const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
+
 let state={
   queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},
   studios:[
-    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
-    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
-    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
-    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
+    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga',estimMenit:15},
+    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial',estimMenit:20},
+    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip',estimMenit:10},
+    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama',estimMenit:20},
   ],
   statuses:[
     {id:'waiting',ico:'⏳',label:'Menunggu',color:'#7B7885'},
     {id:'called', ico:'📢',label:'Dipanggil',color:'#5599F5'},
     {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
-    {id:'done',   ico:'✅',label:'Selesai',  color:'#45C78A'},
-    {id:'skip',   ico:'⏭️',label:'Dilewati', color:'#E05555'},
+    {id:'done', ico:'✅',label:'Selesai', color:'#45C78A'},
+    {id:'skip', ico:'⏭️',label:'Dilewati', color:'#E05555'},
   ],
   config:{name:'JD Production',logo:'🎬'},
   gasUrl:'https://script.google.com/macros/s/AKfycby7EJ-3X0UxIKfuP6ghV7p4dwby85p5Ng-TRl2r3jU1esJrxJJfI1QLsK4jtHLYbrdM_g/exec',
 };
+
 let lastEntry=null;
+
+// ── Helpers ──────────────────────────────────────────────
 function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
-let _nt;
-function showNotif(msg){const el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:18px;right:14px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:10px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:var(--t);max-width:90vw';clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',2800);}
 function todayStr(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function checkDayReset(){
+
+let _nt;
+function showNotif(msg){
+  const el=document.getElementById('notif');if(!el)return;
+  el.textContent=msg;
+  el.style.cssText='position:fixed;bottom:18px;right:14px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:10px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:var(--t);max-width:90vw';
+  clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',2800);
+}
+
+// ── Estimasi waktu ────────────────────────────────────────
+function hitungEstimasi(studioId, excludeId=null){
+  const studio=state.studios.find(s=>s.id===studioId);
+  if(!studio)return{menit:0,label:'Langsung dilayani',urgent:true};
+  const mPerOrang=parseInt(studio.estimMenit)||15;
+  const aktif=state.queue.filter(q=>
+    q.studioId===studioId &&
+    (q.status==='waiting'||q.status==='called'||q.status==='inprogress') &&
+    q.id!==excludeId
+  );
+  const totalMenit=aktif.length*mPerOrang;
+  if(totalMenit===0)return{menit:0,label:'Langsung dilayani 🎉',urgent:true};
+  if(totalMenit<60)return{menit:totalMenit,label:'~'+totalMenit+' menit',urgent:totalMenit<=15};
+  const jam=Math.floor(totalMenit/60);const sisa=totalMenit%60;
+  return{menit:totalMenit,label:'~'+jam+' jam'+(sisa?' '+sisa+' menit':''),urgent:false};
+}
+
+// Estimasi untuk antrian baru yang baru saja diambil (posisi terakhir)
+function hitungEstimasiBaru(studioId, numRaw){
+  const studio=state.studios.find(s=>s.id===studioId);
+  if(!studio)return{menit:0,label:'Langsung dilayani 🎉',urgent:true};
+  const mPerOrang=parseInt(studio.estimMenit)||15;
+  const didepan=state.queue.filter(q=>
+    q.studioId===studioId &&
+    (q.status==='waiting'||q.status==='called'||q.status==='inprogress') &&
+    q.numRaw < numRaw
+  ).length;
+  const totalMenit=didepan*mPerOrang;
+  if(totalMenit===0)return{menit:0,label:'Langsung dilayani 🎉',urgent:true};
+  if(totalMenit<60)return{menit:totalMenit,label:'~'+totalMenit+' menit',urgent:totalMenit<=15};
+  const jam=Math.floor(totalMenit/60);const sisa=totalMenit%60;
+  return{menit:totalMenit,label:'~'+jam+' jam'+(sisa?' '+sisa+' menit':''),urgent:false};
+}
+
+// ── LocalStorage ──────────────────────────────────────────
+function loadLS(){
   try{
-    const d=JSON.parse(localStorage.getItem('jdprod_v2')||'{}');
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
     const today=todayStr();
+    // Reset hari baru — pertahankan settings
     if(d.savedDate && d.savedDate!==today){
-      if(d.studios)state.studios=d.studios;
+      if(d.studios)state.studios=d.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
       if(d.statuses)state.statuses=d.statuses;
       if(d.config)state.config=d.config;
       if(d.gasUrl)state.gasUrl=d.gasUrl;
-      state.queue=[];
-      state.nextNum={s1:1,s2:1,s3:1,s4:1};
-      localStorage.setItem('jdprod_v2',JSON.stringify({...d,queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},savedDate:today}));
+      state.queue=[];state.nextNum={s1:1,s2:1,s3:1,s4:1};
+      saveLS();return;
     }
+    if(d.queue)state.queue=d.queue;
+    if(d.nextNum)state.nextNum=d.nextNum;
+    if(d.studios)state.studios=d.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
+    if(d.statuses)state.statuses=d.statuses;
+    if(d.config)state.config=d.config;
+    if(d.gasUrl)state.gasUrl=d.gasUrl;
   }catch(e){}
 }
-function loadLS(){
-  try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
-    if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;
-    if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;
-    if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;
-  }catch(e){}
-}
+
 function saveLS(){
-  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
+  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl,savedDate:todayStr()}));}catch(e){}
   try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
 }
-async function syncToGAS(){
+
+// Sync background — tidak blokir UI
+function syncToGAS(){
   if(!state.gasUrl)return;
-  try{await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})});}catch(e){}
+  fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})}).catch(()=>{});
 }
+
 async function loadFromGAS(){
   if(!state.gasUrl)return false;
   try{
     const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
     const j=await res.json();if(!j.ok)return false;
-    if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==="string"?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,"0")).join(":"):String(q.time||""))}));
-    if(j.nextNum){Object.keys(j.nextNum).forEach(k=>state.nextNum[k]=parseInt(j.nextNum[k])||1);}
-    if(j.studios&&j.studios.length)state.studios=j.studios;
+    if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==='string'?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':'):String(q.time||''))}));
+    if(j.nextNum){Object.keys(j.nextNum).forEach(k=>{const v=parseInt(j.nextNum[k])||1;if(v>state.nextNum[k])state.nextNum[k]=v;});}
+    if(j.studios&&j.studios.length)state.studios=j.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
     if(j.config&&j.config.name)state.config.name=j.config.name;
     return true;
   }catch(e){return false;}
 }
+
+// ── Render pilih studio ───────────────────────────────────
 function renderPick(){
   const el=document.getElementById('inner');
   el.innerHTML='<div class="studio-grid">'+
     state.studios.map(s=>{
       const active=state.queue.filter(q=>q.studioId===s.id&&q.status!=='done'&&q.status!=='skip').length;
-      return`<button class="studio-btn fadeUp" style="--c:${s.color}" onclick="takeNumber('${s.id}')">
-        <span class="s-ico">${s.ico}</span>
-        <span class="s-nm" style="color:${s.color}">${s.name}</span>
-        <span class="s-desc">${s.desc}</span>
-        <span class="s-badge">🎫 ${active} antrian</span>
-      </button>`;
+      const estim=hitungEstimasi(s.id);
+      const estimColor=estim.urgent?'var(--green)':'var(--pur)';
+      const estimBg=estim.urgent?'rgba(69,199,138,.12)':'rgba(160,127,240,.12)';
+      const estimBorder=estim.urgent?'rgba(69,199,138,.2)':'rgba(160,127,240,.2)';
+      return`<button class="studio-btn fadeUp" style="--c:${s.color}" onclick="takeNumber('${s.id}',this)">
+  <div class="s-loading"><div class="spinner"></div></div>
+  <div class="s-content" style="display:flex;flex-direction:column;align-items:center;gap:5px;width:100%">
+    <span class="s-ico">${s.ico}</span>
+    <span class="s-nm" style="color:${s.color}">${s.name}</span>
+    <span class="s-desc">${s.desc}</span>
+    <span class="s-badge">🎫 ${active} antrian</span>
+    <span class="s-estim" style="color:${estimColor};background:${estimBg};border-color:${estimBorder}">⏱ ${estim.label}</span>
+  </div>
+</button>`;
     }).join('')+'</div>';
 }
-async function takeNumber(studioId){
-  document.querySelectorAll('.studio-btn').forEach(b=>b.disabled=true);
-  if(state.gasUrl){const ok=await loadFromGAS();if(!ok)loadLS();}else loadLS();
+
+// ── Ambil nomor — OPTIMISTIC (langsung, sync background) ──
+async function takeNumber(studioId, btn){
+  // 1. Langsung tampil loading pada tombol yg diklik saja
+  if(btn){btn.classList.add('loading');btn.disabled=true;}
+
+  // 2. Refresh data dari GAS dulu (tapi dengan timeout 1.5s max agar tidak lambat)
+  let gasOk=false;
+  if(state.gasUrl){
+    try{
+      const ctrl=new AbortController();
+      const tid=setTimeout(()=>ctrl.abort(),1500); // max 1.5 detik
+      const res=await fetch(state.gasUrl+'?action=load&t='+Date.now(),{signal:ctrl.signal});
+      clearTimeout(tid);
+      const j=await res.json();
+      if(j.ok){
+        if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==='string'?q.time:String(q.time||'')}));
+        if(j.nextNum){Object.keys(j.nextNum).forEach(k=>{const v=parseInt(j.nextNum[k])||1;if(v>state.nextNum[k])state.nextNum[k]=v;});}
+        if(j.studios&&j.studios.length)state.studios=j.studios.map(s=>({...s,estimMenit:parseInt(s.estimMenit)||15}));
+        gasOk=true;
+      }
+    }catch(e){/* timeout atau error — lanjut pakai LS */}
+  }
+  if(!gasOk)loadLS();
+
+  // 3. Buat entry baru LANGSUNG (optimistic)
   const st=state.studios.find(s=>s.id===studioId);
+  if(!st)return;
   const num=state.nextNum[studioId]++;
   const numStr=PREFIX[studioId]+String(num).padStart(3,'0');
-  const entry={id:'q'+Date.now(),number:numStr,numRaw:num,name:'Tamu',studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,status:'waiting',time:nowTime()};
+  const entry={
+    id:'q'+Date.now(),number:numStr,numRaw:num,
+    name:'Tamu',studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,
+    status:'waiting',time:nowTime()
+  };
   state.queue.push(entry);lastEntry=entry;
-  saveLS();syncToGAS();
+
+  // 4. Simpan lokal & tampilkan receipt DULU
+  saveLS();
   showReceipt(entry);
+
+  // 5. Sync ke GAS di background (tidak tunggu)
+  syncToGAS();
 }
+
+// ── Receipt ────────────────────────────────────────────────
 function showReceipt(entry){
   const el=document.getElementById('inner');
-  const waitBefore=state.queue.filter(q=>q.studioId===entry.studioId&&q.status==='waiting'&&q.numRaw<entry.numRaw).length;
+  const waitBefore=state.queue.filter(q=>
+    q.studioId===entry.studioId &&
+    (q.status==='waiting'||q.status==='called'||q.status==='inprogress') &&
+    q.numRaw < entry.numRaw
+  ).length;
+
+  const estim=hitungEstimasiBaru(entry.studioId, entry.numRaw);
+  const estimColor=estim.urgent?'var(--green)':'var(--pur)';
   const trackLink=buildTrackLink(entry.id);
+
   el.innerHTML=`<div class="receipt-wrap">
-    <div class="receipt-box">
-      <div class="receipt-head">
-        <div style="font-size:20px;margin-bottom:3px">${state.config.logo}</div>
-        <div class="receipt-brand">${state.config.name}</div>
-        <div class="receipt-studio">${entry.studioIco} ${entry.studioName}</div>
-        <div class="receipt-number" style="color:${entry.studioColor}">${entry.number}</div>
-        <div style="font-size:11px;color:var(--tm)">Diambil: ${entry.time}</div>
-      </div>
-      <div class="receipt-body">${[
-        ['Nomor',`<strong style="font-family:var(--fd);font-size:16px;color:${entry.studioColor}">${entry.number}</strong>`],
-        ['Studio',entry.studioIco+' '+entry.studioName],
-        ['Posisi',waitBefore>0?(waitBefore+' orang di depan'):'Kamu berikutnya! 🎉'],
-        ['Est. Tunggu',waitBefore===0?'Sebentar lagi! 🎉':waitBefore<=2?'~'+(waitBefore*15)+' menit ⚡':waitBefore<=5?'~'+(waitBefore*15)+' menit ☕':waitBefore<=10?'~'+(waitBefore*15)+' menit 📱':'>2 jam, pantau link 👇'],
-        ['Status','⏳ Menunggu'],
-      ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('')}</div>
-      <div class="receipt-footer">
-        <div style="font-size:10px;color:var(--tm);margin-bottom:3px">🔗 Link pantau status:</div>
-        <div class="receipt-link">${trackLink}</div>
-        <div class="receipt-qr"><div id="r-qr"></div></div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px">
-          <button class="btn btn-gold btn-sm" onclick="copyLink('${trackLink}')">📋 Salin</button>
-          <button class="btn btn-ghost btn-sm" onclick="shareWA()">📱 WA</button>
-          <a class="btn btn-ghost btn-sm" href="track.html?track=${entry.id}" target="_blank">👁 Pantau</a>
-        </div>
-      </div>
+<div class="receipt-box">
+  <div class="receipt-head">
+    <div style="font-size:20px;margin-bottom:3px">${state.config.logo}</div>
+    <div class="receipt-brand">${state.config.name}</div>
+    <div class="receipt-studio">${entry.studioIco} ${entry.studioName}</div>
+    <div class="receipt-number" style="color:${entry.studioColor}">${entry.number}</div>
+    <div style="font-size:11px;color:var(--tm)">Diambil: ${entry.time}</div>
+  </div>
+
+  <div class="receipt-body">
+    <!-- Estimasi box besar -->
+    <div class="estim-box">
+      <div style="font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;font-weight:600">⏱ Estimasi Waktu Tunggu</div>
+      <div class="estim-big" style="color:${estimColor}">${estim.label}</div>
+      <div class="estim-sub">${waitBefore===0?'Kamu langsung dilayani!':waitBefore===1?'1 orang di depanmu':waitBefore+' orang di depanmu'}</div>
     </div>
-    <div style="text-align:center;margin-top:16px">
-      <div class="countdown-wrap">
-        <svg class="ctr" width="68" height="68" viewBox="0 0 68 68">
-          <circle class="ctr-bg" cx="34" cy="34" r="34"/>
-          <circle class="ctr-bar" id="ctr-bar" cx="34" cy="34" r="34"/>
-        </svg>
-        <div class="ctr-num" id="ctr-num">10</div>
-        <div class="ctr-lbl">detik ke Display TV</div>
-      </div>
-      <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-gold btn-sm" onclick="goDisplay()">📺 Display</button>
-        <button class="btn btn-ghost btn-sm" onclick="cancelCD()">✕ Batal</button>
-        <button class="btn btn-ghost btn-sm" onclick="reset()">+ Antrian Lagi</button>
-      </div>
+
+    ${[
+      ['Nomor',`<strong style="font-family:var(--fd);font-size:16px;color:${entry.studioColor}">${entry.number}</strong>`],
+      ['Studio',entry.studioIco+' '+entry.studioName],
+      ['Posisi antrian',waitBefore===0?'<span style="color:var(--green);font-weight:600">Kamu berikutnya! 🎉</span>':`<span style="font-weight:600">#${waitBefore+1}</span>`],
+      ['Status','⏳ Menunggu'],
+    ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('')}
+  </div>
+
+  <div class="receipt-footer">
+    <div style="font-size:10px;color:var(--tm);margin-bottom:3px">🔗 Link pantau status:</div>
+    <div class="receipt-link">${trackLink}</div>
+    <div class="receipt-qr"><div id="r-qr"></div></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px">
+      <button class="btn btn-gold btn-sm" onclick="copyLink('${trackLink}')">📋 Salin</button>
+      <button class="btn btn-ghost btn-sm" onclick="shareWA()">📱 WA</button>
+      <a class="btn btn-ghost btn-sm" href="track.html?track=${entry.id}" target="_blank">👁 Pantau</a>
     </div>
-  </div>`;
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:16px">
+  <div class="countdown-wrap">
+    <svg class="ctr" width="68" height="68" viewBox="0 0 68 68">
+      <circle class="ctr-bg" cx="34" cy="34" r="34"/>
+      <circle class="ctr-bar" id="ctr-bar" cx="34" cy="34" r="34"/>
+    </svg>
+    <div class="ctr-num" id="ctr-num">10</div>
+    <div class="ctr-lbl">detik ke Display TV</div>
+  </div>
+  <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap">
+    <button class="btn btn-gold btn-sm" onclick="goDisplay()">📺 Display</button>
+    <button class="btn btn-ghost btn-sm" onclick="cancelCD()">✕ Batal</button>
+    <button class="btn btn-ghost btn-sm" onclick="reset()">+ Antrian Lagi</button>
+  </div>
+</div>
+</div>`;
+
   try{new QRCode(document.getElementById('r-qr'),{text:trackLink,width:120,height:120,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});}catch(e){}
   startCD();
 }
+
 function buildTrackLink(id){return window.location.href.replace(/customer\.html.*$/,'')+'track.html?track='+id;}
 function copyLink(link){navigator.clipboard.writeText(link).then(()=>showNotif('✅ Disalin!')).catch(()=>prompt('Salin:',link));}
 function shareWA(){
   if(!lastEntry)return;
   const link=buildTrackLink(lastEntry.id);
-  const msg=`Nomor antrian:\n🎫 *${lastEntry.number}*\n🎬 ${lastEntry.studioName}\n🕐 ${lastEntry.time}\n\nPantau: ${link}\n_${state.config.name}_`;
+  const estim=hitungEstimasiBaru(lastEntry.studioId,lastEntry.numRaw);
+  const msg=`Nomor antrian saya:\n🎫 *${lastEntry.number}*\n🎬 ${lastEntry.studioName}\n🕐 ${lastEntry.time}\n⏱ Est. tunggu: ${estim.label}\n\nPantau: ${link}\n_${state.config.name}_`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
 }
 function reset(){cancelCD();lastEntry=null;renderPick();}
 function goDisplay(){cancelCD();window.location.href='display.html';}
+
+// ── Countdown ─────────────────────────────────────────────
 let _cd=null,_cds=10;
 const CDR=34;
 function startCD(){cancelCD();_cds=10;_upCD(10);_cd=setInterval(()=>{_cds--;_upCD(_cds);if(_cds<=0){cancelCD();goDisplay();}},1000);}
 function cancelCD(){if(_cd){clearInterval(_cd);_cd=null;}}
 function _upCD(s){
   const n=document.getElementById('ctr-num'),b=document.getElementById('ctr-bar');
-  if(n)n.textContent=s;if(b){const c=2*Math.PI*CDR;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-s/10);}
+  if(n)n.textContent=s;
+  if(b){const c=2*Math.PI*CDR;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-s/10);}
 }
+
+// ── Init ──────────────────────────────────────────────────
 async function init(){
   loadLS();
-  if(state.gasUrl)await loadFromGAS();
+  // Load dari GAS di background — tidak blocking
+  if(state.gasUrl){
+    loadFromGAS().then(()=>{
+      renderPick(); // refresh kartu setelah data GAS masuk
+    }).catch(()=>{});
+  }
   document.getElementById('c-logo').textContent=state.config.logo;
   document.getElementById('c-title').textContent=state.config.name;
+
   const p=new URLSearchParams(window.location.search);
   const svc=p.get('svc');
-  if(svc&&state.studios.find(s=>s.id===svc))takeNumber(svc);
-  else renderPick();
+  if(svc&&state.studios.find(s=>s.id===svc)){
+    // Langsung ambil nomor untuk studio tertentu
+    takeNumber(svc,null);
+  } else {
+    renderPick();
+  }
 }
+
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
