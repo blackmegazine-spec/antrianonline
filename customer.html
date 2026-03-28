@@ -128,7 +128,7 @@ async function loadFromGAS(){
   try{
     const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
     const j=await res.json();if(!j.ok)return false;
-    if(j.queue)state.queue=j.queue;
+    if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==="string"?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,"0")).join(":"):String(q.time||""))}));
     if(j.nextNum)state.nextNum=j.nextNum;
     if(j.studios&&j.studios.length)state.studios=j.studios;
     if(j.config&&j.config.name)state.config.name=j.config.name;

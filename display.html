@@ -136,11 +136,26 @@ function loadLS(){
 async function loadFromGAS(){
   if(!state.gasUrl)return;
   try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
-    if(j.ok){if(j.queue&&j.queue.length)state.queue=j.queue;state.gasOk=true;}
+    if(j.ok){if(j.queue&&j.queue.length)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==="string"?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,"0")).join(":"):String(q.time||""))}));state.gasOk=true;}
   }catch(e){state.gasOk=false;}
 }
 
+let _lastSnapshot='';
+function getSnapshot(){
+  return JSON.stringify(state.studios.map(s=>{
+    const sq=state.queue.filter(q=>q.studioId===s.id);
+    const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
+    const waiting=sq.filter(q=>q.status==='waiting');
+    const cur=called[called.length-1];
+    return{id:s.id,cur:cur?cur.number+cur.status:'',wait:waiting.map(q=>q.number).join(',')};
+  }));
+}
+
 function renderDisplay(){
+  const snap=getSnapshot();
+  if(snap===_lastSnapshot)return; // tidak ada perubahan, skip render
+  _lastSnapshot=snap;
+
   const el=document.getElementById('dp-studios');if(!el)return;
   el.innerHTML=state.studios.map(studio=>{
     const sq=state.queue.filter(q=>q.studioId===studio.id);
@@ -180,8 +195,8 @@ function tick(){
   if(now-_lastLoad>3000){
     _lastLoad=now;
     loadLS();
-    if(state.gasUrl)loadFromGAS();
-    renderDisplay();
+    if(state.gasUrl)loadFromGAS().then(()=>renderDisplay()).catch(()=>renderDisplay());
+    else renderDisplay();
   }
 }
 

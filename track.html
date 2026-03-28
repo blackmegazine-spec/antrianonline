@@ -121,7 +121,7 @@ let state={
   config:{name:'JD Production',logo:'🎬'},
   gasUrl:'https://script.google.com/macros/s/AKfycby7EJ-3X0UxIKfuP6ghV7p4dwby85p5Ng-TRl2r3jU1esJrxJJfI1QLsK4jtHLYbrdM_g/exec',
 };
-let trackId=null,trackInterval=null;
+let trackId=null,trackInterval=null,_lastTrackSnap='';
 
 function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
 let _ntimer;
@@ -137,7 +137,7 @@ function loadLS(){
 async function loadFromGAS(){
   if(!state.gasUrl)return;
   try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
-    if(j.ok&&j.queue&&j.queue.length)state.queue=j.queue;
+    if(j.ok&&j.queue&&j.queue.length)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==="string"?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,"0")).join(":"):String(q.time||""))}));
   }catch(e){}
 }
 
@@ -145,6 +145,11 @@ function renderTrack(id){
   const el=document.getElementById('track-card');if(!el)return;
   const upd=document.getElementById('tr-last');if(upd)upd.textContent='Update: '+nowTime();
   const q=state.queue.find(q=>q.id===id);
+
+  // Snapshot: hanya render ulang kalau data berubah
+  const snap=JSON.stringify(q?{status:q.status,numRaw:q.numRaw,queue:state.queue.filter(w=>w.studioId===q?.studioId).map(w=>({id:w.id,status:w.status}))}:null);
+  if(snap===_lastTrackSnap)return;
+  _lastTrackSnap=snap;
   if(!q){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Antrian tidak ditemukan.<br><span style="font-size:12px">Coba minta ulang dari halaman customer.</span></div><div style="margin-top:16px"><a class="btn btn-ghost btn-sm" href="customer.html">← Ambil Antrian Baru</a></div></div>';return;}
   const steps=[{id:'waiting',lbl:'Menunggu',ico:'⏳'},{id:'called',lbl:'Dipanggil',ico:'📢'},{id:'inprogress',lbl:'Dalam Sesi',ico:'⚙️'},{id:'done',lbl:'Selesai',ico:'✅'}];
   const stOrder=['waiting','called','inprogress','done'];

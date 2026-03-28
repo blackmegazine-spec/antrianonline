@@ -380,10 +380,16 @@ function renderGreeting(){
 }
 
 // ── Dashboard ────────────────────────────────────────────
+let _lastDashSnap='',_lastQueueSnap='';
+function _queueSnap(){return JSON.stringify(state.queue.map(q=>({id:q.id,status:q.status,studioId:q.studioId})));}
+
 function renderDashboard(){
   const dd=document.getElementById('dash-date');if(dd)dd.textContent=nowDate();
   renderGreeting();updateStats();
   const el=document.getElementById('dash-studios');if(!el)return;
+  const snap=_queueSnap();
+  if(snap===_lastDashSnap)return;
+  _lastDashSnap=snap;
   el.innerHTML=state.studios.map(studio=>{
     const sq=state.queue.filter(q=>q.studioId===studio.id&&q.status!=='done'&&q.status!=='skip');
     const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
@@ -421,6 +427,12 @@ function renderQueue(){
   const list=state.queue.filter(q=>(stF==='all'||q.studioId===stF)&&(stF2==='all'||q.status===stF2)).sort((a,b)=>a.numRaw-b.numRaw);
   const el=document.getElementById('queue-list');if(!el)return;
   const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' antrian';
+
+  // Smart render: skip jika data tidak berubah
+  const snap=JSON.stringify(list.map(q=>({id:q.id,status:q.status})));
+  if(snap===_lastQueueSnap)return;
+  _lastQueueSnap=snap;
+
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>';return;}
   el.innerHTML=list.map(q=>{
     const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
@@ -442,9 +454,9 @@ function renderQueue(){
     </div>`;
   }).join('');
 }
-function setStatus(id,status){const q=state.queue.find(q=>q.id===id);if(q){q.status=status;renderQueue();renderDashboard();saveLS(true);syncNow(false);}}
-function removeQueue(id){if(!confirm('Hapus antrian ini?'))return;state.queue=state.queue.filter(q=>q.id!==id);renderQueue();renderDashboard();saveLS(true);syncNow(false);}
-function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';renderQueue();renderDashboard();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncNow(false);}}
+function setStatus(id,status){const q=state.queue.find(q=>q.id===id);if(q){q.status=status;_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncNow(false);}}
+function removeQueue(id){if(!confirm('Hapus antrian ini?'))return;state.queue=state.queue.filter(q=>q.id!==id);_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();saveLS(true);syncNow(false);}
+function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';_lastDashSnap='';_lastQueueSnap='';renderQueue();renderDashboard();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncNow(false);}}
 function callNext(){const next=state.queue.find(q=>q.status==='waiting');if(next)callOne(next.id);else showNotif('Tidak ada antrian menunggu');}
 function openTrackWindow(id){window.open('track.html?track='+id,'_blank');}
 
@@ -645,7 +657,7 @@ async function loadFromGAS(){
   try{
     const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
     const j=await res.json();if(!j.ok)throw new Error(j.error);
-    if(j.queue&&j.queue.length)state.queue=j.queue;
+    if(j.queue&&j.queue.length)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==='string'?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':'):String(q.time||''))}));
     if(j.studios&&j.studios.length)state.studios=j.studios;
     if(j.statuses&&j.statuses.length)state.statuses=j.statuses;
     if(j.config&&j.config.name)state.config.name=j.config.name;
