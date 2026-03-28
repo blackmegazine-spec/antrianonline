@@ -9,118 +9,83 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0A0A0B;--s1:#111114;--s2:#18181C;--s3:#222228;
+  --bg:#0A0A0B;--s1:#111114;--s2:#18181C;
   --b:rgba(255,255,255,.06);--ba:rgba(255,210,100,.35);
   --t:#F2EEE8;--tm:#7B7885;--td:#3A3840;
-  --gold:#F0C060;--gold2:#D4A840;--gd:rgba(240,192,96,.1);
+  --gold:#F0C060;--gd:rgba(240,192,96,.1);
   --red:#E05555;--green:#45C78A;--blue:#5599F5;--pur:#A07FF0;
-  --r:14px;--rs:8px;
-  --sh:0 4px 32px rgba(0,0,0,.5);--shg:0 4px 24px rgba(240,192,96,.18);
+  --r:14px;--rs:8px;--shg:0 4px 24px rgba(240,192,96,.18);
   --fd:"Bebas Neue",sans-serif;--fb:"DM Sans",sans-serif;--fm:"JetBrains Mono",monospace;
   --tr:.18s cubic-bezier(.4,0,.2,1);
 }
 html,body{min-height:100%;background:var(--bg);font-family:var(--fb);font-size:14px;color:var(--t);-webkit-font-smoothing:antialiased}
-button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
-input{font-family:inherit;color:inherit}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes tickIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
-@keyframes ring{0%{transform:scale(1)}40%{transform:scale(.94)}70%{transform:scale(1.04)}100%{transform:scale(1)}}
-.fadeUp{animation:fadeUp .32s ease forwards}
-
+button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;text-decoration:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tickIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.fadeUp{animation:fadeUp .3s ease forwards}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap}
 .btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600}
 .btn-gold:hover{background:#F5D070;transform:translateY(-1px);box-shadow:var(--shg)}
 .btn-ghost{border:1px solid var(--b);color:var(--tm)}
 .btn-ghost:hover{border-color:var(--ba);color:var(--t);background:var(--gd)}
 .btn-sm{padding:6px 12px;font-size:12px}
-.btn-lg{padding:14px 28px;font-size:15px;font-weight:600;border-radius:var(--r)}
-
-.inp{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:12px 14px;color:var(--t);font-size:15px;outline:none;transition:border var(--tr)}
-.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,96,.1)}
-.inp::placeholder{color:var(--td)}
-.lbl{font-size:11px;font-weight:600;color:var(--tm);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em}
-.divider{height:1px;background:var(--b);margin:16px 0}
-
-/* ── Wrapper ── */
-#root{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px}
-.back-btn{position:fixed;top:14px;left:14px;z-index:100}
-
-/* ── Header ── */
-.cust-hdr{text-align:center;margin-bottom:28px;animation:fadeUp .4s ease}
-.cust-hdr-logo{font-size:44px;margin-bottom:8px;line-height:1}
-.cust-hdr-title{font-family:var(--fd);font-size:28px;letter-spacing:.06em;margin-bottom:4px}
-.cust-hdr-sub{color:var(--tm);font-size:13px}
-
-/* ── Step: Pick studio ── */
-.studio-pick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:440px}
-.studio-pick-btn{background:var(--s1);border:2px solid var(--b);border-radius:var(--r);padding:20px 16px;text-align:left;cursor:pointer;transition:all var(--tr);position:relative;overflow:hidden;min-height:130px}
-.studio-pick-btn::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
-.studio-pick-btn:hover{border-color:var(--gold);background:var(--gd);transform:translateY(-2px);box-shadow:var(--shg)}
-.studio-pick-btn:active{transform:scale(.97)}
-.studio-pick-ico{font-size:28px;display:block;margin-bottom:8px}
-.studio-pick-nm{font-family:var(--fd);font-size:18px;letter-spacing:.04em;margin-bottom:3px;display:block}
-.studio-pick-desc{font-size:11px;color:var(--tm);display:block;line-height:1.5}
-.studio-pick-count{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--tm);margin-top:8px;background:var(--s2);padding:3px 8px;border-radius:100px}
-
-/* ── Step: Name input ── */
-.name-step{width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .3s ease}
-.studio-confirm-card{padding:18px;background:var(--s1);border-radius:var(--r);border:1px solid var(--b);text-align:center;position:relative;overflow:hidden}
-.studio-confirm-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
-
-/* ── Receipt ── */
-.receipt-wrap{width:100%;max-width:400px;animation:fadeUp .3s ease}
+#root{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px 40px}
+.cust-hdr{text-align:center;margin-bottom:24px;animation:fadeUp .35s ease}
+.cust-hdr-logo{font-size:40px;margin-bottom:6px;line-height:1}
+.cust-hdr-title{font-family:var(--fd);font-size:26px;letter-spacing:.06em;margin-bottom:3px}
+.cust-hdr-sub{color:var(--tm);font-size:12px}
+.studio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:420px}
+.studio-btn{background:var(--s1);border:2px solid var(--b);border-radius:var(--r);padding:22px 16px 18px;text-align:center;cursor:pointer;transition:all var(--tr);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:5px;width:100%}
+.studio-btn::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
+.studio-btn:hover{border-color:var(--gold);background:var(--gd);transform:translateY(-2px);box-shadow:var(--shg)}
+.studio-btn:active{transform:scale(.96);transition:transform .08s}
+.studio-btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.s-ico{font-size:28px;line-height:1}
+.s-nm{font-family:var(--fd);font-size:18px;letter-spacing:.04em}
+.s-desc{font-size:11px;color:var(--tm);line-height:1.4}
+.s-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--tm);background:var(--s2);padding:3px 8px;border-radius:100px;margin-top:3px}
+.receipt-wrap{width:100%;max-width:380px;animation:fadeUp .3s ease}
 .receipt-box{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);overflow:hidden}
-.receipt-head{padding:24px;text-align:center;border-bottom:1px solid var(--b);position:relative;overflow:hidden}
-.receipt-head::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(240,192,96,.1),transparent);pointer-events:none}
-.receipt-logo{font-size:28px;margin-bottom:6px}
-.receipt-brand{font-family:var(--fd);font-size:20px;letter-spacing:.06em;color:var(--gold)}
-.receipt-studio{font-size:12px;color:var(--tm);margin-top:4px}
-.receipt-number{font-family:var(--fd);font-size:80px;letter-spacing:.04em;line-height:1;padding:16px 0 6px;animation:tickIn .4s ease}
-.receipt-body{padding:18px}
-.receipt-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--b);font-size:13px}
+.receipt-head{padding:22px 20px 16px;text-align:center;border-bottom:1px solid var(--b);background:linear-gradient(135deg,rgba(240,192,96,.09),transparent)}
+.receipt-brand{font-family:var(--fd);font-size:16px;letter-spacing:.06em;color:var(--gold)}
+.receipt-studio{font-size:12px;color:var(--tm);margin-top:3px}
+.receipt-number{font-family:var(--fd);font-size:80px;letter-spacing:.04em;line-height:1;padding:14px 0 4px;animation:tickIn .4s ease}
+.receipt-body{padding:14px 18px}
+.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--b);font-size:12px}
 .receipt-row:last-child{border-bottom:none}
 .receipt-key{color:var(--tm)}
-.receipt-val{font-weight:500}
-.receipt-footer{background:var(--s2);padding:14px 18px}
+.receipt-footer{background:var(--s2);padding:12px 16px}
 .receipt-link{font-family:var(--fm);font-size:10px;color:var(--blue);word-break:break-all;line-height:1.7}
-.receipt-qr{display:flex;justify-content:center;background:#fff;border-radius:10px;padding:12px;margin-top:10px}
-
-/* ── Countdown ── */
-.countdown-wrap{display:flex;flex-direction:column;align-items:center;margin:18px 0 8px}
+.receipt-qr{display:flex;justify-content:center;background:#fff;border-radius:8px;padding:10px;margin-top:8px}
+.countdown-wrap{display:flex;flex-direction:column;align-items:center;margin:14px 0 5px}
 .ctr{transform:rotate(-90deg)}
 .ctr-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4}
-.ctr-bar{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-dasharray:251;transition:stroke-dashoffset 1s linear}
-.ctr-num{font-family:var(--fd);font-size:26px;color:var(--gold);text-align:center;margin-top:-4px;line-height:1}
-.ctr-lbl{font-size:10px;color:var(--tm);text-align:center;margin-top:2px}
-
-/* ── Mobile ── */
-@media(max-width:380px){
-  .studio-pick-grid{grid-template-columns:1fr 1fr}
-  .studio-pick-btn{min-height:110px;padding:14px 12px}
-  .studio-pick-ico{font-size:22px}
-  .studio-pick-nm{font-size:15px}
+.ctr-bar{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-dasharray:213;transition:stroke-dashoffset 1s linear}
+.ctr-num{font-family:var(--fd);font-size:20px;color:var(--gold);text-align:center;margin-top:-2px;line-height:1}
+.ctr-lbl{font-size:10px;color:var(--tm);text-align:center;margin-top:1px}
+@media(max-width:360px){
+  .studio-grid{gap:8px}
+  .studio-btn{padding:16px 10px 14px}
+  .s-ico{font-size:22px}
+  .s-nm{font-size:15px}
   .receipt-number{font-size:64px}
-  .cust-hdr-title{font-size:22px}
 }
 </style>
 </head>
 <body>
-<a class="btn btn-ghost btn-sm back-btn" href="index.html">← Admin</a>
+<a class="btn btn-ghost btn-sm" href="index.html" style="position:fixed;top:12px;left:12px;z-index:100">← Admin</a>
 <div id="root">
   <header class="cust-hdr">
     <div class="cust-hdr-logo" id="c-logo">🎬</div>
     <div class="cust-hdr-title" id="c-title">JD Production</div>
-    <div class="cust-hdr-sub" id="c-sub">Pilih studio &amp; ambil nomor antrian</div>
+    <div class="cust-hdr-sub">Ketuk studio untuk ambil nomor antrian</div>
   </header>
-  <div id="customer-inner"></div>
+  <div id="inner"></div>
 </div>
 <div id="notif"></div>
-
 <script>
 const LS_KEY='jdprod_v2';
 const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
-
 let state={
   queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},
   studios:[
@@ -130,21 +95,19 @@ let state={
     {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
   ],
   statuses:[
-    {id:'waiting',   ico:'⏳',label:'Menunggu',  color:'#7B7885'},
-    {id:'called',    ico:'📢',label:'Dipanggil', color:'#5599F5'},
+    {id:'waiting',ico:'⏳',label:'Menunggu',color:'#7B7885'},
+    {id:'called', ico:'📢',label:'Dipanggil',color:'#5599F5'},
     {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
-    {id:'done',      ico:'✅',label:'Selesai',   color:'#45C78A'},
-    {id:'skip',      ico:'⏭️',label:'Dilewati',  color:'#E05555'},
+    {id:'done',   ico:'✅',label:'Selesai',  color:'#45C78A'},
+    {id:'skip',   ico:'⏭️',label:'Dilewati', color:'#E05555'},
   ],
-  config:{name:'JD Production',logo:'🎬',tagline:'Professional Photography & Production'},
+  config:{name:'JD Production',logo:'🎬'},
   gasUrl:'',
 };
-let custStep='pick', custStudioId=null, custName='', lastEntry=null;
-
+let lastEntry=null;
 function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
-let _ntimer;
-function showNotif(msg){let el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:20px;right:16px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:11px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .28s ease;color:var(--t);max-width:90vw';clearTimeout(_ntimer);_ntimer=setTimeout(()=>{el.style.display='none';},3000);}
-
+let _nt;
+function showNotif(msg){const el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:18px;right:14px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:10px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);color:var(--t);max-width:90vw';clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',2800);}
 function loadLS(){
   try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
     if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;
@@ -154,149 +117,124 @@ function loadLS(){
 }
 function saveLS(){
   try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
+  try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
 }
-async function syncNow(){
+async function syncToGAS(){
   if(!state.gasUrl)return;
-  try{const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue})});await res.json();}catch(e){}
+  try{await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})});}catch(e){}
 }
-
-function queueByStudio(id){return state.queue.filter(q=>q.studioId===id);}
-
-function render(){
-  const el=document.getElementById('customer-inner');
-  if(custStep==='pick'){
-    el.innerHTML='<div class="studio-pick-grid">'+
-      state.studios.map(s=>{
-        const active=queueByStudio(s.id).filter(q=>q.status!=='done'&&q.status!=='skip').length;
-        return`<button class="studio-pick-btn fadeUp" style="--c:${s.color}" onclick="pickStudio('${s.id}')">
-          <span class="studio-pick-ico">${s.ico}</span>
-          <span class="studio-pick-nm" style="color:${s.color}">${s.name}</span>
-          <span class="studio-pick-desc">${s.desc}</span>
-          <span class="studio-pick-count">🎫 ${active} aktif</span>
-        </button>`;
-      }).join('')+'</div>';
-  } else if(custStep==='name'){
-    const st=state.studios.find(s=>s.id===custStudioId);
-    el.innerHTML=`<div class="name-step">
-      <div class="studio-confirm-card" style="--c:${st.color}">
-        <div style="font-size:30px;margin-bottom:6px">${st.ico}</div>
-        <div style="font-family:var(--fd);font-size:18px;color:${st.color};letter-spacing:.04em">${st.name}</div>
-        <div style="font-size:12px;color:var(--tm);margin-top:3px">${st.desc}</div>
-      </div>
-      <div><label class="lbl">Nama Kamu</label>
-        <input class="inp" id="cust-name-inp" placeholder="Masukkan nama lengkap…" value="${custName}" autocomplete="name" onkeydown="if(event.key==='Enter')submitName()">
-      </div>
-      <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center" onclick="submitName()">Ambil Nomor Antrian →</button>
-      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="custStep='pick';render()">← Ganti Studio</button>
-    </div>`;
-    setTimeout(()=>document.getElementById('cust-name-inp')?.focus(),120);
-  } else if(custStep==='receipt'){
-    showReceipt(lastEntry);
-  }
+async function loadFromGAS(){
+  if(!state.gasUrl)return false;
+  try{
+    const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
+    const j=await res.json();if(!j.ok)return false;
+    if(j.queue)state.queue=j.queue;
+    if(j.nextNum)state.nextNum=j.nextNum;
+    if(j.studios&&j.studios.length)state.studios=j.studios;
+    if(j.config&&j.config.name)state.config.name=j.config.name;
+    return true;
+  }catch(e){return false;}
 }
-
-function pickStudio(id){custStudioId=id;custStep='name';render();}
-function submitName(){
-  const inp=document.getElementById('cust-name-inp');
-  const name=inp?.value?.trim();
-  if(!name){showNotif('⚠️ Masukkan nama dulu');inp?.focus();return;}
-  custName=name;
-  const st=state.studios.find(s=>s.id===custStudioId);
-  const num=state.nextNum[st.id]++;
-  const numStr=PREFIX[st.id]+String(num).padStart(3,'0');
-  const entry={id:'q'+Date.now(),number:numStr,numRaw:num,name,studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,status:'waiting',time:nowTime()};
-  state.queue.push(entry);
-  lastEntry=entry;
-  saveLS();syncNow();
-  custStep='receipt';render();
+function renderPick(){
+  const el=document.getElementById('inner');
+  el.innerHTML='<div class="studio-grid">'+
+    state.studios.map(s=>{
+      const active=state.queue.filter(q=>q.studioId===s.id&&q.status!=='done'&&q.status!=='skip').length;
+      return`<button class="studio-btn fadeUp" style="--c:${s.color}" onclick="takeNumber('${s.id}')">
+        <span class="s-ico">${s.ico}</span>
+        <span class="s-nm" style="color:${s.color}">${s.name}</span>
+        <span class="s-desc">${s.desc}</span>
+        <span class="s-badge">🎫 ${active} antrian</span>
+      </button>`;
+    }).join('')+'</div>';
 }
-
-// ── Receipt ──────────────────────────────────────────────
+async function takeNumber(studioId){
+  document.querySelectorAll('.studio-btn').forEach(b=>b.disabled=true);
+  if(state.gasUrl){const ok=await loadFromGAS();if(!ok)loadLS();}else loadLS();
+  const st=state.studios.find(s=>s.id===studioId);
+  const num=state.nextNum[studioId]++;
+  const numStr=PREFIX[studioId]+String(num).padStart(3,'0');
+  const entry={id:'q'+Date.now(),number:numStr,numRaw:num,name:'Tamu',studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,status:'waiting',time:nowTime()};
+  state.queue.push(entry);lastEntry=entry;
+  saveLS();syncToGAS();
+  showReceipt(entry);
+}
 function showReceipt(entry){
-  const el=document.getElementById('customer-inner');
-  const trackLink=buildTrackLink(entry.id);
+  const el=document.getElementById('inner');
   const waitBefore=state.queue.filter(q=>q.studioId===entry.studioId&&q.status==='waiting'&&q.numRaw<entry.numRaw).length;
+  const trackLink=buildTrackLink(entry.id);
   el.innerHTML=`<div class="receipt-wrap">
     <div class="receipt-box">
       <div class="receipt-head">
-        <div class="receipt-logo" id="r-logo">${state.config.logo}</div>
+        <div style="font-size:20px;margin-bottom:3px">${state.config.logo}</div>
         <div class="receipt-brand">${state.config.name}</div>
         <div class="receipt-studio">${entry.studioIco} ${entry.studioName}</div>
         <div class="receipt-number" style="color:${entry.studioColor}">${entry.number}</div>
-        <div style="font-size:13px;color:var(--tm)">${entry.name}</div>
+        <div style="font-size:11px;color:var(--tm)">Diambil: ${entry.time}</div>
       </div>
       <div class="receipt-body">${[
+        ['Nomor',`<strong style="font-family:var(--fd);font-size:16px;color:${entry.studioColor}">${entry.number}</strong>`],
         ['Studio',entry.studioIco+' '+entry.studioName],
-        ['Nomor antrian',entry.number],
-        ['Nama',entry.name],
-        ['Daftar jam',entry.time],
-        ['Posisi tunggu',waitBefore>0?(waitBefore+' orang di depanmu'):'Kamu berikutnya! 🎉'],
+        ['Posisi',waitBefore>0?(waitBefore+' orang di depan'):'Kamu berikutnya! 🎉'],
+        ['Status','⏳ Menunggu'],
       ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('')}</div>
       <div class="receipt-footer">
-        <div style="font-size:11px;color:var(--tm);margin-bottom:5px">🔗 Pantau posisi antrian kamu:</div>
+        <div style="font-size:10px;color:var(--tm);margin-bottom:3px">🔗 Link pantau status:</div>
         <div class="receipt-link">${trackLink}</div>
-        <div class="receipt-qr" id="r-qr-wrap"><div id="r-qr"></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center">
-          <button class="btn btn-gold btn-sm" onclick="copyLink('${trackLink}')">📋 Salin Link</button>
-          <button class="btn btn-ghost btn-sm" onclick="shareWA()">📱 Share WA</button>
-          <button class="btn btn-ghost btn-sm" onclick="window.open('track.html?track=${entry.id}','_blank')">👁 Pantau Status</button>
+        <div class="receipt-qr"><div id="r-qr"></div></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px">
+          <button class="btn btn-gold btn-sm" onclick="copyLink('${trackLink}')">📋 Salin</button>
+          <button class="btn btn-ghost btn-sm" onclick="shareWA()">📱 WA</button>
+          <a class="btn btn-ghost btn-sm" href="track.html?track=${entry.id}" target="_blank">👁 Pantau</a>
         </div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:20px">
+    <div style="text-align:center;margin-top:16px">
       <div class="countdown-wrap">
-        <svg class="ctr" width="80" height="80" viewBox="0 0 80 80">
-          <circle class="ctr-bg" cx="40" cy="40" r="34"/>
-          <circle class="ctr-bar" id="ctr-bar" cx="40" cy="40" r="34" style="stroke-dasharray:213"/>
+        <svg class="ctr" width="68" height="68" viewBox="0 0 68 68">
+          <circle class="ctr-bg" cx="34" cy="34" r="34"/>
+          <circle class="ctr-bar" id="ctr-bar" cx="34" cy="34" r="34"/>
         </svg>
         <div class="ctr-num" id="ctr-num">10</div>
         <div class="ctr-lbl">detik ke Display TV</div>
       </div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px">
-        <button class="btn btn-gold btn-sm" onclick="goDisplay()">📺 Display TV</button>
-        <button class="btn btn-ghost btn-sm" id="cancel-cd" onclick="cancelCD()">✕ Batalkan</button>
-        <button class="btn btn-ghost btn-sm" onclick="resetForm()">+ Antrian Lagi</button>
+      <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold btn-sm" onclick="goDisplay()">📺 Display</button>
+        <button class="btn btn-ghost btn-sm" onclick="cancelCD()">✕ Batal</button>
+        <button class="btn btn-ghost btn-sm" onclick="reset()">+ Antrian Lagi</button>
       </div>
     </div>
   </div>`;
-  try{new QRCode(document.getElementById('r-qr'),{text:trackLink,width:150,height:150,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});}catch(e){}
+  try{new QRCode(document.getElementById('r-qr'),{text:trackLink,width:120,height:120,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});}catch(e){}
   startCD();
 }
-function buildTrackLink(id){return window.location.origin+window.location.pathname.replace('customer.html','')+'track.html?track='+id;}
-function copyLink(link){navigator.clipboard.writeText(link).then(()=>showNotif('✅ Link disalin!')).catch(()=>prompt('Salin link:',link));}
+function buildTrackLink(id){return window.location.href.replace(/customer\.html.*$/,'')+'track.html?track='+id;}
+function copyLink(link){navigator.clipboard.writeText(link).then(()=>showNotif('✅ Disalin!')).catch(()=>prompt('Salin:',link));}
 function shareWA(){
   if(!lastEntry)return;
   const link=buildTrackLink(lastEntry.id);
-  const msg=`Halo *${lastEntry.name}*! 👋\n\nNomor antrian kamu:\n\n🎫 *${lastEntry.number}*\n🎬 Studio: ${lastEntry.studioName}\n🕐 Daftar: ${lastEntry.time}\n\nPantau posisi antrian:\n${link}\n\n_${state.config.name}_`;
+  const msg=`Nomor antrian:\n🎫 *${lastEntry.number}*\n🎬 ${lastEntry.studioName}\n🕐 ${lastEntry.time}\n\nPantau: ${link}\n_${state.config.name}_`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
 }
-function resetForm(){cancelCD();custStep='pick';custName='';custStudioId=null;render();}
+function reset(){cancelCD();lastEntry=null;renderPick();}
 function goDisplay(){cancelCD();window.location.href='display.html';}
-
-// ── Countdown ─────────────────────────────────────────────
-let _cdTimer=null,_cdSec=10;
-const CD_TOTAL=10;
-function startCD(){
-  cancelCD();_cdSec=CD_TOTAL;_updateCD(_cdSec);
-  _cdTimer=setInterval(()=>{_cdSec--;_updateCD(_cdSec);if(_cdSec<=0){cancelCD();goDisplay();}},1000);
+let _cd=null,_cds=10;
+const CDR=34;
+function startCD(){cancelCD();_cds=10;_upCD(10);_cd=setInterval(()=>{_cds--;_upCD(_cds);if(_cds<=0){cancelCD();goDisplay();}},1000);}
+function cancelCD(){if(_cd){clearInterval(_cd);_cd=null;}}
+function _upCD(s){
+  const n=document.getElementById('ctr-num'),b=document.getElementById('ctr-bar');
+  if(n)n.textContent=s;if(b){const c=2*Math.PI*CDR;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-s/10);}
 }
-function cancelCD(){if(_cdTimer){clearInterval(_cdTimer);_cdTimer=null;}}
-function _updateCD(sec){
-  const n=document.getElementById('ctr-num');const b=document.getElementById('ctr-bar');
-  if(n)n.textContent=sec;
-  if(b){const c=2*Math.PI*34;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-sec/CD_TOTAL);}
-}
-
-// ── Init ─────────────────────────────────────────────────
-function init(){
+async function init(){
   loadLS();
+  if(state.gasUrl)await loadFromGAS();
   document.getElementById('c-logo').textContent=state.config.logo;
   document.getElementById('c-title').textContent=state.config.name;
-  document.getElementById('c-sub').textContent='Pilih studio & ambil nomor antrian';
-  const params=new URLSearchParams(window.location.search);
-  const svc=params.get('svc');
-  if(svc&&state.studios.find(s=>s.id===svc)){custStudioId=svc;custStep='name';}
-  render();
+  const p=new URLSearchParams(window.location.search);
+  const svc=p.get('svc');
+  if(svc&&state.studios.find(s=>s.id===svc))takeNumber(svc);
+  else renderPick();
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>

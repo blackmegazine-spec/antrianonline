@@ -538,19 +538,98 @@ function showChangelog(){
 }
 
 // ── GAS Script ───────────────────────────────────────────
-const GAS_SCRIPT=`// JD Production — Google Apps Script Backend v2
+const GAS_SCRIPT=`// JD Production — Google Apps Script Backend v2.1
 // Deploy: Deploy > New Deployment > Web App
 // Execute as: Me | Access: Anyone
+// PENTING: setiap update code, buat NEW DEPLOYMENT (bukan edit existing)
 const SHEET_NAME='JD Production Antrian';
-function getOrCreateSS(){const files=DriveApp.getFilesByName(SHEET_NAME);if(files.hasNext())return SpreadsheetApp.open(files.next());const ss=SpreadsheetApp.create(SHEET_NAME);['Antrian','Config','Studios','Statuses'].forEach(name=>{if(!ss.getSheetByName(name))ss.insertSheet(name);});return ss;}
+function getOrCreateSS(){
+  const files=DriveApp.getFilesByName(SHEET_NAME);
+  if(files.hasNext())return SpreadsheetApp.open(files.next());
+  const ss=SpreadsheetApp.create(SHEET_NAME);
+  ['Antrian','Config','Studios','Statuses','NextNum'].forEach(name=>{
+    if(!ss.getSheetByName(name))ss.insertSheet(name);
+  });
+  return ss;
+}
 function doGet(e){return handle(e);}
 function doPost(e){return handle(e);}
-function handle(e){try{const p=e.parameter||{};const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};const action=p.action||body.action||'';const ss=getOrCreateSS();if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK',sheetId:ss.getId()});if(action==='load'){const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);const config=readKV(ss,'Config');const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);return ok({ok:true,queue,config,studios,statuses,sheetId:ss.getId()});}if(action==='save_queue'){const queue=body.queue||[];writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],queue.map(q=>[q.id,q.number,q.numRaw,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));return ok({ok:true,sheetId:ss.getId()});}if(action==='save_config'){const cfg=body.config||{};const sheet=getOrClear(ss,'Config');Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));return ok({ok:true});}if(action==='save_studios'){writeSheet(ss,'Studios',['id','name','ico','color','desc'],(body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'']));return ok({ok:true});}if(action==='save_statuses'){writeSheet(ss,'Statuses',['id','ico','label','color'],(body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));return ok({ok:true});}return ok({ok:false,error:'Unknown action: '+action});}catch(err){return ok({ok:false,error:err.message});}}
-function readSheet(ss,name,fields){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()<2)return[];return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues().filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));}
-function writeSheet(ss,name,headers,rows){const sheet=getOrClear(ss,name,headers);if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);styleHeader(sheet,headers.length);}
-function readKV(ss,name){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()===0)return{};const data={};sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});return data;}
-function getOrClear(ss,name,headers){let sheet=ss.getSheetByName(name);if(!sheet)sheet=ss.insertSheet(name);sheet.clearContents();if(headers)sheet.appendRow(headers);return sheet;}
-function styleHeader(sheet,cols){if(sheet.getLastRow()<1)return;sheet.getRange(1,1,1,cols).setBackground('#F0C060').setFontColor('#000').setFontWeight('bold');}
+function handle(e){
+  try{
+    const p=e.parameter||{};
+    const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};
+    const action=p.action||body.action||'';
+    const ss=getOrCreateSS();
+    if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK v2.1'});
+    if(action==='load'){
+      const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);
+      const config=readKV(ss,'Config');
+      const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);
+      const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);
+      const nextNum=readKV(ss,'NextNum');
+      // convert nextNum values to int
+      Object.keys(nextNum).forEach(k=>nextNum[k]=parseInt(nextNum[k])||1);
+      return ok({ok:true,queue,config,studios,statuses,nextNum,sheetId:ss.getId()});
+    }
+    if(action==='save_queue'){
+      const queue=body.queue||[];
+      writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],
+        queue.map(q=>[q.id,q.number,q.numRaw||0,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));
+      // simpan nextNum juga kalau ada
+      if(body.nextNum){
+        const sheet=getOrClear(ss,'NextNum');
+        Object.entries(body.nextNum).forEach(([k,v])=>sheet.appendRow([k,v]));
+      }
+      return ok({ok:true});
+    }
+    if(action==='save_config'){
+      const cfg=body.config||{};
+      const sheet=getOrClear(ss,'Config');
+      Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));
+      return ok({ok:true});
+    }
+    if(action==='save_studios'){
+      writeSheet(ss,'Studios',['id','name','ico','color','desc'],
+        (body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'']));
+      return ok({ok:true});
+    }
+    if(action==='save_statuses'){
+      writeSheet(ss,'Statuses',['id','ico','label','color'],
+        (body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));
+      return ok({ok:true});
+    }
+    return ok({ok:false,error:'Unknown action: '+action});
+  }catch(err){return ok({ok:false,error:err.message});}
+}
+function readSheet(ss,name,fields){
+  const sheet=ss.getSheetByName(name);
+  if(!sheet||sheet.getLastRow()<2)return[];
+  return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues()
+    .filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));
+}
+function writeSheet(ss,name,headers,rows){
+  const sheet=getOrClear(ss,name,headers);
+  if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);
+  styleHeader(sheet,headers.length);
+}
+function readKV(ss,name){
+  const sheet=ss.getSheetByName(name);
+  if(!sheet||sheet.getLastRow()===0)return{};
+  const data={};
+  sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});
+  return data;
+}
+function getOrClear(ss,name,headers){
+  let sheet=ss.getSheetByName(name);
+  if(!sheet)sheet=ss.insertSheet(name);
+  sheet.clearContents();
+  if(headers)sheet.appendRow(headers);
+  return sheet;
+}
+function styleHeader(sheet,cols){
+  if(sheet.getLastRow()<1)return;
+  sheet.getRange(1,1,1,cols).setBackground('#F0C060').setFontColor('#000').setFontWeight('bold');
+}
 function ok(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}`;
 function showGASScript(){document.getElementById('gas-code-view').textContent=GAS_SCRIPT;document.getElementById('modal-gas').classList.remove('h');}
 function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>showNotif('✅ Script GAS disalin!')).catch(()=>prompt('Salin manual:',GAS_SCRIPT));}
@@ -558,18 +637,46 @@ function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>show
 // ── Sync ─────────────────────────────────────────────────
 async function syncNow(showFeedback){
   if(!state.gasUrl)return;
-  try{const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue})});const j=await res.json();if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Tersinkron ke Google Sheets!');}else throw new Error(j.error);}
+  try{const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue,nextNum:state.nextNum})});const j=await res.json();if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Tersinkron ke Google Sheets!');}else throw new Error(j.error);}
   catch(e){state.gasOnline=false;updateGASBadge(false);if(showFeedback)showNotif('❌ Sync gagal: '+e.message);}
 }
 async function loadFromGAS(){
-  if(!state.gasUrl)return;
-  try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();if(!j.ok)throw new Error(j.error);if(j.queue&&j.queue.length)state.queue=j.queue;if(j.studios&&j.studios.length)state.studios=j.studios;if(j.statuses&&j.statuses.length)state.statuses=j.statuses;if(j.config&&j.config.name)state.config.name=j.config.name;state.gasOnline=true;updateGASBadge(true);}
-  catch(e){state.gasOnline=false;updateGASBadge(false);}
+  if(!state.gasUrl)return false;
+  try{
+    const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
+    const j=await res.json();if(!j.ok)throw new Error(j.error);
+    if(j.queue&&j.queue.length)state.queue=j.queue;
+    if(j.studios&&j.studios.length)state.studios=j.studios;
+    if(j.statuses&&j.statuses.length)state.statuses=j.statuses;
+    if(j.config&&j.config.name)state.config.name=j.config.name;
+    // nextNum: ambil nilai terbesar supaya tidak nomor mundur
+    if(j.nextNum){Object.keys(j.nextNum).forEach(k=>{const v=parseInt(j.nextNum[k])||1;if(v>(state.nextNum[k]||1))state.nextNum[k]=v;});}
+    state.gasOnline=true;updateGASBadge(true);
+    saveLS(true); // update LS juga
+    return true;
+  }catch(e){state.gasOnline=false;updateGASBadge(false);return false;}
 }
 
 // ── LocalStorage ──────────────────────────────────────────
-function saveLS(silent){try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}if(!silent)showNotif('✅ Tersimpan!');}
+function saveLS(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
+  try{new BroadcastChannel('jdprod').postMessage('update');}catch(e){}
+  if(!silent)showNotif('✅ Tersimpan!');
+}
 function loadLS(){try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;return true;}catch(e){return false;}}
+
+// ── Auto sync antar komputer ─────────────────────────────
+// BroadcastChannel: sync antar TAB di browser yang sama
+try{
+  const bc=new BroadcastChannel('jdprod');
+  bc.onmessage=()=>{loadLS();renderDashboard();if(document.getElementById('page-queue')&&!document.getElementById('page-queue').classList.contains('h'))renderQueue();};
+}catch(e){}
+// GAS polling tiap 4 detik jika URL tersedia
+setInterval(async()=>{
+  if(!state.gasUrl)return;
+  const ok=await loadFromGAS();
+  if(ok){renderDashboard();if(document.getElementById('page-queue')&&!document.getElementById('page-queue').classList.contains('h'))renderQueue();}
+},4000);
 
 // ── Init ─────────────────────────────────────────────────
 function init(){
