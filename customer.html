@@ -75,10 +75,9 @@ button,a.btn{cursor:pointer;border:none;background:none;font-family:inherit;colo
 <body>
 <a class="btn btn-ghost btn-sm" href="index.html" style="position:fixed;top:12px;left:12px;z-index:100">← Admin</a>
 <div id="root">
-  <header class="cust-hdr">
+  <header class="cust-hdr" style="display:none">
     <div class="cust-hdr-logo" id="c-logo">🎬</div>
     <div class="cust-hdr-title" id="c-title">JD Production</div>
-    <div class="cust-hdr-sub">Ketuk studio untuk ambil nomor antrian</div>
   </header>
   <div id="inner"></div>
 </div>
@@ -145,7 +144,7 @@ async function loadFromGAS(){
     const res=await fetch(state.gasUrl+'?action=load&t='+Date.now());
     const j=await res.json();if(!j.ok)return false;
     if(j.queue)state.queue=j.queue.map(q=>({...q,numRaw:parseInt(q.numRaw)||0,time:typeof q.time==="string"?q.time:(q.time instanceof Date?[q.time.getHours(),q.time.getMinutes()].map(n=>String(n).padStart(2,"0")).join(":"):String(q.time||""))}));
-    if(j.nextNum)state.nextNum=j.nextNum;
+    if(j.nextNum){Object.keys(j.nextNum).forEach(k=>state.nextNum[k]=parseInt(j.nextNum[k])||1);}
     if(j.studios&&j.studios.length)state.studios=j.studios;
     if(j.config&&j.config.name)state.config.name=j.config.name;
     return true;
@@ -192,6 +191,7 @@ function showReceipt(entry){
         ['Nomor',`<strong style="font-family:var(--fd);font-size:16px;color:${entry.studioColor}">${entry.number}</strong>`],
         ['Studio',entry.studioIco+' '+entry.studioName],
         ['Posisi',waitBefore>0?(waitBefore+' orang di depan'):'Kamu berikutnya! 🎉'],
+        ['Est. Tunggu',waitBefore===0?'Sebentar lagi! 🎉':waitBefore<=2?'~'+(waitBefore*15)+' menit ⚡':waitBefore<=5?'~'+(waitBefore*15)+' menit ☕':waitBefore<=10?'~'+(waitBefore*15)+' menit 📱':'>2 jam, pantau link 👇'],
         ['Status','⏳ Menunggu'],
       ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('')}</div>
       <div class="receipt-footer">
