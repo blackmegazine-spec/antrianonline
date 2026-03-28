@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JD Production — Pantau Antrian</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0B;--s1:#111114;--s2:#18181C;--s3:#222228;
+  --b:rgba(255,255,255,.06);--ba:rgba(255,210,100,.35);
+  --t:#F2EEE8;--tm:#7B7885;--td:#3A3840;
+  --gold:#F0C060;--green:#45C78A;--blue:#5599F5;--pur:#A07FF0;--red:#E05555;
+  --r:14px;--rs:8px;
+  --shg:0 4px 24px rgba(240,192,96,.18);
+  --fd:"Bebas Neue",sans-serif;--fb:"DM Sans",sans-serif;--fm:"JetBrains Mono",monospace;
+  --tr:.18s cubic-bezier(.4,0,.2,1);
+}
+html,body{min-height:100%;background:var(--bg);font-family:var(--fb);font-size:14px;color:var(--t);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes tickIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(2.4);opacity:0}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap;text-decoration:none}
+.btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600}
+.btn-gold:hover{background:#F5D070;transform:translateY(-1px);box-shadow:var(--shg)}
+.btn-ghost{border:1px solid var(--b);color:var(--tm)}
+.btn-ghost:hover{border-color:var(--ba);color:var(--t);background:rgba(240,192,96,.06)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.divider{height:1px;background:var(--b);margin:0}
+
+/* ── Wrapper ── */
+#root{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px}
+.back-btn{align-self:flex-end;margin-bottom:8px}
+
+/* ── Header ── */
+.tr-hdr{text-align:center;margin-bottom:20px;animation:fadeUp .4s ease}
+.tr-hdr-logo{font-size:32px;margin-bottom:6px}
+.tr-hdr-brand{font-family:var(--fd);font-size:18px;letter-spacing:.05em}
+.tr-hdr-sub{font-size:11px;color:var(--tm);margin-top:3px}
+
+/* ── Card ── */
+.track-card{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:20px;width:100%;max-width:400px;animation:fadeUp .3s ease}
+
+/* ── Number ── */
+.tr-num{font-family:var(--fd);font-size:90px;letter-spacing:.04em;line-height:1;text-align:center;padding:10px 0;animation:tickIn .4s ease}
+
+/* ── Step bar ── */
+.track-bar{display:flex;justify-content:center;gap:0;margin:18px 0;position:relative}
+.track-bar::before{content:"";position:absolute;top:12px;left:14%;right:14%;height:2px;background:var(--b);z-index:0}
+.track-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative;z-index:1}
+.track-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--b);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .3s}
+.track-dot.done{border-color:var(--green);background:var(--green);color:#0A0A0B;animation:tickIn .4s ease}
+.track-dot.cur{border-color:var(--blue);background:var(--blue);color:#fff;animation:pulse 2s infinite}
+.track-lbl{font-size:10px;color:var(--td);text-align:center;font-weight:500}
+.track-lbl.done{color:var(--green)}.track-lbl.cur{color:var(--blue)}
+
+/* ── Info rows ── */
+.track-info{display:flex;flex-direction:column;gap:0;margin-top:4px}
+.track-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--b);font-size:13px}
+.track-row:last-child{border-bottom:none}
+.track-key{color:var(--tm)}
+
+/* ── Status boxes ── */
+.eta-box{background:rgba(160,127,240,.08);border:1px solid rgba(160,127,240,.2);border-radius:var(--rs);padding:12px;text-align:center;margin:12px 0}
+.eta-num{font-family:var(--fd);font-size:32px;color:var(--pur);letter-spacing:.04em}
+.called-box{background:rgba(85,153,245,.08);border:1px solid rgba(85,153,245,.25);border-radius:var(--rs);padding:14px;text-align:center;animation:pulse 2s infinite;margin:12px 0}
+.done-box{background:rgba(69,199,138,.08);border:1px solid rgba(69,199,138,.25);border-radius:var(--rs);padding:14px;text-align:center;margin:12px 0}
+
+/* ── Live indicator ── */
+.live-dot-wrap{position:relative;display:inline-flex;width:7px;height:7px;flex-shrink:0}
+.live-ping{position:absolute;inset:0;border-radius:50%;background:var(--green);opacity:.4;animation:ping 1.5s ease-in-out infinite}
+.live-core{width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+
+/* Mobile */
+@media(max-width:380px){
+  .tr-num{font-size:72px}
+  .track-card{padding:16px}
+}
+</style>
+</head>
+<body>
+<div id="root">
+  <a class="btn btn-ghost btn-sm back-btn" href="index.html">← Admin</a>
+  <div class="tr-hdr">
+    <div class="tr-hdr-logo" id="tr-logo">🎬</div>
+    <div class="tr-hdr-brand" id="tr-brand">JD Production</div>
+    <div class="tr-hdr-sub">Status Antrian Real-time</div>
+  </div>
+  <div class="track-card" id="track-card">
+    <div style="text-align:center;padding:40px 0;color:var(--tm)">
+      <div style="font-size:36px;margin-bottom:10px">⏳</div>
+      <div>Memuat data antrian…</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+    <div class="live-dot-wrap"><span class="live-ping"></span><span class="live-core"></span></div>
+    <span style="font-size:11px;color:var(--td)">Auto-update tiap 8 detik · <span id="tr-last">—</span></span>
+  </div>
+</div>
+<div id="notif"></div>
+
+<script>
+const LS_KEY='jdprod_v2';
+let state={
+  queue:[],studios:[
+    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060'},
+    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5'},
+    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A'},
+    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0'},
+  ],
+  statuses:[
+    {id:'waiting',ico:'⏳',label:'Menunggu',color:'#7B7885'},
+    {id:'called',ico:'📢',label:'Dipanggil',color:'#5599F5'},
+    {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
+    {id:'done',ico:'✅',label:'Selesai',color:'#45C78A'},
+    {id:'skip',ico:'⏭️',label:'Dilewati',color:'#E05555'},
+  ],
+  config:{name:'JD Production',logo:'🎬'},
+  gasUrl:'',
+};
+let trackId=null,trackInterval=null;
+
+function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
+let _ntimer;
+function showNotif(msg){let el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:20px;right:16px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:11px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .28s ease;color:var(--t);max-width:90vw';clearTimeout(_ntimer);_ntimer=setTimeout(()=>{el.style.display='none';},3000);}
+
+function loadLS(){
+  try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    if(d.queue)state.queue=d.queue;if(d.studios)state.studios=d.studios;
+    if(d.statuses)state.statuses=d.statuses;if(d.config)state.config=d.config;
+    if(d.gasUrl)state.gasUrl=d.gasUrl;
+  }catch(e){}
+}
+async function loadFromGAS(){
+  if(!state.gasUrl)return;
+  try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
+    if(j.ok&&j.queue&&j.queue.length)state.queue=j.queue;
+  }catch(e){}
+}
+
+function renderTrack(id){
+  const el=document.getElementById('track-card');if(!el)return;
+  const upd=document.getElementById('tr-last');if(upd)upd.textContent='Update: '+nowTime();
+  const q=state.queue.find(q=>q.id===id);
+  if(!q){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Antrian tidak ditemukan.<br><span style="font-size:12px">Coba minta ulang dari halaman customer.</span></div><div style="margin-top:16px"><a class="btn btn-ghost btn-sm" href="customer.html">← Ambil Antrian Baru</a></div></div>';return;}
+  const steps=[{id:'waiting',lbl:'Menunggu',ico:'⏳'},{id:'called',lbl:'Dipanggil',ico:'📢'},{id:'inprogress',lbl:'Dalam Sesi',ico:'⚙️'},{id:'done',lbl:'Selesai',ico:'✅'}];
+  const stOrder=['waiting','called','inprogress','done'];
+  const curIdx=stOrder.indexOf(q.status);
+  const waitBefore=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting'&&w.numRaw<q.numRaw).length;
+  const totalWait=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting').length;
+  const nowServing=state.queue.filter(w=>w.studioId===q.studioId&&(w.status==='called'||w.status==='inprogress'));
+  const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
+  const stBg={waiting:'rgba(123,120,133,.08)',called:'rgba(85,153,245,.08)',inprogress:'rgba(245,161,66,.08)',done:'rgba(69,199,138,.08)',skip:'rgba(224,85,85,.08)'};
+  const trackLink=window.location.href;
+
+  el.innerHTML=`
+    <div style="text-align:center;padding:8px 0 14px">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:2px">${q.studioIco} ${q.studioName}</div>
+      <div class="tr-num" style="color:${q.studioColor}">${q.number}</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:10px">${q.name}</div>
+      <div style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:100px;background:${stBg[q.status]||stBg.waiting};border:1px solid ${st.color}30;color:${st.color};font-weight:600;font-size:13px">${st.ico} ${st.label}</div>
+      <div class="track-bar">
+        ${steps.map((step,i)=>{const done=i<curIdx,cur=i===curIdx;return`<div class="track-step"><div class="track-dot ${done?'done':cur?'cur':''}">${done?'✓':step.ico}</div><div class="track-lbl ${done?'done':cur?'cur':''}">${step.lbl}</div></div>`;}).join('')}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="track-info">
+      <div class="track-row"><span class="track-key">Nomor</span><strong style="font-family:var(--fd);font-size:17px;color:${q.studioColor}">${q.number}</strong></div>
+      <div class="track-row"><span class="track-key">Studio</span><span>${q.studioIco} ${q.studioName}</span></div>
+      <div class="track-row"><span class="track-key">Daftar jam</span><span>${q.time}</span></div>
+      <div class="track-row"><span class="track-key">Posisi</span><strong>${q.status==='waiting'?(waitBefore+1)+' dari '+totalWait+' orang':q.status==='done'?'Selesai ✅':'Sedang dilayani'}</strong></div>
+    </div>
+    ${q.status==='waiting'?`<div class="eta-box"><div style="font-size:10px;color:var(--pur);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">⏱ Estimasi Tunggu</div><div class="eta-num">${waitBefore>0?'~'+(waitBefore*30)+' mnt':'Sebentar lagi!'}</div></div>`:''}
+    ${q.status==='called'?`<div class="called-box"><div style="font-size:22px;margin-bottom:5px">🔔</div><div style="font-weight:600;color:var(--blue);font-size:15px">Namamu dipanggil!</div><div style="font-size:12px;color:var(--tm);margin-top:3px">Segera ke ${q.studioName}</div></div>`:''}
+    ${q.status==='inprogress'?`<div class="done-box" style="background:rgba(245,161,66,.08);border-color:rgba(245,161,66,.25)"><div style="font-size:22px;margin-bottom:5px">⚙️</div><div style="font-weight:600;color:#F5A142;font-size:15px">Sesi sedang berjalan</div><div style="font-size:12px;color:var(--tm);margin-top:3px">Tunggu sebentar ya...</div></div>`:''}
+    ${q.status==='done'?`<div class="done-box"><div style="font-size:22px;margin-bottom:5px">✅</div><div style="font-weight:600;color:var(--green);font-size:15px">Selesai! Terima kasih</div><div style="font-size:12px;color:var(--tm);margin-top:3px">Semoga puas dengan hasilnya 🎉</div></div>`:''}
+    ${nowServing.length&&q.status==='waiting'?`<div style="background:var(--s1);border:1px solid var(--b);border-radius:var(--rs);padding:10px;text-align:center;margin-top:8px"><div style="font-size:11px;color:var(--tm);margin-bottom:3px">Sedang dilayani di ${q.studioName}</div><div style="font-family:var(--fd);font-size:26px;color:var(--gold)">${nowServing[nowServing.length-1].number}</div></div>`:''}
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="doRefresh()">🔄 Refresh</button>
+      <button class="btn btn-ghost btn-sm" onclick="shareWA('${id}')">📱 Kirim WA</button>
+      <a class="btn btn-ghost btn-sm" href="customer.html">+ Antrian Baru</a>
+    </div>`;
+}
+
+function doRefresh(){
+  loadLS();
+  if(state.gasUrl)loadFromGAS().then(()=>renderTrack(trackId)).catch(()=>renderTrack(trackId));
+  else renderTrack(trackId);
+  showNotif('🔄 Diperbarui');
+}
+
+function shareWA(id){
+  const q=state.queue.find(q=>q.id===id);if(!q)return;
+  const link=window.location.href;
+  const msg=`Status antrian *${q.name}*:\n🎫 *${q.number}* — ${q.studioName}\nPantau: ${link}`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+
+function init(){
+  loadLS();
+  document.getElementById('tr-logo').textContent=state.config.logo;
+  document.getElementById('tr-brand').textContent=state.config.name;
+  const params=new URLSearchParams(window.location.search);
+  trackId=params.get('track');
+  if(!trackId){document.getElementById('track-card').innerHTML='<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:36px;margin-bottom:10px">❓</div><div>Tidak ada ID antrian.<br><a href="customer.html" style="color:var(--blue)">← Kembali ke halaman antrian</a></div></div>';return;}
+  if(state.gasUrl)loadFromGAS().then(()=>renderTrack(trackId)).catch(()=>renderTrack(trackId));
+  else renderTrack(trackId);
+  clearInterval(trackInterval);
+  trackInterval=setInterval(()=>{
+    loadLS();
+    if(state.gasUrl)loadFromGAS().then(()=>renderTrack(trackId)).catch(()=>renderTrack(trackId));
+    else renderTrack(trackId);
+  },8000);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

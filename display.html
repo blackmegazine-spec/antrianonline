@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JD Production — Display TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080809;--s1:#0E0E11;--s2:#16161A;--s3:#1E1E24;
+  --b:rgba(255,255,255,.06);--ba:rgba(255,210,100,.3);
+  --t:#F2EEE8;--tm:#6B6875;--td:#2E2C35;
+  --gold:#F0C060;--green:#45C78A;--blue:#5599F5;--pur:#A07FF0;--red:#E05555;
+  --r:18px;--rs:10px;
+  --fd:"Bebas Neue",sans-serif;--fb:"DM Sans",sans-serif;--fm:"JetBrains Mono",monospace;
+  --tr:.18s cubic-bezier(.4,0,.2,1);
+}
+html,body{height:100%;background:var(--bg);font-family:var(--fb);color:var(--t);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+@keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes numIn{0%{transform:scale(.7) translateY(16px);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Layout ── */
+#display{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:20px 24px;gap:14px}
+.d-header{display:flex;justify-content:space-between;align-items:center}
+.d-brand{font-family:var(--fd);font-size:24px;letter-spacing:.08em;color:var(--gold)}
+.d-right{display:flex;align-items:center;gap:16px}
+.d-clock{font-family:var(--fm);font-size:36px;color:var(--tm)}
+.d-date{font-size:11px;color:var(--td);text-align:right;line-height:1.6}
+
+/* ── Studio cards ── */
+.studios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;height:100%;min-height:0}
+.studio-card{background:var(--s1);border:1px solid var(--b);border-radius:20px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;overflow:hidden;min-height:0}
+.studio-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--c,var(--gold))}
+.s-ico{font-size:22px;margin-bottom:4px}
+.s-name{font-family:var(--fd);font-size:14px;letter-spacing:.08em;color:var(--tm);text-transform:uppercase;margin-bottom:2px}
+.s-serving-lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin:10px 0 4px}
+.s-num{font-family:var(--fd);font-size:clamp(56px,8vw,100px);letter-spacing:.03em;line-height:1;animation:numIn .4s ease}
+.s-cname{font-size:13px;color:var(--t);margin-top:3px;font-weight:500}
+.s-status{font-size:11px;margin-top:5px;font-weight:600}
+.s-empty{font-family:var(--fd);font-size:36px;color:var(--td);margin:16px 0}
+.s-wait-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--b);width:100%}
+.s-wait-chip{font-family:var(--fd);font-size:16px;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:4px 10px;color:var(--tm)}
+.s-wait-count{font-size:10px;color:var(--td);width:100%;text-align:center;margin-top:4px}
+
+/* ── CTA Button — lebih compact ── */
+.d-cta-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 2px;flex-wrap:wrap}
+.d-cta-btn{background:var(--gold);color:#0A0A0B;font-family:var(--fd);font-size:20px;letter-spacing:.06em;padding:14px 32px;border-radius:12px;cursor:pointer;transition:all .18s ease;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(240,192,96,.2)}
+.d-cta-btn:hover{background:#F5D070;transform:translateY(-2px);box-shadow:0 8px 28px rgba(240,192,96,.35)}
+.d-cta-btn span.ico{font-size:18px}
+.d-footer-info{font-size:11px;color:var(--td);text-align:right;line-height:1.8}
+
+/* Live dot */
+.live-dot-wrap{position:relative;display:inline-flex;width:8px;height:8px;flex-shrink:0}
+.live-ping{position:absolute;inset:0;border-radius:50%;background:var(--green);opacity:.4;animation:ping 1.5s ease-in-out infinite}
+.live-core{width:8px;height:8px;border-radius:50%;background:var(--green);display:block}
+
+/* Mobile */
+@media(max-width:700px){
+  #display{padding:14px 12px;gap:10px}
+  .studios-grid{grid-template-columns:repeat(2,1fr)}
+  .d-clock{font-size:24px}
+  .d-brand{font-size:18px}
+  .d-cta-btn{font-size:15px;padding:10px 20px}
+  .s-num{font-size:clamp(40px,10vw,72px)}
+  body{overflow:auto}
+  #display{height:auto;min-height:100vh}
+}
+@media(max-width:400px){
+  .studios-grid{grid-template-columns:1fr 1fr}
+}
+
+.back-btn{position:fixed;top:12px;right:12px;z-index:50;background:rgba(30,30,36,.8);border:1px solid var(--b);border-radius:var(--rs);padding:6px 12px;font-size:11px;cursor:pointer;color:var(--tm);transition:all var(--tr);backdrop-filter:blur(6px)}
+.back-btn:hover{color:var(--t);border-color:var(--ba)}
+</style>
+</head>
+<body>
+
+<a class="back-btn" href="index.html">← Admin</a>
+
+<div id="display">
+  <div class="d-header">
+    <div class="d-brand" id="dp-brand">🎬 JD Production</div>
+    <div class="d-right">
+      <div>
+        <div class="d-clock" id="dp-clock">00:00:00</div>
+        <div class="d-date" id="dp-date"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="live-dot-wrap"><span class="live-ping"></span><span class="live-core"></span></div>
+        <span style="font-size:11px;color:var(--tm)" id="dp-status">Live</span>
+      </div>
+    </div>
+  </div>
+  <div class="studios-grid" id="dp-studios"></div>
+  <div class="d-cta-bar">
+    <div style="font-size:11px;color:var(--td);line-height:1.8" id="dp-footer"></div>
+    <a class="d-cta-btn" href="customer.html">
+      <span class="ico">📷</span> AMBIL NOMOR ANTRIAN
+    </a>
+  </div>
+</div>
+
+<script>
+const LS_KEY='jdprod_v2';
+let state={
+  queue:[],studios:[
+    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
+    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
+    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
+    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
+  ],
+  statuses:[
+    {id:'waiting',ico:'⏳',label:'Menunggu',color:'#7B7885'},
+    {id:'called',ico:'📢',label:'Dipanggil',color:'#5599F5'},
+    {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
+    {id:'done',ico:'✅',label:'Selesai',color:'#45C78A'},
+  ],
+  config:{name:'JD Production',logo:'🎬'},
+  gasUrl:'',
+};
+
+function nowTimeSec(){const d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
+function nowDate(){const d=new Date();const dy=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return dy[d.getDay()]+', '+d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();}
+
+function loadLS(){
+  try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    if(d.queue)state.queue=d.queue;if(d.studios)state.studios=d.studios;
+    if(d.statuses)state.statuses=d.statuses;if(d.config)state.config=d.config;
+    if(d.gasUrl)state.gasUrl=d.gasUrl;
+  }catch(e){}
+}
+async function loadFromGAS(){
+  if(!state.gasUrl)return;
+  try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
+    if(j.ok){if(j.queue&&j.queue.length)state.queue=j.queue;state.gasOk=true;}
+  }catch(e){state.gasOk=false;}
+}
+
+function renderDisplay(){
+  const el=document.getElementById('dp-studios');if(!el)return;
+  el.innerHTML=state.studios.map(studio=>{
+    const sq=state.queue.filter(q=>q.studioId===studio.id);
+    const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
+    const waiting=sq.filter(q=>q.status==='waiting');
+    const current=called[called.length-1];
+    const stObj=current?state.statuses.find(s=>s.id===current.status):null;
+    return`<div class="studio-card" style="--c:${studio.color}">
+      <div class="s-ico">${studio.ico}</div>
+      <div class="s-name">${studio.name}</div>
+      ${current
+        ?`<div class="s-serving-lbl">Sedang Dilayani</div>
+          <div class="s-num" style="color:${studio.color}">${current.number}</div>
+          <div class="s-cname">${current.name}</div>
+          <div class="s-status" style="color:${stObj?.color||studio.color}">${stObj?.ico||''} ${stObj?.label||''}</div>`
+        :`<div class="s-serving-lbl" style="margin-top:12px">Belum ada</div><div class="s-empty">—</div>`
+      }
+      <div class="s-wait-row" style="margin-top:auto">
+        ${waiting.length?waiting.slice(0,5).map(q=>`<div class="s-wait-chip">${q.number}</div>`).join(''):'<span style="font-size:11px;color:var(--td)">Kosong</span>'}
+      </div>
+      <div class="s-wait-count">${waiting.length} menunggu</div>
+    </div>`;
+  }).join('');
+
+  const footer=document.getElementById('dp-footer');
+  const total=state.queue.filter(q=>q.status!=='done'&&q.status!=='skip').length;
+  if(footer)footer.innerHTML=`Total antrian aktif: <strong style="color:var(--gold)">${total}</strong> &nbsp;·&nbsp; Selesai hari ini: <strong style="color:var(--green)">${state.queue.filter(q=>q.status==='done').length}</strong>`;
+}
+
+// ── Tick ─────────────────────────────────────────────────
+let _lastLoad=0;
+function tick(){
+  const now=Date.now();
+  const cl=document.getElementById('dp-clock');
+  if(cl)cl.textContent=nowTimeSec();
+  // Reload dari LS/GAS tiap 3 detik
+  if(now-_lastLoad>3000){
+    _lastLoad=now;
+    loadLS();
+    if(state.gasUrl)loadFromGAS();
+    renderDisplay();
+  }
+}
+
+function init(){
+  loadLS();
+  document.getElementById('dp-brand').textContent=state.config.logo+' '+state.config.name;
+  document.getElementById('dp-date').textContent=nowDate();
+  renderDisplay();
+  setInterval(tick,1000);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

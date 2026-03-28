@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>JD Production — Antrian Digital</title>
+<title>JD Production — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -28,10 +27,11 @@ input,select,textarea{font-family:inherit;color:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
 @keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(2.4);opacity:0}}
-@keyframes tickIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 .fadeUp{animation:fadeUp .32s ease forwards}
 .pulse{animation:pulse 2s infinite}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap;font-family:var(--fb)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;transition:all var(--tr);cursor:pointer;white-space:nowrap}
 .btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600}
 .btn-gold:hover{background:#F5D070;transform:translateY(-1px);box-shadow:var(--shg)}
 .btn-ghost{border:1px solid var(--b);color:var(--tm)}
@@ -44,6 +44,8 @@ input,select,textarea{font-family:inherit;color:inherit}
 .btn-lg{padding:14px 32px;font-size:15px;font-weight:600;border-radius:var(--r)}
 .btn-icon{padding:8px}
 .btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* ── Inputs ── */
 .inp{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:11px 14px;color:var(--t);font-size:14px;outline:none;transition:border var(--tr)}
 .inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,96,.1)}
 .inp::placeholder{color:var(--td)}
@@ -52,660 +54,335 @@ input,select,textarea{font-family:inherit;color:inherit}
 .card2{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:20px}
 .divider{height:1px;background:var(--b);margin:18px 0}
 .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:12px;font-weight:500;border:1px solid}
+
+/* ── Layout ── */
 #app{display:flex;min-height:100vh}
-#sidebar{width:210px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;flex-shrink:0}
+#sidebar{width:210px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;flex-shrink:0;transition:transform .3s ease}
 #main-content{flex:1;overflow:auto;min-height:100vh}
-.topbar{padding:16px 26px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;background:var(--s1);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}
-.topbar-title{font-family:var(--fd);font-size:22px;letter-spacing:.04em}
+.topbar{padding:14px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;background:var(--s1);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px);gap:10px;flex-wrap:wrap}
+.topbar-title{font-family:var(--fd);font-size:20px;letter-spacing:.04em}
 .topbar-sub{font-size:11px;color:var(--tm);margin-top:1px}
-.topbar-right{display:flex;gap:8px;align-items:center}
-.page-body{padding:24px;display:flex;flex-direction:column;gap:20px}
-.brand-area{padding:20px 16px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
-.brand-ico{width:38px;height:38px;background:var(--gd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid var(--ba);flex-shrink:0}
-.brand-nm{font-family:var(--fd);font-size:15px;letter-spacing:.03em;line-height:1.2}
+.topbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.page-body{padding:20px;display:flex;flex-direction:column;gap:16px}
+.brand-area{padding:18px 14px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.brand-ico{width:36px;height:36px;background:var(--gd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:1px solid var(--ba);flex-shrink:0}
+.brand-nm{font-family:var(--fd);font-size:14px;letter-spacing:.03em;line-height:1.2}
 .brand-role{font-size:10px;color:var(--gold);letter-spacing:.08em}
-.nav-area{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:2px}
-.ni{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--rs);font-size:13px;color:var(--tm);border:1px solid transparent;transition:all var(--tr);text-align:left;width:100%;cursor:pointer}
+.nav-area{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:2px}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--rs);font-size:13px;color:var(--tm);border:1px solid transparent;transition:all var(--tr);text-align:left;width:100%;cursor:pointer;text-decoration:none}
 .ni.active{background:var(--gd);color:var(--gold);border-color:var(--ba);font-weight:500}
 .ni:hover:not(.active){color:var(--t);background:rgba(255,255,255,.03)}
 .ni-ico{font-size:15px;width:20px;text-align:center}
-.live-area{padding:12px 16px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px}
-.live-dot-wrap{position:relative;display:inline-flex;width:8px;height:8px}
+.live-area{padding:10px 14px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px}
+
+/* Live dot */
+.live-dot-wrap{position:relative;display:inline-flex;width:8px;height:8px;flex-shrink:0}
 .live-ping{position:absolute;inset:0;border-radius:50%;background:var(--green);opacity:.4;animation:ping 1.5s ease-in-out infinite}
 .live-core{width:8px;height:8px;border-radius:50%;background:var(--green);display:block}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.stat-c{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:18px}
-.stat-lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:8px}
-.stat-val{font-family:var(--fd);font-size:36px;letter-spacing:.02em;line-height:1}
-.stat-sub{font-size:11px;color:var(--tm);margin-top:6px}
-.studios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.studio-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:20px;transition:all var(--tr);cursor:pointer;position:relative;overflow:hidden}
+
+/* ── Stats ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-c{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:16px}
+.stat-lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:6px}
+.stat-val{font-family:var(--fd);font-size:34px;letter-spacing:.02em;line-height:1}
+.stat-sub{font-size:11px;color:var(--tm);margin-top:5px}
+
+/* ── Studio cards ── */
+.studios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.studio-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:18px;transition:all var(--tr);cursor:pointer;position:relative;overflow:hidden}
 .studio-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
 .studio-card:hover{border-color:var(--ba);background:var(--s2);transform:translateY(-2px);box-shadow:var(--sh)}
-.studio-ico{font-size:28px;margin-bottom:10px}
-.studio-nm{font-family:var(--fd);font-size:18px;letter-spacing:.04em;margin-bottom:4px}
-.studio-meta{font-size:11px;color:var(--tm);margin-bottom:12px}
-.studio-count{font-family:var(--fd);font-size:40px;letter-spacing:.02em}
-.studio-queue-list{margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto}
-.sq-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:var(--s2);border-radius:6px;border:1px solid var(--b);font-size:12px}
-.sq-num{font-family:var(--fd);font-size:16px;color:var(--gold)}
-.q-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:16px;border-left:3px solid var(--c,var(--gold));transition:all var(--tr)}
+.studio-ico{font-size:26px;margin-bottom:8px}
+.studio-nm{font-family:var(--fd);font-size:17px;letter-spacing:.04em;margin-bottom:3px}
+.studio-meta{font-size:11px;color:var(--tm);margin-bottom:10px}
+.studio-count{font-family:var(--fd);font-size:38px;letter-spacing:.02em}
+.studio-queue-list{margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:130px;overflow-y:auto}
+.sq-item{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--s2);border-radius:6px;border:1px solid var(--b);font-size:12px}
+.sq-num{font-family:var(--fd);font-size:15px;color:var(--gold)}
+
+/* ── Queue cards ── */
+.q-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:14px;border-left:3px solid var(--c,var(--gold));transition:all var(--tr)}
 .q-card:hover{background:var(--s2)}
-.q-number{font-family:var(--fd);font-size:28px;color:var(--gold);letter-spacing:.04em;min-width:72px;height:72px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b);flex-shrink:0}
-.q-name{font-size:15px;font-weight:600;margin-bottom:3px}
-.q-meta{font-size:11px;color:var(--tm);margin-bottom:10px}
-.status-sel{background:var(--s2);border:1px solid;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:500;cursor:pointer;outline:none;font-family:var(--fb)}
-#customer-page,#receipt-page,#track-page,#display-page{min-height:100vh;background:var(--bg)}
-#customer-page{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px}
-#receipt-page{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px}
-#track-page{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px}
-.cust-hdr{text-align:center;margin-bottom:32px}
-.cust-hdr-logo{font-size:48px;margin-bottom:10px}
-.cust-hdr-title{font-family:var(--fd);font-size:32px;letter-spacing:.06em;margin-bottom:4px}
-.cust-hdr-sub{color:var(--tm);font-size:14px}
-.studio-pick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;width:100%;max-width:480px}
-.studio-pick-btn{background:var(--s1);border:2px solid var(--b);border-radius:var(--r);padding:24px 20px;text-align:left;cursor:pointer;transition:all var(--tr);position:relative;overflow:hidden}
-.studio-pick-btn::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--gold))}
-.studio-pick-btn:hover{border-color:var(--gold);background:var(--gd);transform:translateY(-2px);box-shadow:var(--shg)}
-.studio-pick-ico{font-size:32px;margin-bottom:10px;display:block}
-.studio-pick-nm{font-family:var(--fd);font-size:20px;letter-spacing:.04em;margin-bottom:4px}
-.studio-pick-desc{font-size:12px;color:var(--tm)}
-.name-step{width:100%;max-width:440px;display:flex;flex-direction:column;gap:18px}
-.receipt-wrap{width:100%;max-width:420px}
-.receipt-box{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);overflow:hidden}
-.receipt-head{background:linear-gradient(135deg,rgba(240,192,96,.14),rgba(240,192,96,.04));padding:28px;text-align:center;border-bottom:1px solid var(--b)}
-.receipt-logo{font-size:32px;margin-bottom:8px}
-.receipt-brand{font-family:var(--fd);font-size:22px;letter-spacing:.06em;color:var(--gold)}
-.receipt-studio{font-size:12px;color:var(--tm);margin-top:4px}
-.receipt-number{font-family:var(--fd);font-size:96px;letter-spacing:.04em;color:var(--gold);line-height:1;padding:20px 0 8px}
-.receipt-body{padding:20px}
-.receipt-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--b);font-size:13px}
-.receipt-row:last-child{border-bottom:none}
-.receipt-key{color:var(--tm)}
-.receipt-val{font-weight:500}
-.receipt-footer{background:var(--s2);padding:16px 20px}
-.receipt-link{font-family:var(--fm);font-size:11px;color:var(--blue);word-break:break-all;line-height:1.7}
-.receipt-qr{display:flex;justify-content:center;background:#fff;border-radius:10px;padding:14px;margin-top:12px}
-/* Countdown ring */
-.countdown-wrap{display:flex;flex-direction:column;align-items:center;margin:20px 0 10px}
-.ctr{transform:rotate(-90deg)}
-.ctr-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:4}
-.ctr-bar{fill:none;stroke:#F0C060;stroke-width:4;stroke-linecap:round;stroke-dasharray:251;transition:stroke-dashoffset 1s linear}
-.ctr-num{font-family:"Bebas Neue",sans-serif;font-size:30px;color:#F0C060;text-align:center;margin-top:-4px;line-height:1}
-.ctr-lbl{font-size:11px;color:#7B7885;text-align:center;margin-top:2px}
-/* Display TV */
-#display-page{padding:28px 32px;background:#080809;display:flex;flex-direction:column;gap:20px}
-.display-header{display:flex;justify-content:space-between;align-items:center}
-.display-brand{font-family:var(--fd);font-size:28px;letter-spacing:.08em;color:var(--gold)}
-.display-clock{font-family:var(--fm);font-size:42px;color:var(--tm)}
-.display-studios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.display-studio{background:var(--s1);border:1px solid var(--b);border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;overflow:hidden}
-.display-studio::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--c,var(--gold))}
-.display-studio-name{font-family:var(--fd);font-size:18px;letter-spacing:.06em;color:var(--tm);margin-bottom:4px;text-transform:uppercase}
-.display-current-label{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:12px}
-.display-current-num{font-family:var(--fd);font-size:88px;letter-spacing:.04em;line-height:1}
-.display-current-name{font-size:14px;color:var(--t);margin-top:4px}
-.display-current-status{font-size:12px;margin-top:6px;font-weight:500}
-.display-waiting-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--b)}
-.display-waiting-chip{font-family:var(--fd);font-size:20px;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:6px 12px;color:var(--tm)}
-/* CTA bar di display TV */
-.display-cta-bar{display:flex;justify-content:center;padding:12px 0 4px}
-.display-cta-btn{background:var(--gold);color:#0A0A0B;font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.06em;padding:20px 56px;border-radius:16px;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;gap:14px;box-shadow:0 4px 24px rgba(240,192,96,.25)}
-.display-cta-btn:hover{background:#F5D070;transform:translateY(-3px);box-shadow:0 10px 36px rgba(240,192,96,.4)}
-/* Track */
-.track-card{width:100%;max-width:420px}
-.track-num-big{font-family:var(--fd);font-size:100px;letter-spacing:.04em;color:var(--gold);line-height:1;text-align:center;padding:12px 0}
-.track-bar{display:flex;justify-content:center;gap:0;margin:20px 0;position:relative}
-.track-bar::before{content:"";position:absolute;top:13px;left:14%;right:14%;height:2px;background:var(--b);z-index:0}
-.track-step{display:flex;flex-direction:column;align-items:center;gap:7px;flex:1;position:relative;z-index:1}
-.track-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--b);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .3s}
-.track-dot.done{border-color:var(--green);background:var(--green);color:#0A0A0B;animation:tickIn .4s ease}
-.track-dot.cur{border-color:var(--blue);background:var(--blue);color:#fff;animation:pulse 2s infinite}
-.track-lbl{font-size:10px;color:var(--td);text-align:center;font-weight:500}
-.track-lbl.done{color:var(--green)}.track-lbl.cur{color:var(--blue)}
-.track-info{padding:14px 0;display:flex;flex-direction:column;gap:0}
-.track-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--b);font-size:13px}
-.track-row:last-child{border-bottom:none}
-.track-key{color:var(--tm)}
-.eta-box{background:rgba(160,127,240,.08);border:1px solid rgba(160,127,240,.2);border-radius:var(--rs);padding:14px;text-align:center;margin:12px 0}
-.eta-num{font-family:var(--fd);font-size:36px;color:var(--pur);letter-spacing:.04em}
-.called-box{background:rgba(85,153,245,.07);border:1px solid rgba(85,153,245,.25);border-radius:var(--rs);padding:16px;text-align:center;animation:pulse 2s infinite}
-/* Modal */
-.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
-.modal-box{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:26px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp .28s ease}
-.modal-title{font-family:var(--fd);font-size:20px;letter-spacing:.04em;margin-bottom:18px}
-.modal-actions{display:flex;gap:10px;margin-top:20px}
-.notif{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--ba);border-radius:var(--r);padding:13px 18px;font-size:13px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:var(--shg);animation:fadeUp .28s ease}
+.q-number{font-family:var(--fd);font-size:26px;color:var(--gold);letter-spacing:.04em;min-width:68px;height:68px;background:var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b);flex-shrink:0}
+.q-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.q-meta{font-size:11px;color:var(--tm);margin-bottom:8px}
+.status-sel{background:var(--s2);border:1px solid;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:500;cursor:pointer;outline:none}
+
+/* ── Badges ── */
 .gas-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(69,199,138,.1);border:1px solid rgba(69,199,138,.25);border-radius:100px;font-size:11px;color:var(--green);font-weight:500}
 .gas-badge.off{background:rgba(224,85,85,.1);border-color:rgba(224,85,85,.25);color:var(--red)}
 .sync-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(85,153,245,.12);border:1px solid rgba(85,153,245,.25);border-radius:100px;font-size:11px;color:var(--blue);cursor:pointer;transition:all var(--tr)}
 .sync-btn:hover{background:rgba(85,153,245,.22)}
+
+/* ── Greeting banner ── */
+.greeting-bar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(240,192,96,.07);border:1px solid rgba(240,192,96,.2);border-radius:var(--r)}
+.greeting-ico{font-size:24px}
+.greeting-text{font-size:13px;font-weight:500}
+.greeting-sub{font-size:11px;color:var(--tm);margin-top:2px}
+
+/* ── Tabs ── */
 .tab-row{display:flex;gap:4px;flex-wrap:wrap;background:var(--s1);padding:4px;border-radius:10px;border:1px solid var(--b);width:fit-content}
-.tab-btn{padding:7px 15px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;color:var(--tm);transition:all var(--tr)}
+.tab-btn{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;color:var(--tm);transition:all var(--tr)}
 .tab-btn.active{background:var(--s2);color:var(--t);border-color:var(--b)}
-.code-block{background:var(--s3);border:1px solid var(--b);border-radius:var(--rs);padding:14px;font-family:var(--fm);font-size:11px;line-height:1.8;max-height:360px;overflow-y:auto;white-space:pre;color:var(--t)}
+.code-block{background:var(--s3);border:1px solid var(--b);border-radius:var(--rs);padding:12px;font-family:var(--fm);font-size:11px;line-height:1.8;max-height:320px;overflow-y:auto;white-space:pre;color:var(--t)}
+
+/* ── Version badge ── */
+.version-badge{font-size:10px;color:var(--td);padding:2px 8px;background:var(--s3);border-radius:100px;font-family:var(--fm)}
+
+/* ── Modal ── */
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.modal-box{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:22px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp .28s ease}
+.modal-title{font-family:var(--fd);font-size:18px;letter-spacing:.04em;margin-bottom:16px}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+
+/* ── Mobile hamburger ── */
+#mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:8px 10px;font-size:16px;cursor:pointer;color:var(--t)}
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150}
+
+/* ── Responsive ── */
+@media(max-width:900px){.studios-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){
-  #sidebar{display:none}
-  .studios-grid,.display-studios-grid{grid-template-columns:repeat(2,1fr)}
+  #mob-toggle{display:flex}
+  #sidebar{position:fixed;top:0;left:0;z-index:160;transform:translateX(-100%);height:100%;width:220px}
+  #sidebar.open{transform:translateX(0)}
+  #sidebar-overlay.open{display:block}
+  #main-content{padding-top:0}
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .studio-pick-grid{grid-template-columns:1fr}
-  .page-body{padding:14px}
-  .topbar{padding:12px 16px}
-  .display-cta-btn{font-size:20px;padding:14px 28px}
+  .studios-grid{grid-template-columns:1fr 1fr}
+  .topbar{padding:10px 14px;padding-left:50px}
+  .page-body{padding:12px}
+  .topbar-right{gap:6px}
+  .btn-sm{padding:5px 10px;font-size:11px}
 }
 </style>
 </head>
 <body>
 
-<!-- ADMIN APP -->
+<!-- Mobile toggle -->
+<button id="mob-toggle" onclick="toggleSidebar()">☰</button>
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <div id="app">
+  <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="brand-area">
-      <div class="brand-ico" id="sb-ico">&#127909;</div>
-      <div><div class="brand-nm" id="sb-name">JD Production</div><div class="brand-role">ADMIN</div></div>
+      <div class="brand-ico" id="sb-ico">🎬</div>
+      <div>
+        <div class="brand-nm" id="sb-name">JD Production</div>
+        <div class="brand-role">ADMIN</div>
+      </div>
     </div>
     <div class="nav-area">
-      <button class="ni active" data-nav="dashboard" onclick="nav('dashboard')"><span class="ni-ico">&#9672;</span> Dashboard</button>
-      <button class="ni" data-nav="queue" onclick="nav('queue')"><span class="ni-ico">&#8801;</span> Antrian</button>
-      <button class="ni" data-nav="display" onclick="openDisplay()"><span class="ni-ico">&#128250;</span> Display TV</button>
-      <button class="ni" data-nav="settings" onclick="nav('settings')"><span class="ni-ico">&#8857;</span> Pengaturan</button>
+      <button class="ni active" data-nav="dashboard" onclick="nav('dashboard')"><span class="ni-ico">◈</span> Dashboard</button>
+      <button class="ni" data-nav="queue" onclick="nav('queue')"><span class="ni-ico">≡</span> Antrian</button>
+      <a class="ni" href="display.html" target="_blank"><span class="ni-ico">📺</span> Display TV</a>
+      <a class="ni" href="customer.html" target="_blank"><span class="ni-ico">👤</span> Halaman Customer</a>
+      <button class="ni" data-nav="settings" onclick="nav('settings')"><span class="ni-ico">⊙</span> Pengaturan</button>
     </div>
-    <div style="padding:10px 16px;margin-bottom:2px">
-      <button class="btn btn-gold" style="width:100%;justify-content:center;font-size:13px" onclick="openCustomer()">&#128100; Buka Halaman Customer</button>
+    <div style="padding:8px 10px">
+      <button class="btn btn-gold" style="width:100%;justify-content:center;font-size:12px" onclick="window.open('display.html','_blank')">📺 Buka Display TV</button>
     </div>
     <div class="live-area">
       <div class="live-dot-wrap"><span class="live-ping"></span><span class="live-core"></span></div>
       <span style="font-size:11px;color:var(--tm)" id="gas-status-lbl">Sistem Aktif</span>
     </div>
+    <div style="padding:8px 14px;border-top:1px solid var(--b);display:flex;justify-content:space-between;align-items:center">
+      <span class="version-badge">v2.0.0</span>
+      <button class="btn btn-ghost btn-sm" style="padding:3px 8px;font-size:10px" onclick="showChangelog()">📋 Changelog</button>
+    </div>
   </aside>
+
+  <!-- MAIN -->
   <div id="main-content">
+    <!-- DASHBOARD -->
     <section id="page-dashboard">
       <div class="topbar">
         <div><div class="topbar-title">Dashboard</div><div class="topbar-sub" id="dash-date"></div></div>
         <div class="topbar-right">
-          <span id="gas-badge-main" class="gas-badge off">&#11044; GAS Offline</span>
-          <button class="sync-btn" onclick="syncNow(true)">&#8635; Sync</button>
-          <button class="btn btn-ghost btn-sm" onclick="nav('queue')">&#8801; Kelola Antrian</button>
+          <span class="gas-badge off" data-gas-badge>⬤ GAS Offline</span>
+          <button class="sync-btn" onclick="syncNow(true)">⟳ Sync</button>
+          <button class="btn btn-ghost btn-sm" onclick="nav('queue')">≡ Antrian</button>
         </div>
       </div>
       <div class="page-body">
+        <div id="greeting-banner"></div>
         <div class="stats-row">
-          <div class="stat-c"><div class="stat-lbl">Total Antrian</div><div class="stat-val" style="color:var(--gold)" id="s-total">0</div><div class="stat-sub">Hari ini</div></div>
+          <div class="stat-c"><div class="stat-lbl">Total</div><div class="stat-val" style="color:var(--gold)" id="s-total">0</div><div class="stat-sub">Hari ini</div></div>
           <div class="stat-c"><div class="stat-lbl">Menunggu</div><div class="stat-val" style="color:var(--blue)" id="s-wait">0</div><div class="stat-sub">Belum dipanggil</div></div>
-          <div class="stat-c"><div class="stat-lbl">Sedang Proses</div><div class="stat-val" style="color:var(--pur)" id="s-prog">0</div><div class="stat-sub">Di studio</div></div>
+          <div class="stat-c"><div class="stat-lbl">Proses</div><div class="stat-val" style="color:var(--pur)" id="s-prog">0</div><div class="stat-sub">Di studio</div></div>
           <div class="stat-c"><div class="stat-lbl">Selesai</div><div class="stat-val" style="color:var(--green)" id="s-done">0</div><div class="stat-sub">Dilayani</div></div>
         </div>
         <div class="studios-grid" id="dash-studios"></div>
       </div>
     </section>
+
+    <!-- QUEUE -->
     <section id="page-queue" class="h">
       <div class="topbar">
-        <div><div class="topbar-title">Manajemen Antrian</div><div class="topbar-sub" id="q-sub"></div></div>
+        <div><div class="topbar-title">Antrian</div><div class="topbar-sub" id="q-sub"></div></div>
         <div class="topbar-right">
-          <select class="inp" id="q-studio-filter" style="max-width:160px;padding:7px 12px" onchange="renderQueue()"><option value="all">Semua Studio</option></select>
-          <select class="inp" id="q-status-filter" style="max-width:160px;padding:7px 12px" onchange="renderQueue()"><option value="all">Semua Status</option></select>
-          <button class="btn btn-gold btn-sm" onclick="callNext()">&#128226; Panggil Berikutnya</button>
+          <select class="inp" id="q-studio-filter" style="max-width:140px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Studio</option></select>
+          <select class="inp" id="q-status-filter" style="max-width:130px;padding:6px 10px;font-size:12px" onchange="renderQueue()"><option value="all">Semua Status</option></select>
+          <button class="btn btn-gold btn-sm" onclick="callNext()">📢 Panggil Berikutnya</button>
         </div>
       </div>
       <div class="page-body"><div id="queue-list" style="display:flex;flex-direction:column;gap:10px"></div></div>
     </section>
+
+    <!-- SETTINGS -->
     <section id="page-settings" class="h">
-      <div class="topbar"><div><div class="topbar-title">Pengaturan</div><div class="topbar-sub">Konfigurasi sistem &amp; Google Apps Script</div></div></div>
+      <div class="topbar"><div><div class="topbar-title">Pengaturan</div><div class="topbar-sub">Konfigurasi sistem</div></div></div>
       <div class="page-body">
         <div class="tab-row">
-          <button class="tab-btn active" data-tab="gas" onclick="switchTab('gas')">&#128202; Google Apps Script</button>
-          <button class="tab-btn" data-tab="studio" onclick="switchTab('studio')">&#127909; Studio</button>
-          <button class="tab-btn" data-tab="status" onclick="switchTab('status')">&#128203; Status</button>
-          <button class="tab-btn" data-tab="bisnis" onclick="switchTab('bisnis')">&#127970; Bisnis</button>
+          <button class="tab-btn active" data-tab="gas" onclick="switchTab('gas')">📊 GAS</button>
+          <button class="tab-btn" data-tab="studio" onclick="switchTab('studio')">🎬 Studio</button>
+          <button class="tab-btn" data-tab="status" onclick="switchTab('status')">📋 Status</button>
+          <button class="tab-btn" data-tab="bisnis" onclick="switchTab('bisnis')">🏢 Bisnis</button>
         </div>
-        <div id="tab-gas" class="card" style="max-width:660px;display:flex;flex-direction:column;gap:18px">
-          <div style="font-family:var(--fd);font-size:20px;letter-spacing:.04em">&#128202; Google Apps Script Backend</div>
-          <div style="background:var(--gd);border:1px solid var(--ba);border-radius:var(--rs);padding:14px 16px;font-size:13px;line-height:1.8;color:var(--tm)">
+
+        <!-- GAS Tab -->
+        <div id="tab-gas" class="card" style="max-width:620px;display:flex;flex-direction:column;gap:16px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📊 Google Apps Script Backend</div>
+          <div style="background:var(--gd);border:1px solid var(--ba);border-radius:var(--rs);padding:12px 14px;font-size:12px;line-height:1.9;color:var(--tm)">
             <strong style="color:var(--gold)">Setup sekali — gratis selamanya:</strong><br>
-            1. Buka <strong style="color:var(--t)">script.google.com</strong> &rarr; New Project<br>
-            2. Hapus semua &rarr; paste script di bawah<br>
-            3. Klik <strong style="color:var(--t)">Deploy &rarr; New Deployment &rarr; Web App</strong><br>
-            4. Execute as: <strong style="color:var(--t)">Me</strong> &nbsp;|&nbsp; Access: <strong style="color:var(--t)">Anyone</strong><br>
-            5. Copy URL &rarr; paste di bawah &rarr; Simpan &amp; Test
+            1. Buka <strong style="color:var(--t)">script.google.com</strong> → New Project<br>
+            2. Hapus semua → paste script di bawah<br>
+            3. <strong style="color:var(--t)">Deploy → New Deployment → Web App</strong><br>
+            4. Execute as: <strong style="color:var(--t)">Me</strong> | Access: <strong style="color:var(--t)">Anyone</strong><br>
+            5. Copy URL → paste di bawah → Simpan & Test
           </div>
-          <div><button class="btn btn-ghost btn-sm" onclick="showGASScript()" style="margin-bottom:12px">&#128203; Lihat &amp; Salin Script GAS</button></div>
+          <div><button class="btn btn-ghost btn-sm" onclick="showGASScript()">📋 Lihat & Salin Script GAS</button></div>
           <div><label class="lbl">URL Web App Google Apps Script</label><input class="inp" id="cfg-gas-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-green" onclick="saveGasUrl()">&#128190; Simpan &amp; Test Koneksi</button>
-            <button class="btn btn-ghost btn-sm" onclick="syncNow(true)">&#8635; Sync Sekarang</button>
+            <button class="btn btn-green" onclick="saveGasUrl()">💾 Simpan & Test</button>
+            <button class="btn btn-ghost btn-sm" onclick="syncNow(true)">⟳ Sync Sekarang</button>
           </div>
-          <div id="gas-test-result" style="display:none;padding:12px 16px;border-radius:var(--rs);font-size:13px"></div>
+          <div id="gas-test-result" style="display:none;padding:10px 14px;border-radius:var(--rs);font-size:12px"></div>
         </div>
-        <div id="tab-studio" class="card h" style="max-width:660px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--fd);font-size:20px;letter-spacing:.04em">&#127909; Pengaturan Studio</div>
+
+        <!-- Studio Tab -->
+        <div id="tab-studio" class="card h" style="max-width:620px;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🎬 Pengaturan Studio</div>
           <div id="studio-settings-list"></div>
         </div>
-        <div id="tab-status" class="card h" style="max-width:560px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--fd);font-size:20px;letter-spacing:.04em">&#128203; Custom Status Antrian</div>
+
+        <!-- Status Tab -->
+        <div id="tab-status" class="card h" style="max-width:520px;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">📋 Custom Status Antrian</div>
           <div id="status-settings-list"></div>
           <div class="divider"></div>
-          <div style="display:flex;gap:10px">
-            <input class="inp" id="new-st-ico" value="&#128309;" style="width:70px;text-align:center">
+          <div style="display:flex;gap:8px">
+            <input class="inp" id="new-st-ico" value="🔵" style="width:60px;text-align:center">
             <input class="inp" id="new-st-lbl" placeholder="Nama status…" style="flex:1">
             <button class="btn btn-gold btn-sm" onclick="addStatus()">+ Tambah</button>
           </div>
         </div>
-        <div id="tab-bisnis" class="card h" style="max-width:520px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--fd);font-size:20px;letter-spacing:.04em">&#127970; Informasi Bisnis</div>
+
+        <!-- Bisnis Tab -->
+        <div id="tab-bisnis" class="card h" style="max-width:480px;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.04em">🏢 Informasi Bisnis</div>
           <div><label class="lbl">Nama Bisnis</label><input class="inp" id="cfg-nm" value="JD Production"></div>
-          <div><label class="lbl">Logo (emoji)</label><input class="inp" id="cfg-logo" value="&#127909;"></div>
-          <div><label class="lbl">Tagline</label><input class="inp" id="cfg-tag" value="Professional Photography &amp; Production"></div>
-          <button class="btn btn-gold" style="align-self:flex-start" onclick="saveBisnis()">&#128190; Simpan</button>
+          <div><label class="lbl">Logo (emoji)</label><input class="inp" id="cfg-logo" value="🎬"></div>
+          <div><label class="lbl">Tagline</label><input class="inp" id="cfg-tag" value="Professional Photography & Production"></div>
+          <button class="btn btn-gold" style="align-self:flex-start" onclick="saveBisnis()">💾 Simpan</button>
         </div>
       </div>
     </section>
   </div>
 </div>
 
-<!-- CUSTOMER PAGE -->
-<div id="customer-page" class="h">
-  <button class="btn btn-ghost btn-sm" onclick="closeCustomer()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Admin</button>
-  <div class="cust-hdr">
-    <div class="cust-hdr-logo" id="c-logo">&#127909;</div>
-    <div class="cust-hdr-title" id="c-title">JD Production</div>
-    <div class="cust-hdr-sub">Pilih studio &amp; ambil nomor antrian</div>
-  </div>
-  <div id="customer-inner"></div>
-</div>
-
-<!-- RECEIPT PAGE -->
-<div id="receipt-page" class="h">
-  <button class="btn btn-ghost btn-sm" onclick="backToCustomer()" style="position:fixed;top:14px;left:14px;z-index:100">&larr; Kembali</button>
-  <div class="receipt-wrap">
-    <div class="receipt-box">
-      <div class="receipt-head">
-        <div class="receipt-logo" id="r-logo">&#127909;</div>
-        <div class="receipt-brand" id="r-brand">JD Production</div>
-        <div class="receipt-studio" id="r-studio-name">Studio 1</div>
-        <div class="receipt-number" id="r-number">001</div>
-        <div style="font-size:12px;color:var(--tm)" id="r-name">Nama Customer</div>
-      </div>
-      <div class="receipt-body" id="r-body"></div>
-      <div class="receipt-footer">
-        <div style="font-size:11px;color:var(--tm);margin-bottom:6px">&#128279; Link pantau antrian kamu:</div>
-        <div class="receipt-link" id="r-link">&#8212;</div>
-        <div class="receipt-qr" id="r-qr-wrap"><div id="r-qr"></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center">
-          <button class="btn btn-gold btn-sm" onclick="copyReceiptLink()">&#128203; Salin Link</button>
-          <button class="btn btn-ghost btn-sm" onclick="shareWAReceipt()">&#128241; Share WA</button>
-          <button class="btn btn-ghost btn-sm" onclick="openTrackFromReceipt()">&#128065; Pantau Status</button>
-        </div>
-      </div>
-    </div>
-    <!-- COUNTDOWN ke Display TV -->
-    <div style="text-align:center;margin-top:22px">
-      <div class="countdown-wrap">
-        <svg class="ctr" width="90" height="90" viewBox="0 0 90 90">
-          <circle class="ctr-bg" cx="45" cy="45" r="40"/>
-          <circle class="ctr-bar" id="ctr-bar" cx="45" cy="45" r="40"/>
-        </svg>
-        <div class="ctr-num" id="ctr-num">10</div>
-        <div class="ctr-lbl">detik ke Display TV</div>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px">
-        <button class="btn btn-gold" onclick="goToDisplayNow()">&#128250; Tampilkan Sekarang</button>
-        <button class="btn btn-ghost btn-sm" onclick="cancelCountdown()">&#10005; Batalkan</button>
-        <button class="btn btn-ghost btn-sm" onclick="backToCustomer()">&larr; Antrian Lagi</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TRACK PAGE -->
-<div id="track-page" class="h">
-  <button class="btn btn-ghost btn-sm" onclick="closeTrack()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Tutup</button>
-  <div style="text-align:center;margin-bottom:20px">
-    <div style="font-size:32px;margin-bottom:6px" id="tr-logo">&#127909;</div>
-    <div style="font-family:var(--fd);font-size:20px;letter-spacing:.05em" id="tr-brand">JD Production</div>
-    <div style="font-size:11px;color:var(--tm);margin-top:2px">Status Antrian Real-time</div>
-  </div>
-  <div class="track-card card2" id="track-card"></div>
-  <div style="font-size:11px;color:var(--td);margin-top:12px;text-align:center">Auto-update setiap 8 detik &middot; <span id="tr-last">&#8212;</span></div>
-</div>
-
-<!-- DISPLAY TV -->
-<div id="display-page" class="h">
-  <button class="btn btn-ghost btn-sm" onclick="closeDisplay()" style="position:fixed;top:14px;right:14px;z-index:100">&larr; Admin</button>
-  <div class="display-header">
-    <div class="display-brand" id="dp-brand">&#127909; JD Production</div>
-    <div class="display-clock" id="dp-clock">00:00:00</div>
-  </div>
-  <div class="display-studios-grid" id="dp-studios"></div>
-  <!-- TOMBOL AMBIL ANTRIAN -->
-  <div class="display-cta-bar">
-    <button class="display-cta-btn" onclick="openCustomerFromDisplay()">
-      <span style="font-size:28px">&#128247;</span> AMBIL NOMOR ANTRIAN
-    </button>
-  </div>
-</div>
-
-<!-- MODAL GAS -->
+<!-- Modal GAS Script -->
 <div id="modal-gas" class="modal-wrap h" onclick="if(event.target===this)this.classList.add('h')">
-  <div class="modal-box" style="max-width:640px">
-    <div class="modal-title">&#128203; Google Apps Script</div>
-    <div style="font-size:12px;color:var(--tm);margin-bottom:12px">Copy semua &rarr; paste ke <strong style="color:var(--t)">script.google.com</strong> &rarr; Deploy sebagai Web App</div>
+  <div class="modal-box" style="max-width:620px">
+    <div class="modal-title">📋 Google Apps Script</div>
+    <div style="font-size:12px;color:var(--tm);margin-bottom:10px">Copy semua → paste ke <strong style="color:var(--t)">script.google.com</strong></div>
     <div class="code-block" id="gas-code-view"></div>
     <div class="modal-actions">
-      <button class="btn btn-gold" style="flex:1;justify-content:center" onclick="copyGASScript()">&#128203; Salin Script</button>
+      <button class="btn btn-gold" style="flex:1;justify-content:center" onclick="copyGASScript()">📋 Salin Script</button>
       <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-gas').classList.add('h')">Tutup</button>
     </div>
   </div>
 </div>
 
-<div id="notif" class="notif h"></div>
+<!-- Modal Changelog -->
+<div id="modal-changelog" class="modal-wrap h" onclick="if(event.target===this)this.classList.add('h')">
+  <div class="modal-box">
+    <div class="modal-title">📋 Changelog</div>
+    <div id="changelog-body" style="display:flex;flex-direction:column;gap:12px;font-size:13px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="document.getElementById('modal-changelog').classList.add('h')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div id="notif"></div>
 
 <script>
-const STUDIOS=[
-  {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
-  {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
-  {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
-  {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
-];
-const DEFAULT_STATUSES=[
-  {id:'waiting',   ico:'⏳',label:'Menunggu',  color:'#7B7885'},
-  {id:'called',    ico:'📢',label:'Dipanggil', color:'#5599F5'},
-  {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
-  {id:'done',      ico:'✅',label:'Selesai',   color:'#45C78A'},
-  {id:'skip',      ico:'⏭️',label:'Dilewati',  color:'#E05555'},
+// ── State ───────────────────────────────────────────────
+const APP_VERSION='2.0.0';
+const LS_KEY='jdprod_v2';
+const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
+const CHANGELOG=[
+  {ver:'2.0.0',date:'2025',desc:['Pisah halaman menjadi 4 file terpisah (admin, customer, display, track)','Tombol Ambil Antrian di Display TV diperkecil & lebih rapi','Support penuh mobile/HP di semua halaman','Greeting banner + lampu hijau tiap pagi','Versi & changelog ditambahkan','Kode lebih modular & mudah di-maintain']},
+  {ver:'1.0.0',date:'2024',desc:['Rilis pertama — semua dalam 1 file','Queue management, Display TV, Customer flow','Google Apps Script backend','QR code & WhatsApp share']},
 ];
 let state={
   queue:[],nextNum:{s1:1,s2:1,s3:1,s4:1},
-  studios:JSON.parse(JSON.stringify(STUDIOS)),
-  statuses:JSON.parse(JSON.stringify(DEFAULT_STATUSES)),
+  studios:[
+    {id:'s1',name:'Studio 1',ico:'📸',color:'#F0C060',desc:'Foto portrait & keluarga'},
+    {id:'s2',name:'Studio 2',ico:'🎬',color:'#5599F5',desc:'Foto produk & komersial'},
+    {id:'s3',name:'Photobox',ico:'🤳',color:'#45C78A',desc:'Foto selfie & strip'},
+    {id:'s4',name:'Widebox', ico:'🖼️',color:'#A07FF0',desc:'Foto group & panorama'},
+  ],
+  statuses:[
+    {id:'waiting',   ico:'⏳',label:'Menunggu',  color:'#7B7885'},
+    {id:'called',    ico:'📢',label:'Dipanggil', color:'#5599F5'},
+    {id:'inprogress',ico:'⚙️',label:'Dalam Sesi',color:'#F5A142'},
+    {id:'done',      ico:'✅',label:'Selesai',   color:'#45C78A'},
+    {id:'skip',      ico:'⏭️',label:'Dilewati',  color:'#E05555'},
+  ],
   config:{name:'JD Production',logo:'🎬',tagline:'Professional Photography & Production'},
-  gasUrl:'',gasOnline:false,curTrackId:null,
+  gasUrl:'',gasOnline:false,
 };
-const PREFIX={s1:'S1-',s2:'S2-',s3:'PB-',s4:'WB-'};
 
-function nowTime(){const d=new Date(),h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');return h+':'+m;}
-function nowTimeSec(){const d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
+// ── Helpers ──────────────────────────────────────────────
+function nowTime(){const d=new Date();return[d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');}
 function nowDate(){const d=new Date();const dy=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return dy[d.getDay()]+', '+d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();}
+function getGreeting(){const h=new Date().getHours();if(h>=6&&h<11)return{text:'Selamat Pagi 🌅',sub:'Mulai hari yang produktif!',color:'#F0C060',isGreen:true};if(h>=11&&h<15)return{text:'Selamat Siang ☀️',sub:'Semangat terus melayani!',color:'#F5A142',isGreen:false};if(h>=15&&h<18)return{text:'Selamat Sore 🌤️',sub:'Tetap semangat sampai tutup!',color:'#A07FF0',isGreen:false};return{text:'Selamat Malam 🌙',sub:'Terima kasih sudah bekerja keras.',color:'#5599F5',isGreen:false};}
 
+let _ntimer;
+function showNotif(msg){let el=document.getElementById('notif');if(!el)return;el.textContent=msg;el.style.cssText='position:fixed;bottom:20px;right:16px;background:var(--s2);border:1px solid var(--ba);border-radius:12px;padding:11px 16px;font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeUp .28s ease;color:var(--t);max-width:90vw';clearTimeout(_ntimer);_ntimer=setTimeout(()=>{el.style.display='none';},3000);}
+
+// ── Sidebar mobile ───────────────────────────────────────
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').classList.toggle('open');}
+
+// ── Navigation ───────────────────────────────────────────
 function nav(page){
   document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('h'));
   document.getElementById('page-'+page)?.classList.remove('h');
-  document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
-  document.getElementById('app').classList.remove('h');
-  ['customer-page','receipt-page','track-page','display-page'].forEach(id=>document.getElementById(id).classList.add('h'));
-  cancelCountdown();
+  document.querySelectorAll('.ni[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
   if(page==='dashboard')renderDashboard();
   if(page==='queue')renderQueue();
   if(page==='settings')renderSettings();
 }
 
-// ── COUNTDOWN ──────────────────────────────────────────
-let _cdrTimer=null, _cdrSec=10;
-const CDR_TOTAL=10;
-function startCountdown(){
-  cancelCountdown();
-  _cdrSec=CDR_TOTAL;
-  _updateCDR(_cdrSec);
-  _cdrTimer=setInterval(()=>{
-    _cdrSec--;
-    _updateCDR(_cdrSec);
-    if(_cdrSec<=0){cancelCountdown();goToDisplayNow();}
-  },1000);
-}
-function cancelCountdown(){if(_cdrTimer){clearInterval(_cdrTimer);_cdrTimer=null;}}
-function _updateCDR(sec){
-  const n=document.getElementById('ctr-num');
-  const b=document.getElementById('ctr-bar');
-  if(n)n.textContent=sec;
-  if(b){const c=2*Math.PI*40;b.style.strokeDasharray=c;b.style.strokeDashoffset=c*(1-sec/CDR_TOTAL);}
-}
-function goToDisplayNow(){
-  cancelCountdown();
-  document.getElementById('receipt-page').classList.add('h');
-  openDisplay();
+// ── Greeting ─────────────────────────────────────────────
+function renderGreeting(){
+  const el=document.getElementById('greeting-banner');if(!el)return;
+  const g=getGreeting();
+  const dot=g.isGreen?`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:8px"></span>`:'';
+  el.innerHTML=`<div class="greeting-bar" style="border-color:${g.color}30;background:${g.color}08">
+    <div style="font-size:22px">${g.text.split(' ')[2]||'👋'}</div>
+    <div><div class="greeting-text" style="color:${g.color}">${dot}${g.text.split(' ').slice(0,2).join(' ')} — ${state.config.name}</div><div class="greeting-sub">${g.sub} · ${nowDate()}</div></div>
+  </div>`;
 }
 
-// ── CUSTOMER FLOW ───────────────────────────────────────
-let custState={step:'pick',studioId:null,name:''};
-let _fromDisplay=false;
-
-function openCustomer(preStudio){
-  _fromDisplay=false;
-  document.getElementById('app').classList.add('h');
-  ['receipt-page','track-page','display-page'].forEach(id=>document.getElementById(id).classList.add('h'));
-  document.getElementById('customer-page').classList.remove('h');
-  custState={step:preStudio?'name':'pick',studioId:preStudio||null,name:''};
-  document.getElementById('c-logo').textContent=state.config.logo;
-  document.getElementById('c-title').textContent=state.config.name;
-  renderCustomer();
-}
-function openCustomerFromDisplay(){
-  _fromDisplay=true;
-  clearInterval(displayInterval);
-  document.getElementById('display-page').classList.add('h');
-  document.getElementById('customer-page').classList.remove('h');
-  custState={step:'pick',studioId:null,name:''};
-  document.getElementById('c-logo').textContent=state.config.logo;
-  document.getElementById('c-title').textContent=state.config.name;
-  renderCustomer();
-}
-function closeCustomer(){
-  cancelCountdown();
-  document.getElementById('customer-page').classList.add('h');
-  if(_fromDisplay){_fromDisplay=false;openDisplay();}
-  else{document.getElementById('app').classList.remove('h');renderDashboard();}
-}
-function renderCustomer(){
-  const el=document.getElementById('customer-inner');
-  if(custState.step==='pick'){
-    el.innerHTML='<div class="studio-pick-grid">'+
-      state.studios.map(s=>`<button class="studio-pick-btn" style="--c:${s.color}" onclick="pickStudio('${s.id}')">
-        <span class="studio-pick-ico">${s.ico}</span>
-        <div class="studio-pick-nm" style="color:${s.color}">${s.name}</div>
-        <div class="studio-pick-desc">${s.desc}</div>
-        <div style="margin-top:10px;font-size:11px;color:var(--tm)">${queueByStudio(s.id).filter(q=>q.status!=='done'&&q.status!=='skip').length} antrian aktif</div>
-      </button>`).join('')+'</div>';
-  } else if(custState.step==='name'){
-    const st=state.studios.find(s=>s.id===custState.studioId);
-    el.innerHTML=`<div class="name-step">
-      <div style="text-align:center;padding:16px;background:var(--s1);border:1px solid var(--b);border-radius:var(--r);border-top:3px solid ${st.color}">
-        <div style="font-size:28px;margin-bottom:6px">${st.ico}</div>
-        <div style="font-family:var(--fd);font-size:18px;color:${st.color};letter-spacing:.04em">${st.name}</div>
-        <div style="font-size:12px;color:var(--tm);margin-top:4px">${st.desc}</div>
-      </div>
-      <div><label class="lbl">Nama Kamu</label>
-        <input class="inp" id="cust-name-inp" placeholder="Masukkan nama lengkap…" value="${custState.name}" onkeydown="if(event.key==='Enter')submitName()">
-      </div>
-      <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center" onclick="submitName()">Ambil Nomor Antrian &rarr;</button>
-      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="custState.step='pick';renderCustomer()">&larr; Ganti Studio</button>
-    </div>`;
-    setTimeout(()=>document.getElementById('cust-name-inp')?.focus(),100);
-  }
-}
-function pickStudio(id){custState.studioId=id;custState.step='name';renderCustomer();}
-function submitName(){
-  const inp=document.getElementById('cust-name-inp');
-  const name=inp?.value?.trim();
-  if(!name){showNotif('⚠️ Masukkan nama dulu');inp?.focus();return;}
-  custState.name=name;
-  const st=state.studios.find(s=>s.id===custState.studioId);
-  const num=state.nextNum[st.id]++;
-  const numStr=PREFIX[st.id]+String(num).padStart(3,'0');
-  const entry={id:'q'+Date.now(),number:numStr,numRaw:num,name,studioId:st.id,studioName:st.name,studioIco:st.ico,studioColor:st.color,status:'waiting',time:nowTime()};
-  state.queue.push(entry);
-  saveLS(true);syncNow(false);
-  showReceipt(entry);
-}
-
-// ── RECEIPT ─────────────────────────────────────────────
-let lastReceiptEntry=null;
-function showReceipt(entry){
-  lastReceiptEntry=entry;
-  document.getElementById('customer-page').classList.add('h');
-  document.getElementById('receipt-page').classList.remove('h');
-  document.getElementById('r-logo').textContent=state.config.logo;
-  document.getElementById('r-brand').textContent=state.config.name;
-  document.getElementById('r-studio-name').textContent=entry.studioIco+' '+entry.studioName;
-  document.getElementById('r-number').textContent=entry.number;
-  document.getElementById('r-name').textContent=entry.name;
-  document.getElementById('r-number').style.color=entry.studioColor;
-  const trackLink=buildTrackLink(entry.id);
-  document.getElementById('r-link').textContent=trackLink;
-  document.getElementById('r-link').dataset.link=trackLink;
-  const waitBefore=state.queue.filter(q=>q.studioId===entry.studioId&&q.status==='waiting'&&q.numRaw<entry.numRaw).length;
-  document.getElementById('r-body').innerHTML=[
-    ['Studio',entry.studioIco+' '+entry.studioName],
-    ['Nomor',entry.number],
-    ['Nama',entry.name],
-    ['Daftar jam',entry.time],
-    ['Posisi tunggu',waitBefore>0?(waitBefore+' orang di depanmu'):'Kamu berikutnya!'],
-    ['Status','⏳ Menunggu'],
-  ].map(([k,v])=>`<div class="receipt-row"><span class="receipt-key">${k}</span><span class="receipt-val">${v}</span></div>`).join('');
-  const qrEl=document.getElementById('r-qr');
-  qrEl.innerHTML='';
-  try{new QRCode(qrEl,{text:trackLink,width:160,height:160,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});}
-  catch(e){qrEl.innerHTML='<div style="font-size:11px;color:var(--tm)">QR tidak tersedia</div>';}
-  // Reset ring dan mulai countdown
-  const b=document.getElementById('ctr-bar');
-  if(b){const c=2*Math.PI*40;b.style.strokeDasharray=c;b.style.strokeDashoffset=0;}
-  startCountdown();
-}
-function buildTrackLink(id){return window.location.origin+window.location.pathname+'?track='+id;}
-function copyReceiptLink(){const link=document.getElementById('r-link').dataset.link||'';navigator.clipboard.writeText(link).then(()=>showNotif('✅ Link disalin!')).catch(()=>prompt('Salin link:',link));}
-function shareWAReceipt(){
-  if(!lastReceiptEntry)return;
-  const e=lastReceiptEntry,link=buildTrackLink(e.id);
-  const msg=`Halo *${e.name}*! 👋
-
-Nomor antrian kamu:
-
-🎫 *${e.number}*
-🎬 Studio: ${e.studioName}
-🕐 Daftar: ${e.time}
-
-Pantau posisi antrian real-time:
-${link}
-
-_${state.config.name}_`;
-  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
-}
-function openTrackFromReceipt(){if(!lastReceiptEntry)return;cancelCountdown();openTrack(lastReceiptEntry.id);}
-function backToCustomer(){
-  cancelCountdown();
-  document.getElementById('receipt-page').classList.add('h');
-  document.getElementById('customer-page').classList.remove('h');
-  custState.step='pick';custState.name='';
-  renderCustomer();
-}
-
-// ── TRACK ────────────────────────────────────────────────
-let trackInterval;
-function openTrack(id){
-  state.curTrackId=id;
-  ['app','customer-page','receipt-page','display-page'].forEach(i=>document.getElementById(i).classList.add('h'));
-  document.getElementById('track-page').classList.remove('h');
-  document.getElementById('tr-logo').textContent=state.config.logo;
-  document.getElementById('tr-brand').textContent=state.config.name;
-  renderTrack(id);
-  clearInterval(trackInterval);
-  trackInterval=setInterval(async()=>{if(state.gasUrl){try{await loadFromGAS();}catch(e){}}renderTrack(id);},8000);
-}
-function closeTrack(){
-  clearInterval(trackInterval);state.curTrackId=null;
-  document.getElementById('track-page').classList.add('h');
-  if(lastReceiptEntry){document.getElementById('receipt-page').classList.remove('h');startCountdown();}
-  else{document.getElementById('app').classList.remove('h');nav('dashboard');}
-}
-function renderTrack(id){
-  const el=document.getElementById('track-card');
-  const upd=document.getElementById('tr-last');
-  if(upd)upd.textContent='Update: '+nowTime();
-  if(!el)return;
-  const q=state.queue.find(q=>q.id===id);
-  if(!q){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">❓</div><div>Memuat data antrian…</div></div>';return;}
-  const steps=[{id:'waiting',lbl:'Menunggu',ico:'⏳'},{id:'called',lbl:'Dipanggil',ico:'📢'},{id:'inprogress',lbl:'Dalam Sesi',ico:'⚙️'},{id:'done',lbl:'Selesai',ico:'✅'}];
-  const stOrder=['waiting','called','inprogress','done'];
-  const curIdx=stOrder.indexOf(q.status);
-  const waitBefore=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting'&&w.numRaw<q.numRaw).length;
-  const totalWait=state.queue.filter(w=>w.studioId===q.studioId&&w.status==='waiting').length;
-  const nowServing=state.queue.filter(w=>w.studioId===q.studioId&&(w.status==='called'||w.status==='inprogress'));
-  const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
-  const stColor={waiting:'var(--tm)',called:'var(--blue)',inprogress:'#F5A142',done:'var(--green)',skip:'var(--red)'};
-  const stBg={waiting:'rgba(123,120,133,.08)',called:'rgba(85,153,245,.08)',inprogress:'rgba(245,161,66,.08)',done:'rgba(69,199,138,.08)',skip:'rgba(224,85,85,.08)'};
-  el.innerHTML=`
-    <div style="text-align:center;padding:8px 0 16px">
-      <div style="font-size:13px;color:var(--tm);margin-bottom:2px">${q.studioIco} ${q.studioName}</div>
-      <div class="track-num-big" style="color:${q.studioColor}">${q.number}</div>
-      <div style="font-size:15px;font-weight:600;margin-bottom:10px">${q.name}</div>
-      <div style="display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:100px;background:${stBg[q.status]||stBg.waiting};border:1px solid ${st.color}30;color:${st.color};font-weight:600;font-size:13px">${st.ico} ${st.label}</div>
-      <div class="track-bar" style="margin-top:20px">
-        ${steps.map((step,i)=>{const done=i<curIdx,cur=i===curIdx;return`<div class="track-step"><div class="track-dot ${done?'done':cur?'cur':''}">${done?'✓':step.ico}</div><div class="track-lbl ${done?'done':cur?'cur':''}">${step.lbl}</div></div>`;}).join('')}
-      </div>
-    </div>
-    <div class="divider" style="margin:0"></div>
-    <div class="track-info">
-      <div class="track-row"><span class="track-key">Nomor antrian</span><strong style="font-family:var(--fd);font-size:18px;color:${q.studioColor}">${q.number}</strong></div>
-      <div class="track-row"><span class="track-key">Studio</span><span>${q.studioIco} ${q.studioName}</span></div>
-      <div class="track-row"><span class="track-key">Daftar jam</span><span>${q.time}</span></div>
-      <div class="track-row"><span class="track-key">Posisi antrian</span><strong style="color:${stColor[q.status]||stColor.waiting}">${q.status==='waiting'?(waitBefore+1)+' dari '+totalWait:q.status==='done'?'Selesai ✅':'Sedang dilayani'}</strong></div>
-    </div>
-    ${q.status==='waiting'?`<div class="eta-box"><div style="font-size:11px;color:var(--pur);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">⏱ Estimasi Tunggu</div><div class="eta-num">${waitBefore>0?'~'+(waitBefore*30)+' mnt':'Sebentar lagi'}</div></div>`:''}
-    ${q.status==='called'?`<div class="called-box"><div style="font-size:22px;margin-bottom:6px">🔔</div><div style="font-weight:600;color:var(--blue);font-size:15px">Namamu sedang dipanggil!</div><div style="font-size:12px;color:var(--tm);margin-top:4px">Segera ke ${q.studioName}</div></div>`:''}
-    ${nowServing.length&&q.status==='waiting'?`<div style="background:var(--s1);border:1px solid var(--b);border-radius:var(--rs);padding:12px;text-align:center;margin-top:10px"><div style="font-size:11px;color:var(--tm);margin-bottom:4px">Sedang dilayani di ${q.studioName}</div><div style="font-family:var(--fd);font-size:28px;color:var(--gold)">${nowServing[nowServing.length-1].number}</div></div>`:''}
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap">
-      <button class="btn btn-ghost btn-sm" onclick="renderTrack('${id}')">🔄 Refresh</button>
-      <button class="btn btn-ghost btn-sm" onclick="shareWAReceipt()">📱 Kirim WA</button>
-    </div>`;
-}
-
-// ── DISPLAY TV ───────────────────────────────────────────
-let displayInterval;
-function openDisplay(){
-  document.getElementById('app').classList.add('h');
-  ['customer-page','receipt-page','track-page'].forEach(id=>document.getElementById(id).classList.add('h'));
-  document.getElementById('display-page').classList.remove('h');
-  document.getElementById('dp-brand').textContent=state.config.logo+' '+state.config.name;
-  renderDisplay();
-  clearInterval(displayInterval);
-  displayInterval=setInterval(()=>{
-    const el=document.getElementById('dp-clock');
-    if(el)el.textContent=nowTimeSec();
-    renderDisplay();
-  },1000);
-}
-function closeDisplay(){
-  clearInterval(displayInterval);_fromDisplay=false;
-  document.getElementById('display-page').classList.add('h');
-  document.getElementById('app').classList.remove('h');
-  nav('dashboard');
-}
-function renderDisplay(){
-  const el=document.getElementById('dp-studios');if(!el)return;
-  el.innerHTML=state.studios.map(studio=>{
-    const sq=state.queue.filter(q=>q.studioId===studio.id);
-    const called=sq.filter(q=>q.status==='called'||q.status==='inprogress');
-    const waiting=sq.filter(q=>q.status==='waiting');
-    const current=called[called.length-1];
-    const stObj=current?state.statuses.find(s=>s.id===current.status):null;
-    return`<div class="display-studio" style="--c:${studio.color}">
-      <div style="font-size:24px;margin-bottom:2px">${studio.ico}</div>
-      <div class="display-studio-name">${studio.name}</div>
-      ${current?`<div class="display-current-label">Sedang Dilayani</div>
-        <div class="display-current-num" style="color:${studio.color}">${current.number}</div>
-        <div class="display-current-name">${current.name}</div>
-        <div class="display-current-status" style="color:${stObj?.color||studio.color}">${stObj?.ico||''} ${stObj?.label||''}</div>`
-      :`<div class="display-current-label" style="margin-top:16px">Belum ada</div><div style="font-family:var(--fd);font-size:40px;color:var(--td);margin:8px 0">—</div>`}
-      <div class="display-waiting-row">
-        ${waiting.length?waiting.slice(0,6).map(q=>`<div class="display-waiting-chip">${q.number}</div>`).join(''):'<div style="font-size:12px;color:var(--td)">Kosong</div>'}
-      </div>
-      <div style="font-size:11px;color:var(--tm);margin-top:8px">${waiting.length} menunggu</div>
-    </div>`;
-  }).join('');
-}
-
-// ── DASHBOARD ────────────────────────────────────────────
+// ── Dashboard ────────────────────────────────────────────
 function renderDashboard(){
   const dd=document.getElementById('dash-date');if(dd)dd.textContent=nowDate();
-  updateStats();
+  renderGreeting();updateStats();
   const el=document.getElementById('dash-studios');if(!el)return;
   el.innerHTML=state.studios.map(studio=>{
     const sq=state.queue.filter(q=>q.studioId===studio.id&&q.status!=='done'&&q.status!=='skip');
@@ -720,62 +397,63 @@ function renderDashboard(){
         ${sq.slice(0,5).map(q=>{const st=state.statuses.find(s=>s.id===q.status);return`<div class="sq-item"><span class="sq-num">${q.number}</span><span style="color:var(--tm)">${q.name}</span><span style="color:${st?.color||studio.color};font-size:11px">${st?.ico||''} ${st?.label||''}</span></div>`;}).join('')}
         ${sq.length===0?'<div style="text-align:center;padding:10px;color:var(--td);font-size:12px">Kosong</div>':''}
       </div>
-      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:10px" onclick="nav('queue')">Lihat Semua →</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="nav('queue')">Lihat Semua →</button>
     </div>`;
   }).join('');
 }
 function updateStats(){
-  const all=state.queue,s=id=>document.getElementById(id);
+  const all=state.queue;
+  const s=id=>document.getElementById(id);
   if(s('s-total'))s('s-total').textContent=all.length;
   if(s('s-wait'))s('s-wait').textContent=all.filter(q=>q.status==='waiting').length;
   if(s('s-prog'))s('s-prog').textContent=all.filter(q=>q.status==='called'||q.status==='inprogress').length;
   if(s('s-done'))s('s-done').textContent=all.filter(q=>q.status==='done').length;
 }
 
-// ── QUEUE MANAGEMENT ─────────────────────────────────────
-function queueByStudio(id){return state.queue.filter(q=>q.studioId===id);}
+// ── Queue ────────────────────────────────────────────────
 function renderQueue(){
-  const studioF=document.getElementById('q-studio-filter')?.value||'all';
-  const statusF=document.getElementById('q-status-filter')?.value||'all';
+  const stF=document.getElementById('q-studio-filter')?.value||'all';
+  const stF2=document.getElementById('q-status-filter')?.value||'all';
   const sf=document.getElementById('q-studio-filter');
   if(sf&&sf.options.length===1)state.studios.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.name;sf.appendChild(o);});
   const statusSel=document.getElementById('q-status-filter');
   if(statusSel&&statusSel.options.length===1)state.statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.ico+' '+s.label;statusSel.appendChild(o);});
-  const list=state.queue.filter(q=>(studioF==='all'||q.studioId===studioF)&&(statusF==='all'||q.status===statusF)).sort((a,b)=>a.numRaw-b.numRaw);
+  const list=state.queue.filter(q=>(stF==='all'||q.studioId===stF)&&(stF2==='all'||q.status===stF2)).sort((a,b)=>a.numRaw-b.numRaw);
   const el=document.getElementById('queue-list');if(!el)return;
   const sub=document.getElementById('q-sub');if(sub)sub.textContent=list.length+' antrian';
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--tm)"><div style="font-size:40px;margin-bottom:12px">📋</div><div>Belum ada antrian</div></div>';return;}
   el.innerHTML=list.map(q=>{
     const st=state.statuses.find(s=>s.id===q.status)||state.statuses[0];
-    const opts=state.statuses.map(s=>`<option value="${s.id}" ${q.status===s.id?'selected':''}>${s.ico} ${s.label}</option>`).join('');
+    const opts=state.statuses.map(s=>`<option value="${s.id}"${q.status===s.id?' selected':''}>${s.ico} ${s.label}</option>`).join('');
     return`<div class="q-card fadeUp" style="--c:${q.studioColor}">
-      <div style="display:flex;align-items:flex-start;gap:14px">
+      <div style="display:flex;align-items:flex-start;gap:12px">
         <div class="q-number" style="color:${q.studioColor}">${q.number}</div>
         <div style="flex:1">
           <div class="q-name">${q.name} <span style="font-size:11px;color:var(--tm);font-weight:400;background:var(--s2);padding:2px 8px;border-radius:100px;margin-left:4px">${q.studioIco} ${q.studioName}</span></div>
-          <div class="q-meta">Daftar: ${q.time} · No. ${q.number}</div>
+          <div class="q-meta">Daftar: ${q.time} · ${q.number}</div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <select class="status-sel" style="color:${st.color};border-color:${st.color}40" onchange="setStatus('${q.id}',this.value)">${opts}</select>
-            <button class="btn btn-ghost btn-sm btn-icon" onclick="openTrack('${q.id}')" title="Pantau">👁</button>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openTrackWindow('${q.id}')" title="Pantau">👁</button>
             <button class="btn btn-red btn-sm btn-icon" onclick="removeQueue('${q.id}')" title="Hapus">🗑</button>
           </div>
         </div>
-        <div style="flex-shrink:0"><button class="btn btn-gold btn-sm" onclick="callOne('${q.id}')">📢 Panggil</button></div>
+        <button class="btn btn-gold btn-sm" onclick="callOne('${q.id}')">📢 Panggil</button>
       </div>
     </div>`;
   }).join('');
 }
 function setStatus(id,status){const q=state.queue.find(q=>q.id===id);if(q){q.status=status;renderQueue();renderDashboard();saveLS(true);syncNow(false);}}
-function removeQueue(id){state.queue=state.queue.filter(q=>q.id!==id);renderQueue();renderDashboard();saveLS(true);syncNow(false);}
-function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';renderQueue();renderDashboard();renderDisplay();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncNow(false);}}
+function removeQueue(id){if(!confirm('Hapus antrian ini?'))return;state.queue=state.queue.filter(q=>q.id!==id);renderQueue();renderDashboard();saveLS(true);syncNow(false);}
+function callOne(id){const q=state.queue.find(q=>q.id===id);if(q){q.status='called';renderQueue();renderDashboard();showNotif('📢 Memanggil '+q.name+' — '+q.number);saveLS(true);syncNow(false);}}
 function callNext(){const next=state.queue.find(q=>q.status==='waiting');if(next)callOne(next.id);else showNotif('Tidak ada antrian menunggu');}
+function openTrackWindow(id){window.open('track.html?track='+id,'_blank');}
 
-// ── SETTINGS ─────────────────────────────────────────────
+// ── Settings ─────────────────────────────────────────────
 function renderSettings(){switchTab('gas');}
 function switchTab(tab){
   document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('h'));
   document.querySelectorAll('.tab-btn').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
-  const el=document.getElementById('tab-'+tab);if(el)el.classList.remove('h');
+  document.getElementById('tab-'+tab)?.classList.remove('h');
   if(tab==='studio')renderStudioSettings();
   if(tab==='status')renderStatusSettings();
   if(tab==='gas'){const u=document.getElementById('cfg-gas-url');if(u)u.value=state.gasUrl||'';}
@@ -795,24 +473,22 @@ function saveBisnis(){
 }
 function renderStudioSettings(){
   const el=document.getElementById('studio-settings-list');if(!el)return;
-  el.innerHTML=state.studios.map(s=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);border-left:3px solid ${s.color};margin-bottom:8px">
-      <input class="inp" value="${s.ico}" style="width:54px;text-align:center;font-size:18px;padding:6px" onchange="updateStudio('${s.id}','ico',this.value)">
-      <input class="inp" value="${s.name}" style="flex:1" onchange="updateStudio('${s.id}','name',this.value)">
-      <input class="inp" value="${s.desc}" style="flex:2;font-size:12px" placeholder="Deskripsi…" onchange="updateStudio('${s.id}','desc',this.value)">
-      <input type="color" value="${s.color}" style="width:38px;height:38px;border:1px solid var(--b);border-radius:6px;cursor:pointer;background:none;padding:2px" onchange="updateStudio('${s.id}','color',this.value)">
-    </div>`).join('');
+  el.innerHTML=state.studios.map(s=>`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);border-left:3px solid ${s.color};margin-bottom:8px">
+    <input class="inp" value="${s.ico}" style="width:50px;text-align:center;font-size:16px;padding:5px" onchange="updateStudio('${s.id}','ico',this.value)">
+    <input class="inp" value="${s.name}" style="flex:1;font-size:13px" onchange="updateStudio('${s.id}','name',this.value)">
+    <input class="inp" value="${s.desc}" style="flex:2;font-size:11px" placeholder="Deskripsi…" onchange="updateStudio('${s.id}','desc',this.value)">
+    <input type="color" value="${s.color}" style="width:36px;height:36px;border:1px solid var(--b);border-radius:6px;cursor:pointer;background:none;padding:2px" onchange="updateStudio('${s.id}','color',this.value)">
+  </div>`).join('');
 }
 function updateStudio(id,key,val){const s=state.studios.find(s=>s.id===id);if(s){s[key]=val;saveLS();}}
 function renderStatusSettings(){
   const el=document.getElementById('status-settings-list');if(!el)return;
-  el.innerHTML=state.statuses.map(s=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);margin-bottom:6px">
-      <span style="font-size:18px">${s.ico}</span>
-      <span style="flex:1;font-weight:500">${s.label}</span>
-      <span class="tag" style="color:${s.color};border-color:${s.color}30;background:${s.color}10;font-size:11px">${s.id}</span>
-      <button class="btn btn-red btn-sm btn-icon" onclick="deleteStatus('${s.id}')" ${['waiting','called','done'].includes(s.id)?'disabled':''}>✕</button>
-    </div>`).join('');
+  el.innerHTML=state.statuses.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b);margin-bottom:6px">
+    <span style="font-size:16px">${s.ico}</span>
+    <span style="flex:1;font-weight:500;font-size:13px">${s.label}</span>
+    <span style="font-size:11px;color:var(--td);font-family:var(--fm)">${s.id}</span>
+    <button class="btn btn-red btn-sm btn-icon" onclick="deleteStatus('${s.id}')"${['waiting','called','done'].includes(s.id)?' disabled':''}>✕</button>
+  </div>`).join('');
 }
 function addStatus(){
   const ico=document.getElementById('new-st-ico').value.trim()||'🔵';
@@ -830,12 +506,12 @@ async function saveGasUrl(){
   const url=document.getElementById('cfg-gas-url').value.trim();
   state.gasUrl=url;saveLS();
   if(!url){showNotif('⚠️ URL tidak boleh kosong');return;}
-  showNotif('⏳ Testing koneksi ke GAS…');
+  showNotif('⏳ Testing koneksi…');
   try{
     const res=await fetch(url+'?action=ping');const j=await res.json();
     if(j.ok){state.gasOnline=true;updateGASBadge(true);setTestResult('✅ Koneksi berhasil!','ok');showNotif('✅ GAS terhubung!');}
     else throw new Error(j.error||'Unknown');
-  }catch(e){state.gasOnline=false;updateGASBadge(false);setTestResult('❌ Gagal: '+e.message,'err');showNotif('❌ GAS tidak terhubung: '+e.message);}
+  }catch(e){state.gasOnline=false;updateGASBadge(false);setTestResult('❌ Gagal: '+e.message,'err');showNotif('❌ GAS tidak terhubung');}
 }
 function setTestResult(msg,type){
   const el=document.getElementById('gas-test-result');if(!el)return;
@@ -844,96 +520,59 @@ function setTestResult(msg,type){
   el.style.color=type==='ok'?'var(--green)':'var(--red)';el.textContent=msg;
 }
 function updateGASBadge(online){
-  const el=document.getElementById('gas-badge-main');
-  if(el){el.textContent=online?'⬤ GAS Online':'⬤ GAS Offline';el.className='gas-badge'+(online?'':' off');}
-  const lbl=document.getElementById('gas-status-lbl');
-  if(lbl)lbl.textContent=online?'GAS Online':'Sistem Lokal';
+  document.querySelectorAll('[data-gas-badge]').forEach(el=>{el.textContent=online?'⬤ GAS Online':'⬤ GAS Offline';el.className='gas-badge'+(online?'':' off');});
+  const lbl=document.getElementById('gas-status-lbl');if(lbl)lbl.textContent=online?'GAS Online':'Sistem Lokal';
 }
 
-// ── GAS SCRIPT ───────────────────────────────────────────
-const GAS_SCRIPT=`// ============================================================
-// JD Production — Google Apps Script Backend
+// ── Changelog ────────────────────────────────────────────
+function showChangelog(){
+  const el=document.getElementById('changelog-body');if(!el)return;
+  el.innerHTML=CHANGELOG.map(c=>`<div style="padding:12px;background:var(--s1);border-radius:var(--rs);border:1px solid var(--b)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-family:var(--fm);font-size:12px;color:var(--gold);background:rgba(240,192,96,.1);padding:2px 10px;border-radius:100px">v${c.ver}</span>
+      <span style="font-size:11px;color:var(--tm)">${c.date}</span>
+    </div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:5px">${c.desc.map(d=>`<li style="font-size:12px;color:var(--tm);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--green)">•</span>${d}</li>`).join('')}</ul>
+  </div>`).join('');
+  document.getElementById('modal-changelog').classList.remove('h');
+}
+
+// ── GAS Script ───────────────────────────────────────────
+const GAS_SCRIPT=`// JD Production — Google Apps Script Backend v2
 // Deploy: Deploy > New Deployment > Web App
-//   Execute as : Me | Who has access : Anyone
-// ============================================================
+// Execute as: Me | Access: Anyone
 const SHEET_NAME='JD Production Antrian';
 function getOrCreateSS(){const files=DriveApp.getFilesByName(SHEET_NAME);if(files.hasNext())return SpreadsheetApp.open(files.next());const ss=SpreadsheetApp.create(SHEET_NAME);['Antrian','Config','Studios','Statuses'].forEach(name=>{if(!ss.getSheetByName(name))ss.insertSheet(name);});return ss;}
 function doGet(e){return handle(e);}
 function doPost(e){return handle(e);}
-function handle(e){
-  try{
-    const p=e.parameter||{};const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};
-    const action=p.action||body.action||'';const ss=getOrCreateSS();
-    if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK',sheetId:ss.getId()});
-    if(action==='load'){
-      const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);
-      const config=readKV(ss,'Config');const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);
-      return ok({ok:true,queue,config,studios,statuses,sheetId:ss.getId()});
-    }
-    if(action==='save_queue'){const queue=body.queue||[];writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],queue.map(q=>[q.id,q.number,q.numRaw,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));return ok({ok:true,sheetId:ss.getId()});}
-    if(action==='save_config'){const cfg=body.config||{};const sheet=getOrClear(ss,'Config');Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));return ok({ok:true});}
-    if(action==='save_studios'){writeSheet(ss,'Studios',['id','name','ico','color','desc'],(body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'']));return ok({ok:true});}
-    if(action==='save_statuses'){writeSheet(ss,'Statuses',['id','ico','label','color'],(body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));return ok({ok:true});}
-    return ok({ok:false,error:'Unknown action: '+action});
-  }catch(err){return ok({ok:false,error:err.message});}
-}
+function handle(e){try{const p=e.parameter||{};const body=(e.postData&&e.postData.contents)?JSON.parse(e.postData.contents):{};const action=p.action||body.action||'';const ss=getOrCreateSS();if(action==='ping')return ok({ok:true,msg:'JD Production GAS OK',sheetId:ss.getId()});if(action==='load'){const queue=readSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time']);const config=readKV(ss,'Config');const studios=readSheet(ss,'Studios',['id','name','ico','color','desc']);const statuses=readSheet(ss,'Statuses',['id','ico','label','color']);return ok({ok:true,queue,config,studios,statuses,sheetId:ss.getId()});}if(action==='save_queue'){const queue=body.queue||[];writeSheet(ss,'Antrian',['id','number','numRaw','name','studioId','studioName','studioIco','studioColor','status','time'],queue.map(q=>[q.id,q.number,q.numRaw,q.name,q.studioId,q.studioName,q.studioIco,q.studioColor,q.status,q.time]));return ok({ok:true,sheetId:ss.getId()});}if(action==='save_config'){const cfg=body.config||{};const sheet=getOrClear(ss,'Config');Object.entries(cfg).forEach(([k,v])=>sheet.appendRow([k,v]));return ok({ok:true});}if(action==='save_studios'){writeSheet(ss,'Studios',['id','name','ico','color','desc'],(body.studios||[]).map(s=>[s.id,s.name,s.ico,s.color,s.desc||'']));return ok({ok:true});}if(action==='save_statuses'){writeSheet(ss,'Statuses',['id','ico','label','color'],(body.statuses||[]).map(s=>[s.id,s.ico,s.label,s.color]));return ok({ok:true});}return ok({ok:false,error:'Unknown action: '+action});}catch(err){return ok({ok:false,error:err.message});}}
 function readSheet(ss,name,fields){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()<2)return[];return sheet.getRange(2,1,sheet.getLastRow()-1,fields.length).getValues().filter(r=>r[0]).map(r=>Object.fromEntries(fields.map((f,i)=>[f,r[i]])));}
 function writeSheet(ss,name,headers,rows){const sheet=getOrClear(ss,name,headers);if(rows.length)sheet.getRange(2,1,rows.length,headers.length).setValues(rows);styleHeader(sheet,headers.length);}
 function readKV(ss,name){const sheet=ss.getSheetByName(name);if(!sheet||sheet.getLastRow()===0)return{};const data={};sheet.getDataRange().getValues().forEach(r=>{if(r[0])data[r[0]]=r[1];});return data;}
 function getOrClear(ss,name,headers){let sheet=ss.getSheetByName(name);if(!sheet)sheet=ss.insertSheet(name);sheet.clearContents();if(headers)sheet.appendRow(headers);return sheet;}
 function styleHeader(sheet,cols){if(sheet.getLastRow()<1)return;sheet.getRange(1,1,1,cols).setBackground('#F0C060').setFontColor('#000').setFontWeight('bold');}
 function ok(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}`;
-
 function showGASScript(){document.getElementById('gas-code-view').textContent=GAS_SCRIPT;document.getElementById('modal-gas').classList.remove('h');}
 function copyGASScript(){navigator.clipboard.writeText(GAS_SCRIPT).then(()=>showNotif('✅ Script GAS disalin!')).catch(()=>prompt('Salin manual:',GAS_SCRIPT));}
 
-// ── GAS SYNC ─────────────────────────────────────────────
+// ── Sync ─────────────────────────────────────────────────
 async function syncNow(showFeedback){
   if(!state.gasUrl)return;
-  try{
-    const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue})});
-    const j=await res.json();
-    if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Data tersinkron ke Google Sheets!');}
-    else throw new Error(j.error);
-  }catch(e){state.gasOnline=false;updateGASBadge(false);if(showFeedback)showNotif('❌ Sync gagal: '+e.message);}
+  try{const res=await fetch(state.gasUrl,{method:'POST',body:JSON.stringify({action:'save_queue',queue:state.queue})});const j=await res.json();if(j.ok){state.gasOnline=true;updateGASBadge(true);if(showFeedback)showNotif('✅ Tersinkron ke Google Sheets!');}else throw new Error(j.error);}
+  catch(e){state.gasOnline=false;updateGASBadge(false);if(showFeedback)showNotif('❌ Sync gagal: '+e.message);}
 }
 async function loadFromGAS(){
   if(!state.gasUrl)return;
-  try{
-    const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();
-    if(!j.ok)throw new Error(j.error);
-    if(j.queue&&j.queue.length)state.queue=j.queue;
-    if(j.studios&&j.studios.length)state.studios=j.studios;
-    if(j.statuses&&j.statuses.length)state.statuses=j.statuses;
-    if(j.config&&j.config.name)state.config.name=j.config.name;
-    state.gasOnline=true;updateGASBadge(true);
-  }catch(e){state.gasOnline=false;updateGASBadge(false);}
+  try{const res=await fetch(state.gasUrl+'?action=load');const j=await res.json();if(!j.ok)throw new Error(j.error);if(j.queue&&j.queue.length)state.queue=j.queue;if(j.studios&&j.studios.length)state.studios=j.studios;if(j.statuses&&j.statuses.length)state.statuses=j.statuses;if(j.config&&j.config.name)state.config.name=j.config.name;state.gasOnline=true;updateGASBadge(true);}
+  catch(e){state.gasOnline=false;updateGASBadge(false);}
 }
 
-// ── LOCAL STORAGE ────────────────────────────────────────
-const LS='jdprod_v2';
-function saveLS(silent){
-  try{localStorage.setItem(LS,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}
-  if(!silent)showNotif('✅ Tersimpan!');
-}
-function loadLS(){
-  try{
-    const d=JSON.parse(localStorage.getItem(LS)||'{}');
-    if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;
-    if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;
-    if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;
-    return true;
-  }catch(e){return false;}
-}
+// ── LocalStorage ──────────────────────────────────────────
+function saveLS(silent){try{localStorage.setItem(LS_KEY,JSON.stringify({queue:state.queue,nextNum:state.nextNum,studios:state.studios,statuses:state.statuses,config:state.config,gasUrl:state.gasUrl}));}catch(e){}if(!silent)showNotif('✅ Tersimpan!');}
+function loadLS(){try{const d=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(d.queue)state.queue=d.queue;if(d.nextNum)state.nextNum=d.nextNum;if(d.studios)state.studios=d.studios;if(d.statuses)state.statuses=d.statuses;if(d.config)state.config=d.config;if(d.gasUrl)state.gasUrl=d.gasUrl;return true;}catch(e){return false;}}
 
-// ── NOTIF ─────────────────────────────────────────────────
-let ntimer;
-function showNotif(msg){const el=document.getElementById('notif');el.textContent=msg;el.classList.remove('h');clearTimeout(ntimer);ntimer=setTimeout(()=>el.classList.add('h'),2800);}
-
-// ── INIT ──────────────────────────────────────────────────
-async function init(){
-  const params=new URLSearchParams(window.location.search);
-  const trackParam=params.get('track'),svcParam=params.get('svc');
+// ── Init ─────────────────────────────────────────────────
+function init(){
   loadLS();
   if(!state.queue.length){
     state.queue=[
@@ -945,8 +584,6 @@ async function init(){
     ];
     state.nextNum={s1:3,s2:2,s3:2,s4:2};
   }
-  if(trackParam){if(state.gasUrl)try{await loadFromGAS();}catch(e){}openTrack(trackParam);return;}
-  if(svcParam){openCustomer(svcParam);return;}
   document.getElementById('sb-name').textContent=state.config.name;
   document.getElementById('sb-ico').textContent=state.config.logo;
   nav('dashboard');
